@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strand Dashboard - National Curriculum Analysis</title>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Highcharts -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-family-base);
+      background: var(--color-page-background);
+      color: var(--color-text-default);
+    }
+
+    /* ============================================
+       HAMBURGER MENU (Global Navigation)
+       ============================================ */
+    .hamburger-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .hamburger-menu h1 {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      order: 2;
+    }
+
+    .menu-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      order: 1;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: -300px;
+      width: 300px;
+      height: calc(100vh - 60px);
+      background: white;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      z-index: 999;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 998;
+    }
+
+    .sidebar-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .sidebar nav {
+      padding: 20px 0;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #6b7280;
+      padding: 0 24px 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: #1f2937;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-link:hover {
+      background: #f3f4f6;
+    }
+
+    .nav-link.active {
+      background: #eff6ff;
+      color: #d946ef;
+      border-right: 3px solid #d946ef;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    body {
+      padding-top: 84px !important;
+      padding-left: 24px;
+      padding-right: 24px;
+      padding-bottom: 24px;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+
+    .breadcrumb a {
+      color: #d946ef;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    /* Header */
+    .page-header {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .page-header .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .stat-value.mastered { color: #10b981; }
+    .stat-value.developing { color: #3b82f6; }
+    .stat-value.emerging { color: #f59e0b; }
+    .stat-value.concern { color: #dc2626; }
+
+    .stat-detail {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .chart-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .chart-card.full-width {
+      grid-column: span 2;
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 16px;
+    }
+
+    .chart-subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+
+    /* Objectives List (Simplified) */
+    .objectives-compact {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+    }
+
+    .objective-compact {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border-left: 4px solid;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .objective-compact:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .objective-compact.mastered {
+      background: #f0fdf4;
+      border-left-color: #10b981;
+    }
+
+    .objective-compact.developing {
+      background: #eff6ff;
+      border-left-color: #3b82f6;
+    }
+
+    .objective-compact.emerging {
+      background: #fffbeb;
+      border-left-color: #f59e0b;
+    }
+
+    .objective-compact.concern {
+      background: #fef2f2;
+      border-left-color: #dc2626;
+    }
+
+    .objective-code {
+      font-weight: 700;
+      color: #1f2937;
+      margin-right: 8px;
+    }
+
+    .objective-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .objective-badge.mastered {
+      background: #10b981;
+      color: white;
+    }
+
+    .objective-badge.developing {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .objective-badge.emerging {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .objective-badge.concern {
+      background: #dc2626;
+      color: white;
+    }
+
+    .focus-skill-badge {
+      background: #d946ef;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    /* Focus Skills Explainer */
+    .focus-skills-box {
+      background: #faf5ff;
+      border-left: 4px solid #d946ef;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      border-radius: 8px;
+    }
+
+    .focus-skills-box h3 {
+      color: #a855f7;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .focus-skills-box p {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Export Buttons */
+    .export-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .export-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .export-card {
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .export-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .export-card.concern { border-left: 4px solid #dc2626; }
+    .export-card.emerging { border-left: 4px solid #f59e0b; }
+    .export-card.developing { border-left: 4px solid #3b82f6; }
+    .export-card.mastered { border-left: 4px solid #10b981; }
+    .export-card.all { border-left: 4px solid #d946ef; }
+
+    .export-info {
+      flex: 1;
+    }
+
+    .export-level {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+
+    .export-count {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .export-btn {
+      background: #d946ef;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .export-btn:hover {
+      background: #c026d3;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .report-btn {
+      flex: 1;
+      min-width: 200px;
+      background: white;
+      border: 2px solid #d946ef;
+      color: #d946ef;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .report-btn:hover {
+      background: #d946ef;
+      color: white;
+    }
+
+    .report-btn.primary {
+      background: #d946ef;
+      color: white;
+    }
+
+    .report-btn.primary:hover {
+      background: #c026d3;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card.full-width {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .objectives-compact {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HAMBURGER MENU -->
+  <div class="hamburger-menu">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <h1>
+      <span>📊</span>
+      GL Assessment Analytics
+    </h1>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <nav>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="/" class="nav-link">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard Home</span>
+        </a>
+        <a href="/mat" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>MAT Overview</span>
+        </a>
+        <a href="/gl" class="nav-link">
+          <span class="nav-icon">🎓</span>
+          <span>GL Assessment</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Analysis</div>
+        <a href="/dashboard" class="nav-link">
+          <span class="nav-icon">📈</span>
+          <span>Visual Dashboard</span>
+        </a>
+        <a href="/school/school6/skills" class="nav-link">
+          <span class="nav-icon">🎯</span>
+          <span>Skills Analysis</span>
+        </a>
+        <a href="/school/school6/strand/number-fractions" class="nav-link active">
+          <span class="nav-icon">📚</span>
+          <span>Strand Drill-Down</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Schools & Classes</div>
+        <a href="/school/school6/skills" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>School A - Oakwood</span>
+        </a>
+        <a href="/school/school7/skills" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>School B - Riverside</span>
+        </a>
+        <a href="/school/school8/skills" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>School C - Hillside</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Tools</div>
+        <a href="/demo" class="nav-link">
+          <span class="nav-icon">🤖</span>
+          <span>AI Insights</span>
+        </a>
+        <a href="/hackathon" class="nav-link">
+          <span class="nav-icon">🚀</span>
+          <span>Original Demo</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <div class="breadcrumb" id="breadcrumb">
+      Loading...
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 id="pageTitle">Loading...</h1>
+      <p class="subtitle" id="pageSubtitle">National Curriculum objectives with student performance analysis (% correct by objective)</p>
+    </div>
+
+    <!-- Focus Skills Explainer -->
+    <div class="focus-skills-box">
+      <h3>⭐ Renaissance Focus Skills</h3>
+      <p>Focus Skills are the essential <strong>23% of mathematics skills</strong> (305 out of 1,304 total) identified by Renaissance as critical building blocks for future learning. Objectives marked with ⭐ deserve disproportionate practice time for maximum impact.</p>
+    </div>
+
+    <!-- Export Section -->
+    <div class="export-section">
+      <div class="chart-title">📥 Export Student Lists & Reports</div>
+      <p class="chart-subtitle">Download actionable student lists grouped by performance level (% correct) for targeted interventions</p>
+
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; margin: 12px 0; border-radius: 6px; font-size: 13px;">
+        <strong style="color: #1e40af;">💡 Understanding % Correct:</strong>
+        <span style="color: #6b7280;">These percentages represent questions answered correctly per objective. They do not account for:</span>
+        <ul style="margin: 6px 0 0 20px; color: #6b7280; line-height: 1.6;">
+          <li>Question weighting within the assessment</li>
+          <li>Difficulty levels of individual questions</li>
+          <li>Number of questions per objective (which may vary)</li>
+        </ul>
+        <span style="color: #6b7280; font-style: italic; display: block; margin-top: 6px;">For weighted scores and detailed question-level analysis, refer to the full PTM assessment report.</span>
+      </div>
+
+      <div class="export-grid">
+        <div class="export-card concern" onclick="exportByLevel('concern')">
+          <div class="export-info">
+            <div class="export-level">🔴 Concern Level</div>
+            <div class="export-count" id="concernCount">Loading...</div>
+          </div>
+          <button class="export-btn">📥 Export CSV</button>
+        </div>
+
+        <div class="export-card emerging" onclick="exportByLevel('emerging')">
+          <div class="export-info">
+            <div class="export-level">🟠 Emerging Level</div>
+            <div class="export-count" id="emergingCount">Loading...</div>
+          </div>
+          <button class="export-btn">📥 Export CSV</button>
+        </div>
+
+        <div class="export-card developing" onclick="exportByLevel('developing')">
+          <div class="export-info">
+            <div class="export-level">🔵 Developing Level</div>
+            <div class="export-count" id="developingCount">Loading...</div>
+          </div>
+          <button class="export-btn">📥 Export CSV</button>
+        </div>
+
+        <div class="export-card mastered" onclick="exportByLevel('mastered')">
+          <div class="export-info">
+            <div class="export-level">🟢 Mastered Level</div>
+            <div class="export-count" id="masteredCount">Loading...</div>
+          </div>
+          <button class="export-btn">📥 Export CSV</button>
+        </div>
+
+        <div class="export-card all" onclick="exportByLevel('all')">
+          <div class="export-info">
+            <div class="export-level">📋 All Students</div>
+            <div class="export-count" id="allCount">Loading...</div>
+          </div>
+          <button class="export-btn">📥 Export CSV</button>
+        </div>
+      </div>
+
+      <div class="report-actions">
+        <button class="report-btn" onclick="exportObjectives()">
+          <span>📊</span>
+          <span>Export Objectives Breakdown</span>
+        </button>
+        <button class="report-btn primary" onclick="generateFullReport()">
+          <span>📑</span>
+          <span>Generate Full Report (CSV)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Concerning Students List -->
+    <div class="export-section" id="concerningStudentsSection" style="display: none;">
+      <div class="chart-title">🚨 Students Requiring Urgent Support (Concern Level)</div>
+      <p class="chart-subtitle">Students with average % correct below 50% across objectives in this strand</p>
+
+      <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; margin: 16px 0; border-radius: 6px; font-size: 13px;">
+        <strong style="color: #d97706;">⚠️ Note on % Correct:</strong>
+        <span style="color: #6b7280;">This metric shows the percentage of questions answered correctly but does not reflect question weighting or difficulty. Some objectives may have more questions or weighted items in the actual assessment.</span>
+      </div>
+
+      <div style="overflow-x: auto; margin-top: 16px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <thead>
+            <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+              <th style="padding: 12px; text-align: left; font-weight: 600;">Student ID</th>
+              <th style="padding: 12px; text-align: left; font-weight: 600;">Student Name</th>
+              <th style="padding: 12px; text-align: center; font-weight: 600;">
+                <div style="position: relative; display: inline-block;">
+                  Avg % Correct
+                  <span style="cursor: help; color: #6b7280; font-size: 11px; margin-left: 4px;">ⓘ</span>
+                </div>
+              </th>
+              <th style="padding: 12px; text-align: left; font-weight: 600;">Weakest Objectives</th>
+              <th style="padding: 12px; text-align: center; font-weight: 600;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="concerningStudentsTable">
+            <!-- Rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 16px; padding: 16px; background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 8px;">
+        <strong style="color: #dc2626;">⚠️ Recommended Actions:</strong>
+        <ul style="margin: 8px 0 0 20px; color: #6b7280; line-height: 1.8;">
+          <li>Prioritize small-group interventions targeting Focus Skills (⭐) in concern areas</li>
+          <li>Review student progress weekly using PTM assessments</li>
+          <li>Consider 1-on-1 support for students below 40% correct</li>
+          <li>Review raw assessment data to understand question weighting and difficulty</li>
+          <li>Export student list above for targeted planning and parent communication</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="statsGrid">
+      <!-- Stats will be inserted here -->
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Student Performance Scatter Plot -->
+      <div class="chart-card full-width">
+        <div class="chart-title">📍 Student Performance Distribution (% Correct)</div>
+        <p class="chart-subtitle">Each dot represents a student's average % correct across objectives in this strand (unweighted)</p>
+        <div id="scatterChart" style="height: 400px;"></div>
+      </div>
+
+      <!-- Objectives Performance Bar Chart -->
+      <div class="chart-card">
+        <div class="chart-title">📊 Objectives Performance (% Correct)</div>
+        <p class="chart-subtitle">Average % correct by objective (ordered by concern level, unweighted)</p>
+        <div id="objectivesChart" style="height: 300px;"></div>
+      </div>
+
+      <!-- Performance Level Breakdown -->
+      <div class="chart-card">
+        <div class="chart-title">🎯 Performance Level Breakdown</div>
+        <p class="chart-subtitle">Student distribution across performance levels (based on % correct)</p>
+        <div id="donutChart" style="height: 300px;"></div>
+      </div>
+    </div>
+
+    <!-- Objectives List (Compact, Ordered) -->
+    <div class="chart-card">
+      <div class="chart-title">📚 National Curriculum Objectives (Ordered by Priority)</div>
+      <p class="chart-subtitle">Click an objective to see detailed student breakdown</p>
+      <div class="objectives-compact" id="objectivesList">
+        <!-- Objectives will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    const API_BASE = 'http://localhost:3001';
+
+    // Get parameters from URL
+    const pathParts = window.location.pathname.split('/');
+    const schoolId = pathParts[pathParts.length - 3];
+    const strandId = pathParts[pathParts.length - 1];
+
+    // Mock data for strand analysis
+    const strandData = {
+      'school6': {
+        'number-fractions': {
+          name: 'Number - Fractions, Decimals & Percentages',
+          schoolName: 'School A - Oakwood Primary',
+          objectives: [
+            { code: 'Y5.N.FDP.2', text: 'Recognise mixed numbers and improper fractions', level: 'emerging', focusSkill: '522', masteryPercent: 62, studentCount: 114 },
+            { code: 'Y5.N.FDP.3', text: 'Add and subtract fractions with the same denominator', level: 'concern', focusSkill: '524, 526', masteryPercent: 34, studentCount: 114 },
+            { code: 'Y5.N.FDP.4', text: 'Compare and order fractions', level: 'developing', focusSkill: null, masteryPercent: 73, studentCount: 114 },
+            { code: 'Y5.N.FDP.5', text: 'Write decimal numbers as fractions', level: 'concern', focusSkill: '531', masteryPercent: 42, studentCount: 114 },
+            { code: 'Y5.N.FDP.6', text: 'Read and write decimal numbers', level: 'developing', focusSkill: null, masteryPercent: 76, studentCount: 114 },
+            { code: 'Y5.N.FDP.7', text: 'Understand percentages', level: 'emerging', focusSkill: '544', masteryPercent: 58, studentCount: 114 }
+          ],
+          students: generateMockStudents(114, schoolId)
+        }
+      },
+      'school7': {
+        'number-fractions': {
+          name: 'Number - Fractions, Decimals & Percentages',
+          schoolName: 'School B - Riverside Academy',
+          objectives: [
+            { code: 'Y5.N.FDP.2', text: 'Recognise mixed numbers and improper fractions', level: 'developing', focusSkill: '522', masteryPercent: 78, studentCount: 110 },
+            { code: 'Y5.N.FDP.3', text: 'Add and subtract fractions with the same denominator', level: 'emerging', focusSkill: '524, 526', masteryPercent: 62, studentCount: 110 },
+            { code: 'Y5.N.FDP.4', text: 'Compare and order fractions', level: 'developing', focusSkill: null, masteryPercent: 81, studentCount: 110 },
+            { code: 'Y5.N.FDP.5', text: 'Write decimal numbers as fractions', level: 'emerging', focusSkill: '531', masteryPercent: 68, studentCount: 110 },
+            { code: 'Y5.N.FDP.6', text: 'Read and write decimal numbers', level: 'mastered', focusSkill: null, masteryPercent: 87, studentCount: 110 },
+            { code: 'Y5.N.FDP.7', text: 'Understand percentages', level: 'developing', focusSkill: '544', masteryPercent: 74, studentCount: 110 }
+          ],
+          students: generateMockStudents(110, schoolId)
+        }
+      },
+      'school8': {
+        'number-fractions': {
+          name: 'Number - Fractions, Decimals & Percentages',
+          schoolName: 'School C - Hillside Primary',
+          objectives: [
+            { code: 'Y5.N.FDP.2', text: 'Recognise mixed numbers and improper fractions', level: 'mastered', focusSkill: '522', masteryPercent: 92, studentCount: 110 },
+            { code: 'Y5.N.FDP.3', text: 'Add and subtract fractions with the same denominator', level: 'developing', focusSkill: '524, 526', masteryPercent: 78, studentCount: 110 },
+            { code: 'Y5.N.FDP.4', text: 'Compare and order fractions', level: 'mastered', focusSkill: null, masteryPercent: 89, studentCount: 110 },
+            { code: 'Y5.N.FDP.5', text: 'Write decimal numbers as fractions', level: 'developing', focusSkill: '531', masteryPercent: 81, studentCount: 110 },
+            { code: 'Y5.N.FDP.6', text: 'Read and write decimal numbers', level: 'mastered', focusSkill: null, masteryPercent: 94, studentCount: 110 },
+            { code: 'Y5.N.FDP.7', text: 'Understand percentages', level: 'mastered', focusSkill: '544', masteryPercent: 86, studentCount: 110 }
+          ],
+          students: generateMockStudents(110, schoolId)
+        }
+      }
+    };
+
+    function generateMockStudents(count, schoolId) {
+      const students = [];
+      const baseScore = schoolId === 'school6' ? 55 : (schoolId === 'school7' ? 75 : 85);
+
+      for (let i = 0; i < count; i++) {
+        const objectiveScores = [];
+        for (let j = 0; j < 6; j++) {
+          const score = Math.max(0, Math.min(100, baseScore + (Math.random() - 0.5) * 40));
+          objectiveScores.push(Math.round(score));
+        }
+
+        const avgScore = Math.round(objectiveScores.reduce((a, b) => a + b, 0) / objectiveScores.length);
+
+        students.push({
+          studentId: `STU${i.toString().padStart(4, '0')}`,
+          studentName: `Student ${i + 1}`,
+          averageMastery: avgScore,
+          objectiveScores: objectiveScores
+        });
+      }
+
+      return students;
+    }
+
+    function loadData() {
+      const data = strandData[schoolId]?.[strandId];
+
+      if (!data) {
+        document.getElementById('pageTitle').textContent = 'Strand Not Found';
+        return;
+      }
+
+      // Update page title and breadcrumb
+      document.getElementById('pageTitle').textContent = data.name;
+      document.getElementById('pageSubtitle').textContent = `${data.schoolName} • ${data.studentCount} students`;
+      document.getElementById('breadcrumb').innerHTML = `
+        <a href="/gl">← GL Assessment</a> /
+        <a href="/school/${schoolId}/skills">${data.schoolName}</a> /
+        <span>${data.name}</span>
+      `;
+
+      // Calculate stats
+      const mastered = data.objectives.filter(o => o.level === 'mastered').length;
+      const developing = data.objectives.filter(o => o.level === 'developing').length;
+      const emerging = data.objectives.filter(o => o.level === 'emerging').length;
+      const concern = data.objectives.filter(o => o.level === 'concern').length;
+      const focusSkills = data.objectives.filter(o => o.focusSkill).length;
+
+      // Render stats
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Mastered</div>
+          <div class="stat-value mastered">${mastered}</div>
+          <div class="stat-detail">of ${data.objectives.length} objectives</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Developing</div>
+          <div class="stat-value developing">${developing}</div>
+          <div class="stat-detail">on track</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Emerging</div>
+          <div class="stat-value emerging">${emerging}</div>
+          <div class="stat-detail">needs support</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Concern</div>
+          <div class="stat-value concern">${concern}</div>
+          <div class="stat-detail">priority</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">⭐ Focus Skills</div>
+          <div class="stat-value" style="color: #d946ef;">${focusSkills}</div>
+          <div class="stat-detail">essential 23%</div>
+        </div>
+      `;
+
+      // Render charts
+      renderScatterChart(data);
+      renderObjectivesChart(data);
+      renderDonutChart(data);
+      renderObjectivesList(data);
+    }
+
+    function renderScatterChart(data) {
+      const scatterData = data.students.map((student, idx) => ({
+        x: idx,
+        y: student.averageMastery,
+        name: student.studentName,
+        color: student.averageMastery >= 85 ? '#10b981' :
+               student.averageMastery >= 70 ? '#3b82f6' :
+               student.averageMastery >= 50 ? '#f59e0b' : '#dc2626'
+      }));
+
+      Highcharts.chart('scatterChart', {
+        chart: {
+          type: 'scatter',
+          zoomType: 'xy'
+        },
+        title: {
+          text: null
+        },
+        xAxis: {
+          title: {
+            text: 'Student Index'
+          },
+          labels: {
+            enabled: false
+          }
+        },
+        yAxis: {
+          title: {
+            text: 'Average % Correct (Unweighted)'
+          },
+          min: 0,
+          max: 100,
+          plotBands: [{
+            from: 0,
+            to: 50,
+            color: 'rgba(220, 38, 38, 0.1)',
+            label: {
+              text: 'Concern',
+              style: {
+                color: '#dc2626'
+              }
+            }
+          }, {
+            from: 50,
+            to: 70,
+            color: 'rgba(245, 158, 11, 0.1)',
+            label: {
+              text: 'Emerging',
+              style: {
+                color: '#f59e0b'
+              }
+            }
+          }, {
+            from: 70,
+            to: 85,
+            color: 'rgba(59, 130, 246, 0.1)',
+            label: {
+              text: 'Developing',
+              style: {
+                color: '#3b82f6'
+              }
+            }
+          }, {
+            from: 85,
+            to: 100,
+            color: 'rgba(16, 185, 129, 0.1)',
+            label: {
+              text: 'Mastered',
+              style: {
+                color: '#10b981'
+              }
+            }
+          }]
+        },
+        legend: {
+          enabled: false
+        },
+        plotOptions: {
+          scatter: {
+            marker: {
+              radius: 5,
+              states: {
+                hover: {
+                  enabled: true,
+                  lineColor: 'rgb(100,100,100)'
+                }
+              }
+            },
+            states: {
+              hover: {
+                marker: {
+                  enabled: false
+                }
+              }
+            },
+            tooltip: {
+              headerFormat: '',
+              pointFormat: '<b>{point.name}</b><br/>% Correct: {point.y}%'
+            }
+          }
+        },
+        series: [{
+          name: 'Students',
+          data: scatterData
+        }],
+        credits: {
+          enabled: false
+        }
+      });
+    }
+
+    function renderObjectivesChart(data) {
+      // Sort objectives by mastery (lowest first - highest concern)
+      const sorted = [...data.objectives].sort((a, b) => a.masteryPercent - b.masteryPercent);
+
+      Highcharts.chart('objectivesChart', {
+        chart: {
+          type: 'bar'
+        },
+        title: {
+          text: null
+        },
+        xAxis: {
+          categories: sorted.map(o => o.code),
+          labels: {
+            style: {
+              fontSize: '11px'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          max: 100,
+          title: {
+            text: '% Correct'
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              enabled: true,
+              format: '{y}%'
+            }
+          }
+        },
+        series: [{
+          name: '% Correct',
+          data: sorted.map(o => ({
+            y: o.masteryPercent,
+            color: o.level === 'mastered' ? '#10b981' :
+                   o.level === 'developing' ? '#3b82f6' :
+                   o.level === 'emerging' ? '#f59e0b' : '#dc2626'
+          }))
+        }],
+        credits: {
+          enabled: false
+        }
+      });
+    }
+
+    function renderDonutChart(data) {
+      const studentCount = data.studentCount;
+      const mastered = Math.round(data.objectives.filter(o => o.level === 'mastered').length / data.objectives.length * studentCount);
+      const developing = Math.round(data.objectives.filter(o => o.level === 'developing').length / data.objectives.length * studentCount);
+      const emerging = Math.round(data.objectives.filter(o => o.level === 'emerging').length / data.objectives.length * studentCount);
+      const concern = studentCount - mastered - developing - emerging;
+
+      Highcharts.chart('donutChart', {
+        chart: {
+          type: 'pie'
+        },
+        title: {
+          text: null
+        },
+        plotOptions: {
+          pie: {
+            innerSize: '60%',
+            dataLabels: {
+              enabled: true,
+              format: '<b>{point.name}</b><br>{point.y} students<br>({point.percentage:.1f}%)',
+              style: {
+                fontSize: '12px'
+              }
+            }
+          }
+        },
+        series: [{
+          name: 'Students',
+          data: [
+            { name: 'Mastered', y: mastered, color: '#10b981' },
+            { name: 'Developing', y: developing, color: '#3b82f6' },
+            { name: 'Emerging', y: emerging, color: '#f59e0b' },
+            { name: 'Concern', y: concern, color: '#dc2626' }
+          ]
+        }],
+        credits: {
+          enabled: false
+        }
+      });
+    }
+
+    function renderObjectivesList(data) {
+      // Sort by priority: concern first, then emerging, developing, mastered
+      // Within same level, sort Focus Skills first
+      const priority = { concern: 4, emerging: 3, developing: 2, mastered: 1 };
+      const sorted = [...data.objectives].sort((a, b) => {
+        if (priority[b.level] !== priority[a.level]) {
+          return priority[b.level] - priority[a.level];
+        }
+        // Within same priority, Focus Skills first
+        if (a.focusSkill && !b.focusSkill) return -1;
+        if (!a.focusSkill && b.focusSkill) return 1;
+        return 0;
+      });
+
+      const html = sorted.map(obj => `
+        <div class="objective-compact ${obj.level}">
+          <div>
+            <span class="objective-code">${obj.code}</span>
+            ${obj.focusSkill ? `<span class="focus-skill-badge">⭐ ${obj.focusSkill}</span>` : ''}
+            <br>
+            <span style="font-size: 12px; color: #6b7280;">${obj.text}</span>
+          </div>
+          <div>
+            <span class="objective-badge ${obj.level}">${obj.masteryPercent}%</span>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('objectivesList').innerHTML = html;
+
+      // Update export counts
+      updateExportCounts(data);
+    }
+
+    function updateExportCounts(data) {
+      const students = data.students;
+      const concern = students.filter(s => s.averageMastery < 50).length;
+      const emerging = students.filter(s => s.averageMastery >= 50 && s.averageMastery < 70).length;
+      const developing = students.filter(s => s.averageMastery >= 70 && s.averageMastery < 85).length;
+      const mastered = students.filter(s => s.averageMastery >= 85).length;
+
+      document.getElementById('concernCount').textContent = `${concern} students need urgent support`;
+      document.getElementById('emergingCount').textContent = `${emerging} students need practice`;
+      document.getElementById('developingCount').textContent = `${developing} students on track`;
+      document.getElementById('masteredCount').textContent = `${mastered} students excelling`;
+      document.getElementById('allCount').textContent = `${students.length} total students`;
+
+      // Render concerning students list if any exist
+      renderConcerningStudents(data);
+    }
+
+    function renderConcerningStudents(data) {
+      const concerningStudents = data.students.filter(s => s.averageMastery < 50);
+
+      if (concerningStudents.length === 0) {
+        document.getElementById('concerningStudentsSection').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('concerningStudentsSection').style.display = 'block';
+
+      // Sort by mastery (lowest first)
+      concerningStudents.sort((a, b) => a.averageMastery - b.averageMastery);
+
+      const html = concerningStudents.map(student => {
+        // Find the two weakest objectives for this student
+        const objectiveScoresWithIndex = student.objectiveScores.map((score, idx) => ({
+          score,
+          objective: data.objectives[idx]
+        }));
+        objectiveScoresWithIndex.sort((a, b) => a.score - b.score);
+        const weakest = objectiveScoresWithIndex.slice(0, 2);
+
+        const weakestText = weakest.map(w => `${w.objective.code} (${w.score}%)`).join(', ');
+
+        return `
+          <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px; font-family: monospace; color: #6b7280;">${student.studentId}</td>
+            <td style="padding: 12px; font-weight: 600;">${student.studentName}</td>
+            <td style="padding: 12px; text-align: center;">
+              <span style="background: #fef2f2; color: #dc2626; padding: 4px 12px; border-radius: 12px; font-weight: 700;">
+                ${student.averageMastery}%
+              </span>
+            </td>
+            <td style="padding: 12px; font-size: 12px; color: #6b7280;">${weakestText}</td>
+            <td style="padding: 12px; text-align: center;">
+              <button
+                onclick="viewStudentDetail('${student.studentId}')"
+                style="background: #d946ef; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;"
+                onmouseover="this.style.background='#c026d3'"
+                onmouseout="this.style.background='#d946ef'">
+                View Details
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('concerningStudentsTable').innerHTML = html;
+    }
+
+    function viewStudentDetail(studentId) {
+      // Placeholder - would navigate to student detail page
+      alert(`Navigating to detailed view for ${studentId}...\n\nThis would show:\n- Individual objective scores\n- Learning gaps analysis\n- Recommended interventions\n- Progress history\n- Teacher notes`);
+    }
+
+    function exportByLevel(level) {
+      const data = strandData[schoolId]?.[strandId];
+      if (!data) return;
+
+      let students = [];
+      let filename = '';
+
+      // Filter students by level
+      if (level === 'concern') {
+        students = data.students.filter(s => s.averageMastery < 50);
+        filename = `${schoolId}_${strandId}_concern_students.csv`;
+      } else if (level === 'emerging') {
+        students = data.students.filter(s => s.averageMastery >= 50 && s.averageMastery < 70);
+        filename = `${schoolId}_${strandId}_emerging_students.csv`;
+      } else if (level === 'developing') {
+        students = data.students.filter(s => s.averageMastery >= 70 && s.averageMastery < 85);
+        filename = `${schoolId}_${strandId}_developing_students.csv`;
+      } else if (level === 'mastered') {
+        students = data.students.filter(s => s.averageMastery >= 85);
+        filename = `${schoolId}_${strandId}_mastered_students.csv`;
+      } else {
+        students = data.students;
+        filename = `${schoolId}_${strandId}_all_students.csv`;
+      }
+
+      // Build CSV content
+      const headers = [
+        'Student ID',
+        'Student Name',
+        'Average % Correct (Unweighted)',
+        'Performance Level',
+        ...data.objectives.map(obj => `${obj.code} (${obj.text})`)
+      ];
+
+      const rows = students.map(student => [
+        student.studentId,
+        student.studentName,
+        student.averageMastery,
+        student.averageMastery >= 85 ? 'Mastered' :
+          student.averageMastery >= 70 ? 'Developing' :
+          student.averageMastery >= 50 ? 'Emerging' : 'Concern',
+        ...student.objectiveScores.map(score => `${score}%`)
+      ]);
+
+      // Add metadata rows at top
+      const csvContent = [
+        [`Strand: ${data.name}`],
+        [`School: ${data.schoolName}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Filter: ${level.charAt(0).toUpperCase() + level.slice(1)} Level`],
+        [`Total Students: ${students.length}`],
+        [`Note: Percentages are unweighted (simple % correct) and do not account for question difficulty or weighting`],
+        [],
+        headers,
+        ...rows
+      ].map(row => row.join(',')).join('\n');
+
+      // Download CSV
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportObjectives() {
+      const data = strandData[schoolId]?.[strandId];
+      if (!data) return;
+
+      // Build CSV content for objectives
+      const headers = [
+        'Objective Code',
+        'Objective Text',
+        'Performance Level',
+        '% Correct (Unweighted)',
+        'Focus Skill',
+        'Student Count',
+        'Students Below 50%',
+        'Students 50-69%',
+        'Students 70-84%',
+        'Students 85%+'
+      ];
+
+      const rows = data.objectives.map((obj, idx) => {
+        // Count students in each band for this objective
+        const below50 = data.students.filter(s => s.objectiveScores[idx] < 50).length;
+        const band50_69 = data.students.filter(s => s.objectiveScores[idx] >= 50 && s.objectiveScores[idx] < 70).length;
+        const band70_84 = data.students.filter(s => s.objectiveScores[idx] >= 70 && s.objectiveScores[idx] < 85).length;
+        const above85 = data.students.filter(s => s.objectiveScores[idx] >= 85).length;
+
+        return [
+          obj.code,
+          `"${obj.text}"`,
+          obj.level.charAt(0).toUpperCase() + obj.level.slice(1),
+          obj.masteryPercent,
+          obj.focusSkill || 'N/A',
+          obj.studentCount,
+          below50,
+          band50_69,
+          band70_84,
+          above85
+        ];
+      });
+
+      // Add metadata
+      const csvContent = [
+        [`Strand: ${data.name}`],
+        [`School: ${data.schoolName}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Note: Percentages show simple % correct (unweighted) and do not reflect question difficulty or weighting`],
+        [],
+        headers,
+        ...rows
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, `${schoolId}_${strandId}_objectives_breakdown.csv`);
+    }
+
+    function generateFullReport() {
+      const data = strandData[schoolId]?.[strandId];
+      if (!data) return;
+
+      // Generate comprehensive report
+      const headers = [
+        'Student ID',
+        'Student Name',
+        'Average % Correct (Unweighted)',
+        'Performance Level',
+        ...data.objectives.map(obj => obj.code),
+        ...data.objectives.map(obj => `${obj.code} - Level`)
+      ];
+
+      const rows = data.students.map(student => [
+        student.studentId,
+        student.studentName,
+        student.averageMastery,
+        student.averageMastery >= 85 ? 'Mastered' :
+          student.averageMastery >= 70 ? 'Developing' :
+          student.averageMastery >= 50 ? 'Emerging' : 'Concern',
+        ...student.objectiveScores.map(score => `${score}%`),
+        ...student.objectiveScores.map(score =>
+          score >= 85 ? 'Mastered' :
+          score >= 70 ? 'Developing' :
+          score >= 50 ? 'Emerging' : 'Concern'
+        )
+      ]);
+
+      // Add metadata and objectives reference
+      const objectivesRef = data.objectives.map(obj =>
+        `${obj.code},"${obj.text}",${obj.masteryPercent}%,${obj.level},${obj.focusSkill || 'N/A'}`
+      ).join('\n');
+
+      const csvContent = [
+        [`FULL STRAND REPORT`],
+        [`Strand: ${data.name}`],
+        [`School: ${data.schoolName}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Total Students: ${data.students.length}`],
+        [`Total Objectives: ${data.objectives.length}`],
+        [`IMPORTANT: All percentages are unweighted (simple % correct) and do not account for question difficulty or weighting within the assessment`],
+        [],
+        [`OBJECTIVES REFERENCE`],
+        [`Code,Text,Overall % Correct,Level,Focus Skills`],
+        ...data.objectives.map(obj => [obj.code, `"${obj.text}"`, `${obj.masteryPercent}%`, obj.level, obj.focusSkill || 'N/A']),
+        [],
+        [`STUDENT DATA`],
+        headers,
+        ...rows
+      ].map(row => Array.isArray(row) ? row.join(',') : row).join('\n');
+
+      downloadCSV(csvContent, `${schoolId}_${strandId}_full_report.csv`);
+    }
+
+    function downloadCSV(content, filename) {
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible');
+    }
+
+    // Close sidebar when clicking a link (on mobile)
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          toggleMenu();
+        }
+      });
+    });
+
+    // Load data on page load
+    loadData();
+  </script>
+</body>
+</html>

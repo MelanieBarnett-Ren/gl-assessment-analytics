@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GL Assessment - School Insights</title>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-family-base);
+      background: var(--color-page-background);
+      color: var(--color-text-default);
+      padding: 24px;
+    }
+
+    .header {
+      max-width: 1400px;
+      margin: 0 auto 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #d946ef;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #c026d3;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #6b7280;
+      border: 1px solid #e5e7eb;
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* School Cards */
+    .schools-grid {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .school-card {
+      background: white;
+      border-radius: 12px;
+      padding: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    /* Performance Header */
+    .performance-header {
+      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      padding: 24px;
+      color: white;
+    }
+
+    .performance-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .performance-header .subtitle {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .metric-item {
+      padding: 20px;
+      text-align: center;
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .metric-item:last-child {
+      border-right: none;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #a855f7;
+      margin-bottom: 4px;
+    }
+
+    .metric-subtitle {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .metric-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .badge-positive {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-negative {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-neutral {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    /* Implications Section */
+    .implications-section {
+      padding: 24px;
+      background: #f8f9fa;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 16px 0;
+      border-bottom: 2px solid #1f2937;
+    }
+
+    .section-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .section-icon {
+      font-size: 24px;
+    }
+
+    .implications-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .implication-column h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chevron {
+      font-size: 20px;
+      color: #6b7280;
+    }
+
+    .implication-column ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .implication-column li {
+      padding-left: 24px;
+      margin-bottom: 12px;
+      position: relative;
+      line-height: 1.6;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .implication-column li::before {
+      content: "•";
+      position: absolute;
+      left: 8px;
+      font-weight: bold;
+      color: #9ca3af;
+    }
+
+    /* Action Links */
+    .action-links {
+      display: flex;
+      gap: 12px;
+      padding: 20px 24px;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .action-link {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .action-link:hover {
+      background: #faf5ff;
+      border-color: #d946ef;
+      color: #a855f7;
+    }
+
+    .action-link-primary {
+      background: #d946ef;
+      color: white;
+      border-color: #d946ef;
+    }
+
+    .action-link-primary:hover {
+      background: #c026d3;
+      color: white;
+    }
+
+    /* Tooltips */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted #d946ef;
+      cursor: help;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 240px;
+      background-color: #1f2937;
+      color: #fff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 10px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -120px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #1f2937 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .implications-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ============================================
+       HAMBURGER MENU (Global Navigation)
+       ============================================ */
+    .hamburger-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .hamburger-menu h1 {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      order: 2;
+    }
+
+    .menu-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      order: 1;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: -300px;
+      width: 300px;
+      height: calc(100vh - 60px);
+      background: white;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      z-index: 999;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 998;
+    }
+
+    .sidebar-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .sidebar nav {
+      padding: 20px 0;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #6b7280;
+      padding: 0 24px 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: #1f2937;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-link:hover {
+      background: #f3f4f6;
+    }
+
+    .nav-link.active {
+      background: #eff6ff;
+      color: #d946ef;
+      border-right: 3px solid #d946ef;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+    }
+
+    body {
+      padding-top: 84px !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- HAMBURGER MENU -->
+  <div class="hamburger-menu">
+    <h1>
+      <span>📊</span>
+      GL Assessment Analytics
+    </h1>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <nav>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="/" class="nav-link">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard Home</span>
+        </a>
+        <a href="/mat" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>MAT Overview</span>
+        </a>
+        <a href="/gl" class="nav-link active">
+          <span class="nav-icon">🎓</span>
+          <span>GL Assessment</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Analysis</div>
+        <a href="/dashboard" class="nav-link">
+          <span class="nav-icon">📈</span>
+          <span>Visual Dashboard</span>
+        </a>
+        <a href="/school/school6/skills" class="nav-link">
+          <span class="nav-icon">🎯</span>
+          <span>Skills Analysis</span>
+        </a>
+        <a href="/school/school6/strand/number-fractions" class="nav-link">
+          <span class="nav-icon">📚</span>
+          <span>Strand Drill-Down</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Classes</div>
+        <a href="/class/class6a" class="nav-link">
+          <span class="nav-icon">👥</span>
+          <span>Class 5A (School A)</span>
+        </a>
+        <a href="/class/class7a" class="nav-link">
+          <span class="nav-icon">👥</span>
+          <span>Class 5B (School B)</span>
+        </a>
+        <a href="/class/class8a" class="nav-link">
+          <span class="nav-icon">👥</span>
+          <span>Class 5C (School C)</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Tools</div>
+        <a href="/demo" class="nav-link">
+          <span class="nav-icon">🤖</span>
+          <span>AI Insights</span>
+        </a>
+        <a href="/hackathon" class="nav-link">
+          <span class="nav-icon">🚀</span>
+          <span>Original Demo</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>GL Assessment - School Insights</h1>
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="window.location.href='/mat'">MAT Overview</button>
+      <button class="btn btn-primary" onclick="window.location.href='/dashboard'">📊 Dashboard</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- School A -->
+    <div class="school-card">
+      <div class="performance-header">
+        <h2>🏫 School A - Oakwood Primary</h2>
+        <div class="subtitle">Year 5 Cohort • 84 students • Autumn 2024</div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">CAT4<span class="tooltiptext">Cognitive Abilities Test: Measures student potential across verbal, quantitative, non-verbal and spatial reasoning</span></span>
+          </div>
+          <div class="metric-value">94</div>
+          <div class="metric-subtitle">AVG SAS</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">NGMT<span class="tooltiptext">New Group Mathematics Test: Measures actual maths attainment</span></span>
+          </div>
+          <div class="metric-value">90</div>
+          <div class="metric-subtitle">AVG SAS</div>
+          <div class="metric-badge badge-negative">Below</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">PTM<span class="tooltiptext">Progress Test in Maths: Termly progress tracking</span></span>
+          </div>
+          <div class="metric-value">-2</div>
+          <div class="metric-subtitle">Change</div>
+          <div class="metric-badge badge-negative">Declining</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">Value Added<span class="tooltiptext">Difference between CAT4 predicted performance and actual NGMT results</span></span>
+          </div>
+          <div class="metric-value">-4</div>
+          <div class="metric-subtitle">Points</div>
+          <div class="metric-badge badge-negative">-4.3%</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">FSM<span class="tooltiptext">Free School Meals: Percentage of students eligible</span></span>
+          </div>
+          <div class="metric-value">54%</div>
+          <div class="metric-subtitle">High</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">SEND<span class="tooltiptext">Special Educational Needs and Disabilities</span></span>
+          </div>
+          <div class="metric-value">25%</div>
+          <div class="metric-subtitle">High</div>
+        </div>
+      </div>
+
+      <!-- Implications for Teaching and Learning -->
+      <div class="implications-section">
+        <div class="section-header">
+          <span class="section-icon">🎓</span>
+          <h3>Implications for teaching and learning</h3>
+        </div>
+
+        <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; margin-bottom: 20px; border-radius: 6px;">
+          <p style="font-size: 13px; color: #1e40af; margin: 0;"><strong>📌 Focus Skills:</strong> Where mentioned, <strong>Focus Skills</strong> are the essential 23% of mathematics skills (305 out of 1,304 total) identified by Renaissance as critical building blocks for future learning. Prioritising these skills provides disproportionate practice time for maximum impact.</p>
+        </div>
+
+        <div class="implications-grid">
+          <!-- Performance Column -->
+          <div class="implication-column">
+            <h4><span class="chevron">››</span> Performance</h4>
+            <ul>
+              <li>Maths attainment of students at the school is <strong>significantly lower</strong> than the national average (90 vs 100 SAS).</li>
+              <li>38% of students demonstrated maths attainment that should be considered <strong>below average or very low</strong> (Stanine 1-3).</li>
+              <li>This compares unfavourably against 23% of students for whom maths attainment is above average or very high.</li>
+              <li>Attainment in <strong>Number - fractions</strong> is weakest (34% vs 68% national).</li>
+              <li>Students are performing <strong>4 SAS points below their CAT4 potential</strong>, indicating negative value added.</li>
+              <li>Female students performed equally to male students in the assessment.</li>
+              <li>Students with <span class="tooltip">EAL<span class="tooltiptext">English as Additional Language</span></span> did not attain as highly in these tests as other students.</li>
+              <li>Students with SEND did not attain as highly in these tests as other students.</li>
+              <li>Overall progress is <strong>declining</strong> (-2 SAS in latest PTM) and requires urgent attention.</li>
+              <li>According to CAT4 analysis, 42% of students could reasonably be expected to achieve the expected standard at the end of Key Stage 2.</li>
+            </ul>
+          </div>
+
+          <!-- Practical Steps Column -->
+          <div class="implication-column">
+            <h4><span class="chevron">››</span> Practical Steps</h4>
+            <ul>
+              <li><strong>Analyse scores</strong> for the group of students in the 'Very low' and 'Below average' stanine bands (Stanine 1-3) – to identify any common trends in their results. <a href="/school/school6/skills" style="color: #d946ef; font-weight: 600;">View skills breakdown ›</a></li>
+              <li><strong>Focus on Number - fractions strand:</strong> Review the <a href="/school/school6/strand/number-fractions" style="color: #d946ef; font-weight: 600;">strand analysis</a> showing Y5 National Curriculum objectives. <strong>Target Focus Skills 524, 526 & 531</strong> (add/subtract fractions with same denominator; write decimals as fractions) - these are among the essential 23% of skills that underpin future learning.</li>
+              <li><strong>Analyse class-level variation:</strong> Use the <a href="/school/school6/skills#heatmap" style="color: #d946ef; font-weight: 600;">cross-class heatmap</a> to identify which classes (5A, 5B, 5C) need targeted support on specific strands.</li>
+              <li><strong>Review students not making expected progress:</strong> Identify the 12 students in "Foundation" focus group who need intensive intervention. <a href="/class/class6a" style="color: #d946ef; font-weight: 600;">View Class 5A students ›</a></li>
+              <li><strong>Investigate value-added gap:</strong> Use CAT4 vs NGMT analysis to identify students underperforming relative to potential. <a href="/dashboard" style="color: #d946ef; font-weight: 600;">View scatter plot ›</a></li>
+              <li><strong>Support EAL and SEND learners:</strong> Look into the scores for students with EAL and SEND – to identify specific curriculum barriers and adapt teaching strategies.</li>
+              <li><strong>Address declining trend:</strong> Review <a href="/dashboard" style="color: #d946ef; font-weight: 600;">4-term trend data</a> to identify which domains are declining fastest (Number -8 SAS, Algebra -5 SAS).</li>
+              <li><strong>Learn from School C:</strong> School C has similar demographics but scores 17 SAS points higher. Request collaborative visits to observe <a href="/school/school8/skills" style="color: #d946ef; font-weight: 600;">their fractions teaching strategies ›</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Links -->
+      <div class="action-links">
+        <a href="/school/school6/skills" class="action-link">📊 Skills Analysis</a>
+        <a href="/dashboard" class="action-link">📈 Trend Dashboard</a>
+        <a href="/class/class6a" class="action-link">👥 View Classes</a>
+        <a href="/demo" class="action-link action-link-primary">🤖 Generate AI Insights</a>
+      </div>
+    </div>
+
+    <!-- School B -->
+    <div class="school-card" style="margin-top: 24px;">
+      <div class="performance-header">
+        <h2>🏫 School B - Riverside Academy</h2>
+        <div class="subtitle">Year 5 Cohort • 84 students • Autumn 2024</div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">CAT4<span class="tooltiptext">Cognitive Abilities Test</span></span>
+          </div>
+          <div class="metric-value">100</div>
+          <div class="metric-subtitle">AVG SAS</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">NGMT<span class="tooltiptext">New Group Mathematics Test</span></span>
+          </div>
+          <div class="metric-value">98</div>
+          <div class="metric-subtitle">AVG SAS</div>
+          <div class="metric-badge badge-neutral">Average</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">PTM<span class="tooltiptext">Progress Test in Maths</span></span>
+          </div>
+          <div class="metric-value">-1</div>
+          <div class="metric-subtitle">Change</div>
+          <div class="metric-badge badge-neutral">Stable</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">Value Added<span class="tooltiptext">Difference between predicted and actual</span></span>
+          </div>
+          <div class="metric-value">-2</div>
+          <div class="metric-subtitle">Points</div>
+          <div class="metric-badge badge-neutral">-2.0%</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">FSM<span class="tooltiptext">Free School Meals</span></span>
+          </div>
+          <div class="metric-value">38%</div>
+          <div class="metric-subtitle">Medium</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">SEND<span class="tooltiptext">Special Educational Needs</span></span>
+          </div>
+          <div class="metric-value">18%</div>
+          <div class="metric-subtitle">Medium</div>
+        </div>
+      </div>
+
+      <!-- Implications -->
+      <div class="implications-section">
+        <div class="section-header">
+          <span class="section-icon">🎓</span>
+          <h3>Implications for teaching and learning</h3>
+        </div>
+
+        <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; margin-bottom: 20px; border-radius: 6px;">
+          <p style="font-size: 13px; color: #1e40af; margin: 0;"><strong>📌 Focus Skills:</strong> Where mentioned, <strong>Focus Skills</strong> are the essential 23% of mathematics skills identified by Renaissance as critical building blocks. Prioritising these provides maximum impact.</p>
+        </div>
+
+        <div class="implications-grid">
+          <div class="implication-column">
+            <h4><span class="chevron">››</span> Performance</h4>
+            <ul>
+              <li>Maths attainment is <strong>broadly in line with national average</strong> (98 vs 100 SAS).</li>
+              <li>26% of students demonstrated maths attainment below average or very low.</li>
+              <li>This compares reasonably against 32% of students for whom maths attainment is above average or very high.</li>
+              <li>Attainment in <strong>Number - fractions</strong> needs improvement (62% vs 68% national).</li>
+              <li>Performance is <strong>stable</strong> but showing slight decline (-1 SAS in latest PTM).</li>
+              <li>Female students outperformed male students by 3 SAS points.</li>
+              <li>EAL students performed comparably to non-EAL students.</li>
+              <li>According to CAT4 analysis, 68% of students could reasonably be expected to achieve the expected standard.</li>
+            </ul>
+          </div>
+
+          <div class="implication-column">
+            <h4><span class="chevron">››</span> Practical Steps</h4>
+            <ul>
+              <li><strong>Maintain current standards:</strong> Performance is satisfactory but focus on preventing the slight decline trend. <a href="/dashboard" style="color: #d946ef; font-weight: 600;">Monitor trends ›</a></li>
+              <li><strong>Support lower attaining students:</strong> Focus on the 26% below average. <a href="/school/school7/skills" style="color: #d946ef; font-weight: 600;">View detailed breakdown ›</a></li>
+              <li><strong>Strengthen fractions teaching:</strong> While better than School A, there's still a gap vs national. Focus on <strong>Y5 Focus Skills 524-526</strong> (adding/subtracting fractions with same denominator). <a href="/school/school7/strand/number-fractions" style="color: #d946ef; font-weight: 600;">Review objectives ›</a></li>
+              <li><strong>Support male students:</strong> Investigate why male students are underperforming by 3 SAS points.</li>
+              <li><strong>Build on strengths:</strong> Geometry and Measurement are strong areas – document successful approaches.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-links">
+        <a href="/school/school7/skills" class="action-link">📊 Skills Analysis</a>
+        <a href="/dashboard" class="action-link">📈 Trend Dashboard</a>
+        <a href="/class/class7a" class="action-link">👥 View Classes</a>
+        <a href="/demo" class="action-link action-link-primary">🤖 Generate AI Insights</a>
+      </div>
+    </div>
+
+    <!-- School C -->
+    <div class="school-card" style="margin-top: 24px;">
+      <div class="performance-header" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+        <h2>🏫 School C - Valley School ⭐</h2>
+        <div class="subtitle">Year 5 Cohort • 84 students • Autumn 2024</div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">CAT4<span class="tooltiptext">Cognitive Abilities Test</span></span>
+          </div>
+          <div class="metric-value">106</div>
+          <div class="metric-subtitle">AVG SAS</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">NGMT<span class="tooltiptext">New Group Mathematics Test</span></span>
+          </div>
+          <div class="metric-value">112</div>
+          <div class="metric-subtitle">AVG SAS</div>
+          <div class="metric-badge badge-positive">High</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">PTM<span class="tooltiptext">Progress Test in Maths</span></span>
+          </div>
+          <div class="metric-value">+2</div>
+          <div class="metric-subtitle">Change</div>
+          <div class="metric-badge badge-positive">Improving</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">Value Added<span class="tooltiptext">Difference between predicted and actual</span></span>
+          </div>
+          <div class="metric-value">+6</div>
+          <div class="metric-subtitle">Points</div>
+          <div class="metric-badge badge-positive">+5.7%</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">FSM<span class="tooltiptext">Free School Meals</span></span>
+          </div>
+          <div class="metric-value">22%</div>
+          <div class="metric-subtitle">Low</div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label">
+            <span class="tooltip">SEND<span class="tooltiptext">Special Educational Needs</span></span>
+          </div>
+          <div class="metric-value">12%</div>
+          <div class="metric-subtitle">Low</div>
+        </div>
+      </div>
+
+      <!-- Implications -->
+      <div class="implications-section">
+        <div class="section-header">
+          <span class="section-icon">🎓</span>
+          <h3>Implications for teaching and learning</h3>
+        </div>
+
+        <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 12px 16px; margin-bottom: 20px; border-radius: 6px;">
+          <p style="font-size: 13px; color: #065f46; margin: 0;"><strong>📌 Focus Skills:</strong> This school excels at the essential 23% of mathematics skills identified by Renaissance. Their approach to Focus Skills can be shared across the MAT.</p>
+        </div>
+
+        <div class="implications-grid">
+          <div class="implication-column">
+            <h4><span class="chevron">››</span> Performance</h4>
+            <ul>
+              <li>Maths attainment of students at the school is <strong>significantly higher</strong> than the national average (112 vs 100 SAS).</li>
+              <li>Only 8% of students demonstrated maths attainment that should be considered below average or very low.</li>
+              <li>This compares favourably against 58% of students for whom maths attainment is above average or very high.</li>
+              <li><strong>All domains show strong performance</strong>, with particularly high attainment in Number and Geometry.</li>
+              <li>Students are performing <strong>6 SAS points above their CAT4 potential</strong>, indicating excellent value added.</li>
+              <li>Female and male students performed equally well.</li>
+              <li>EAL students performed comparably to non-EAL students.</li>
+              <li>SEND students made good progress relative to their starting points.</li>
+              <li>Overall progress is <strong>improving</strong> (+2 SAS in latest PTM) and compares favourably to national norms.</li>
+              <li>According to CAT4 analysis, 89% of students could reasonably be expected to achieve the expected standard at end of Key Stage 2.</li>
+            </ul>
+          </div>
+
+          <div class="implication-column">
+            <h4><span class="chevron">››</span> Practical Steps</h4>
+            <ul>
+              <li><strong>Share Focus Skills teaching with MAT:</strong> Document successful teaching strategies for <strong>Y5 Focus Skills 524-531</strong> (fractions strand) where School A struggles. Your approach to these essential 23% of skills can benefit other schools. <a href="/school/school8/skills" style="color: #10b981; font-weight: 600;">View approaches ›</a></li>
+              <li><strong>Provide stretch and challenge:</strong> Analyse the test performance of students in the 'Very high' attainment band to plan adapted teaching.</li>
+              <li><strong>Support the 8% below average:</strong> Even high-performing schools need targeted intervention for lower attainers. <a href="/class/class8a" style="color: #10b981; font-weight: 600;">Identify students ›</a></li>
+              <li><strong>Continue monitoring progress:</strong> Maintain the improving trend through consistent quality teaching. <a href="/dashboard" style="color: #10b981; font-weight: 600;">View trends ›</a></li>
+              <li><strong>Collaborative visits:</strong> Host teachers from Schools A and B to observe maths lessons, particularly fractions and problem-solving approaches.</li>
+              <li><strong>Document intervention strategies:</strong> Capture what works for SEND and lower-attaining students for MAT-wide sharing.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-links">
+        <a href="/school/school8/skills" class="action-link">📊 Best Practice Review</a>
+        <a href="/dashboard" class="action-link">📈 Trend Analysis</a>
+        <a href="/class/class8a" class="action-link">👥 View Classes</a>
+        <a href="/demo" class="action-link action-link-primary">🤖 View Success Factors</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible');
+    }
+
+    // Close sidebar when clicking a link (on mobile)
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          toggleMenu();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

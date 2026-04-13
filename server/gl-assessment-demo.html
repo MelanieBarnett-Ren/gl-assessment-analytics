@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GL Assessment Insights - NGMT, PTM & CAT4 Integration</title>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-family-base);
+      background: var(--color-page-background);
+      color: var(--color-text-default);
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      color: white;
+      padding: 30px 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .header .tagline {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+    .gl-logo {
+      display: inline-block;
+      background: white;
+      color: #1e3a8a;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    /* Assessment Cards */
+    .assessment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .assessment-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-top: 4px solid #3b82f6;
+    }
+    .assessment-card h3 {
+      font-size: 18px;
+      color: #1e3a8a;
+      margin-bottom: 12px;
+    }
+    .assessment-card .description {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .assessment-card .what-it-measures {
+      background: #eff6ff;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .assessment-card .what-it-measures strong {
+      color: #1e3a8a;
+    }
+
+    /* School Analysis */
+    .schools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+
+    .school-analysis {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .school-analysis.crisis {
+      border-left: 6px solid #dc2626;
+    }
+    .school-analysis.excellent {
+      border-left: 6px solid #10b981;
+    }
+
+    .school-header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .school-header h2 {
+      font-size: 24px;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+    .school-header .verdict {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .verdict.crisis { background: #fee2e2; color: #991b1b; }
+    .verdict.concern { background: #fed7aa; color: #9a3412; }
+    .verdict.excellent { background: #d1fae5; color: #065f46; }
+    .verdict.good { background: #dbeafe; color: #1e40af; }
+
+    /* Score Cards */
+    .score-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .score-card {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .score-card .label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .score-card .value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .score-card .sublabel {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    /* Value Added */
+    .value-added {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      border-left: 4px solid #3b82f6;
+    }
+    .value-added.negative {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left-color: #dc2626;
+    }
+    .value-added.positive {
+      background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+      border-left-color: #10b981;
+    }
+    .value-added h4 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+    .value-added .va-score {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .value-added.positive .va-score { color: #10b981; }
+    .value-added.negative .va-score { color: #dc2626; }
+    .value-added p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #374151;
+    }
+
+    /* Insights */
+    .insight {
+      background: #faf9fb;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      border-left: 4px solid #6b7280;
+    }
+    .insight.urgent { border-left-color: #dc2626; background: #fef2f2; }
+    .insight.high { border-left-color: #f59e0b; background: #fffbeb; }
+    .insight h5 {
+      font-size: 15px;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+    .insight .priority {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .priority.urgent { background: #dc2626; color: white; }
+    .priority.high { background: #f59e0b; color: white; }
+    .priority.medium { background: #6b7280; color: white; }
+    .insight p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    .insight .evidence {
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+    }
+    .insight .evidence ul {
+      list-style: none;
+      padding: 0;
+    }
+    .insight .evidence li {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 6px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    .insight .evidence li:before {
+      content: "📊";
+      position: absolute;
+      left: 0;
+    }
+    .insight .recommendation {
+      background: #dbeafe;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+    .insight .recommendation strong {
+      color: #1e3a8a;
+    }
+
+    /* Skill Gaps Table */
+    .skill-gaps {
+      margin-top: 24px;
+    }
+    .skill-gaps h4 {
+      font-size: 16px;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    .skill-gaps table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .skill-gaps th {
+      background: #f3f4f6;
+      padding: 10px;
+      text-align: left;
+      font-weight: 600;
+      color: #6b7280;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .skill-gaps td {
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .skill-gaps .gap-critical {
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .skill-gaps .gap-high {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    /* Action Button */
+    .analyze-button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      margin-top: 20px;
+    }
+    .analyze-button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px;
+    }
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #dbeafe;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Tooltips */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted #3b82f6;
+      cursor: help;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 320px;
+      background-color: #1f2937;
+      color: #fff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 12px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -160px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 13px;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #1f2937 transparent transparent transparent;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Class drill-down */
+    .classes-section {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .classes-section h5 {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .class-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .class-link {
+      background: white;
+      border: 1px solid #e5e7eb;
+      padding: 8px;
+      border-radius: 6px;
+      text-align: center;
+      text-decoration: none;
+      color: #1f2937;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .class-link:hover {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="gl-logo">GL Assessment</div>
+    <h1>🎯 Integrated Assessment Insights</h1>
+    <p class="tagline">NGMT, PTM & CAT4 combined analysis - Baseline to attainment to progress</p>
+  </div>
+
+  <div class="container">
+    <!-- About GL Assessments -->
+    <div class="assessment-grid">
+      <div class="assessment-card">
+        <h3>📚 <span class="tooltip">CAT4<span class="tooltiptext">Cognitive Abilities Test (4th Edition): Assesses reasoning abilities in four batteries to predict future academic performance and identify learning potential.</span></span> (Cognitive Abilities Test)</h3>
+        <p class="description">Baseline assessment measuring cognitive potential</p>
+        <div class="what-it-measures">
+          <strong>Measures:</strong> <span class="tooltip">Verbal, Quantitative, Non-verbal, Spatial reasoning<span class="tooltiptext">Four batteries: Verbal (language-based reasoning), Quantitative (number patterns), Non-verbal (diagrams/figures), Spatial (mental rotation/visualisation)</span></span>
+        </div>
+        <p style="font-size: 13px; color: #6b7280;">
+          <strong>Use:</strong> Set targets, predict GCSE outcomes, identify potential
+        </p>
+      </div>
+
+      <div class="assessment-card">
+        <h3>📊 <span class="tooltip">NGMT<span class="tooltiptext">New Group Mathematics Test: Standardised assessment providing SAS scores, stanines, and percentiles to benchmark maths attainment against national norms.</span></span> (New Group Mathematics Test)</h3>
+        <p class="description">Standardised maths assessment showing attainment</p>
+        <div class="what-it-measures">
+          <strong>Measures:</strong> <span class="tooltip">Number, Algebra, Shape/Space, Handling Data<span class="tooltiptext">Four content domains covering all areas of the maths curriculum: calculations, equations, geometry, and statistics.</span></span>
+        </div>
+        <p style="font-size: 13px; color: #6b7280;">
+          <strong>Use:</strong> Benchmark performance, identify skill gaps
+        </p>
+      </div>
+
+      <div class="assessment-card">
+        <h3>📈 <span class="tooltip">PTM<span class="tooltiptext">Progress Test in Maths: Termly assessments with item-level data showing which specific skills students have mastered. Expected progress is +3 SAS per term.</span></span> (Progress Test in Maths)</h3>
+        <p class="description">Termly progress monitoring with item-level data</p>
+        <div class="what-it-measures">
+          <strong>Measures:</strong> <span class="tooltip">Progress over time, specific skill mastery<span class="tooltiptext">Tracks SAS progress termly and provides item-level data showing exactly which questions students got right/wrong for targeted intervention.</span></span>
+        </div>
+        <p style="font-size: 13px; color: #6b7280;">
+          <strong>Use:</strong> Track interventions, identify declining cohorts
+        </p>
+      </div>
+    </div>
+
+    <!-- School Analyses -->
+    <div class="schools-grid" id="schoolsGrid">
+      <!-- Will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3001';
+
+    const SCHOOLS = [
+      { id: 'school6', name: 'School A' },
+      { id: 'school8', name: 'School C' },
+    ];
+
+    // Load GL Assessment data
+    async function loadSchoolAnalysis() {
+      const grid = document.getElementById('schoolsGrid');
+      grid.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading GL Assessment data...</p></div>';
+
+      try {
+        const response = await fetch(\`\${API_BASE}/api/gl-assessment/all\`);
+        const data = await response.json();
+
+        if (data.success) {
+          let html = '';
+
+          SCHOOLS.forEach(school => {
+            const schoolData = data.data.find((s: any) => s.schoolId === school.id);
+            if (schoolData) {
+              html += renderSchoolAnalysis(school.name, schoolData);
+            }
+          });
+
+          grid.innerHTML = html;
+        } else {
+          grid.innerHTML = \`<div class="loading"><p style="color: #dc2626;">Error: \${data.error?.message || 'Failed to load data'}</p></div>\`;
+        }
+      } catch (error) {
+        console.error(error);
+        grid.innerHTML = \`<div class="loading"><p style="color: #dc2626;">Error: \${error.message}</p></div>\`;
+      }
+    }
+
+    function renderSchoolAnalysis(schoolName, data) {
+      const va = data.valueAdded;
+      const vaClass = va.valueAdded >= 0 ? 'positive' : 'negative';
+      const verdictClass = data.overallVerdict;
+
+      return \`
+        <div class="school-analysis \${verdictClass}">
+          <div class="school-header">
+            <h2>\${schoolName}</h2>
+            <span class="verdict \${verdictClass}">\${data.overallVerdict.toUpperCase()}</span>
+            <p style="font-size: 14px; color: #6b7280; margin-top: 8px;">\${data.headline}</p>
+          </div>
+
+          <!-- Score Cards -->
+          <div class="score-cards">
+            <div class="score-card">
+              <div class="label"><span class="tooltip">CAT4<span class="tooltiptext">Cognitive Abilities Test: Measures cognitive potential. Used as baseline to predict future attainment.</span></span> (Potential)</div>
+              <div class="value"><span class="tooltip">\${data.cat4.meanCAT4.sas}<span class="tooltiptext">Standard Age Score (SAS): National average is 100. Range 85-115 is typical.</span></span></div>
+              <div class="sublabel"><span class="tooltip">Stanine \${data.cat4.meanCAT4.stanine}<span class="tooltiptext">Stanine scale 1-9 where 5 is average. 1-3=below, 4-6=average, 7-9=above.</span></span></div>
+            </div>
+            <div class="score-card">
+              <div class="label"><span class="tooltip">NGMT<span class="tooltiptext">New Group Mathematics Test: Standardised maths assessment showing actual attainment.</span></span> (Actual)</div>
+              <div class="value"><span class="tooltip">\${data.ngmt.overall.sas}<span class="tooltiptext">Standard Age Score (SAS): Shows actual maths performance vs national average (100).</span></span></div>
+              <div class="sublabel"><span class="tooltip">Stanine \${data.ngmt.overall.stanine}<span class="tooltiptext">Stanine scale 1-9 where 5 is average. 1-3=below, 4-6=average, 7-9=above.</span></span></div>
+            </div>
+            <div class="score-card">
+              <div class="label"><span class="tooltip">PTM Progress<span class="tooltiptext">Progress Test in Maths: Termly progress monitoring. Expected progress is +3 SAS per term.</span></span></div>
+              <div class="value">\${va.valueAdded > 0 ? '+' : ''}\${va.valueAdded}</div>
+              <div class="sublabel"><span class="tooltip">Value Added<span class="tooltiptext">Difference between CAT4 predicted and NGMT actual. Positive=exceeding potential, Negative=underachieving.</span></span></div>
+            </div>
+          </div>
+
+          <!-- Value Added Analysis -->
+          <div class="value-added \${vaClass}">
+            <h4>Value-Added Analysis</h4>
+            <div class="va-score">\${va.valueAdded > 0 ? '+' : ''}\${va.valueAdded} SAS</div>
+            <p><strong>\${va.verdict}</strong></p>
+            <p style="margin-top: 8px; font-size: 13px;">
+              CAT4 predicted: \${va.predictedAttainment}<br>
+              Actual: SAS \${va.actualMathsSAS} (Stanine \${va.actualStanine})
+            </p>
+          </div>
+
+          <!-- Key Insights -->
+          <div>
+            <h4 style="margin-bottom: 16px;">Key Insights</h4>
+            \${data.keyInsights.map((insight: any) => \`
+              <div class="insight \${insight.priority}">
+                <span class="priority \${insight.priority}">\${insight.priority}</span>
+                <h5>\${insight.title}</h5>
+                <p>\${insight.finding}</p>
+                <div class="evidence">
+                  <ul>
+                    \${insight.evidence.map((e: string) => \`<li>\${e}</li>\`).join('')}
+                  </ul>
+                </div>
+                <div class="recommendation">
+                  <strong>Recommendation:</strong> \${insight.recommendation}
+                </div>
+              </div>
+            \`).join('')}
+          </div>
+
+          <!-- Skill Gaps -->
+          <div class="skill-gaps">
+            <h4>Top 5 Skill Gaps (PTM Item-Level Data)</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Skill</th>
+                  <th>Your Score</th>
+                  <th>National</th>
+                  <th>Gap</th>
+                </tr>
+              </thead>
+              <tbody>
+                \${data.skillGaps.map((gap: any) => \`
+                  <tr>
+                    <td>\${gap.skill}</td>
+                    <td>\${gap.yourScore}%</td>
+                    <td>\${gap.nationalAverage}%</td>
+                    <td class="gap-\${gap.severity}">\${gap.gap}%</td>
+                  </tr>
+                \`).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Progress Trajectory -->
+          <div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 20px;">
+            <h5 style="margin-bottom: 8px;">Progress Trajectory</h5>
+            <p style="font-size: 13px; color: #6b7280;">
+              <strong>Direction:</strong> \${data.progressTrajectory.direction === 'improving' ? '📈' : data.progressTrajectory.direction === 'declining' ? '📉' : '➡️'} \${data.progressTrajectory.direction}<br>
+              <strong>Rate:</strong> \${data.progressTrajectory.rate}<br>
+              <strong>Projection:</strong> \${data.progressTrajectory.projection}
+            </p>
+          </div>
+
+          <!-- Skills Analysis -->
+          <a href="/school/\${data.schoolId}/skills" style="display: block; background: #10b981; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 16px;">🎯 View Detailed Skills Analysis</a>
+
+          <!-- Dashboard Link -->
+          <a href="/dashboard" style="display: block; background: #3b82f6; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 12px;">📊 Visual Analytics Dashboard</a>
+
+          <!-- Class Drill-Down -->
+          <div class="classes-section">
+            <h5>📚 View Classes</h5>
+            <div class="class-links">
+              <a href="/class/\${data.schoolId}a" class="class-link">Class 5A</a>
+              <a href="/class/\${data.schoolId}b" class="class-link">Class 5B</a>
+              <a href="/class/\${data.schoolId}c" class="class-link">Class 5C</a>
+            </div>
+          </div>
+        </div>
+      \`;
+    }
+
+    // Load on page load
+    loadSchoolAnalysis();
+  </script>
+</body>
+</html>

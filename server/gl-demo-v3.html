@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GL Assessment - Visual Dashboard</title>
+
+  <!-- Highcharts -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-family-base);
+      background: var(--color-page-background);
+      color: var(--color-text-default);
+    }
+
+    /* ============================================
+       HAMBURGER MENU (Global Navigation)
+       ============================================ */
+    .hamburger-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .hamburger-menu h1 {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      order: 2;
+    }
+
+    .menu-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      order: 1;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: -300px;
+      width: 300px;
+      height: calc(100vh - 60px);
+      background: white;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      z-index: 999;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 998;
+    }
+
+    .sidebar-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .sidebar nav {
+      padding: 20px 0;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #6b7280;
+      padding: 0 24px 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: #1f2937;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-link:hover {
+      background: #f3f4f6;
+    }
+
+    .nav-link.active {
+      background: #eff6ff;
+      color: #d946ef;
+      border-right: 3px solid #d946ef;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    body {
+      padding-top: 84px !important;
+      padding-left: 24px;
+      padding-right: 24px;
+      padding-bottom: 24px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    /* Filter Pills */
+    .filter-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill:hover {
+      border-color: #d946ef;
+      color: #d946ef;
+    }
+
+    .pill.active {
+      background: #d946ef;
+      color: white;
+      border-color: #d946ef;
+    }
+
+    select.pill-select {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b7280;
+      cursor: pointer;
+      outline: none;
+    }
+
+    select.pill-select:focus {
+      border-color: #d946ef;
+      color: #d946ef;
+    }
+
+    /* School Cards */
+    .schools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+
+    .school-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .school-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .school-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .school-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-amber {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-green {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    /* Metrics Grid */
+    .metrics-compact {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .metric-compact {
+      text-align: center;
+    }
+
+    .metric-compact-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .metric-compact-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #d946ef;
+    }
+
+    .metric-compact-change {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .metric-compact-change.positive {
+      color: #10b981;
+    }
+
+    .metric-compact-change.negative {
+      color: #dc2626;
+    }
+
+    /* Mini Chart */
+    .mini-chart {
+      height: 150px;
+      margin-bottom: 16px;
+    }
+
+    /* Demographics Badges */
+    .demographics-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .demographics-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .demographics-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .demo-badge {
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .demo-badge.fsm {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .demo-badge.eal {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .demo-badge.send {
+      background: #fce7f3;
+      color: #9f1239;
+    }
+
+    .demo-badge.gender {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    /* Classes Tree */
+    .classes-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .classes-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .classes-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .class-link {
+      padding: 10px 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .class-link:hover {
+      background: #eff6ff;
+      color: #d946ef;
+    }
+
+    .class-icon {
+      font-size: 16px;
+    }
+
+    /* Group Analysis Section */
+    .group-analysis {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .group-analysis h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .group-analysis-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .analysis-card {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .analysis-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .group-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .group-stat {
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .group-stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .group-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #d946ef;
+    }
+
+    .group-stat-count {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .gap-indicator {
+      padding: 8px 12px;
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #92400e;
+    }
+
+    .gap-indicator.positive {
+      background: #d1fae5;
+      border-left-color: #10b981;
+      color: #065f46;
+    }
+
+    .gap-indicator.negative {
+      background: #fee2e2;
+      border-left-color: #dc2626;
+      color: #991b1b;
+    }
+
+    @media (max-width: 768px) {
+      .schools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-compact {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .classes-list {
+        grid-template-columns: 1fr;
+      }
+
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .group-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HAMBURGER MENU -->
+  <div class="hamburger-menu">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <h1>
+      <span>📊</span>
+      GL Assessment Analytics
+    </h1>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <nav>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="/" class="nav-link">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard Home</span>
+        </a>
+        <a href="/mat" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>MAT Overview</span>
+        </a>
+        <a href="/gl" class="nav-link active">
+          <span class="nav-icon">🎓</span>
+          <span>GL Assessment</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Analysis</div>
+        <a href="/dashboard" class="nav-link">
+          <span class="nav-icon">📈</span>
+          <span>Visual Dashboard</span>
+        </a>
+        <a href="/school/school6/skills" class="nav-link">
+          <span class="nav-icon">🎯</span>
+          <span>Skills Analysis</span>
+        </a>
+        <a href="/school/school6/strand/number-fractions" class="nav-link">
+          <span class="nav-icon">📚</span>
+          <span>Strand Drill-Down</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Schools & Classes</div>
+        <a href="/school/school6/skills" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>School A - Oakwood</span>
+        </a>
+        <a href="/school/school7/skills" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>School B - Riverside</span>
+        </a>
+        <a href="/school/school8/skills" class="nav-link">
+          <span class="nav-icon">🏫</span>
+          <span>School C - Hillside</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Tools</div>
+        <a href="/demo" class="nav-link">
+          <span class="nav-icon">🤖</span>
+          <span>AI Insights</span>
+        </a>
+        <a href="/hackathon" class="nav-link">
+          <span class="nav-icon">🚀</span>
+          <span>Original Demo</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <div class="header">
+      <h1>GL Assessment - School Insights</h1>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <span class="filter-label">Term:</span>
+      <select class="pill-select" id="termSelect" onchange="updateDashboard()">
+        <option value="autumn-2024">Autumn 2024</option>
+        <option value="summer-2024">Summer 2024</option>
+        <option value="spring-2024">Spring 2024</option>
+        <option value="autumn-2023">Autumn 2023</option>
+        <option value="summer-2023">Summer 2023</option>
+        <option value="spring-2023">Spring 2023</option>
+      </select>
+
+      <span class="filter-label">Year:</span>
+      <div class="filter-pills">
+        <div class="pill active" onclick="filterYear(5)">Year 5</div>
+        <div class="pill" onclick="filterYear(6)">Year 6</div>
+      </div>
+
+      <span class="filter-label">View:</span>
+      <div class="filter-pills">
+        <div class="pill active" onclick="filterView('all')">All Schools</div>
+        <div class="pill" onclick="filterView('concern')">Concern Only</div>
+      </div>
+    </div>
+
+    <!-- Group Analysis -->
+    <div class="group-analysis">
+      <h2>📊 Group Analysis - Demographic Trends</h2>
+      <p class="group-analysis-subtitle">Compare performance across FSM, Gender, EAL, and SEND groups</p>
+
+      <div class="analysis-grid" id="groupAnalysis">
+        <!-- Analysis cards will be inserted here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Schools Grid -->
+    <div class="schools-grid" id="schoolsGrid">
+      <!-- School cards will be inserted here by JavaScript -->
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Term-based data (last 2 academic years, 6 terms)
+    const termData = {
+      'autumn-2024': {
+        school6: { cat4: 94, ngmt: 90, ptm: -2, valueAdded: -4 },
+        school7: { cat4: 100, ngmt: 100, ptm: 0, valueAdded: 0 },
+        school8: { cat4: 105, ngmt: 112, ptm: +3, valueAdded: +7 }
+      },
+      'summer-2024': {
+        school6: { cat4: 94, ngmt: 92, ptm: -1, valueAdded: -2 },
+        school7: { cat4: 100, ngmt: 99, ptm: -1, valueAdded: -1 },
+        school8: { cat4: 105, ngmt: 110, ptm: +2, valueAdded: +5 }
+      },
+      'spring-2024': {
+        school6: { cat4: 95, ngmt: 94, ptm: -2, valueAdded: -1 },
+        school7: { cat4: 100, ngmt: 100, ptm: +1, valueAdded: 0 },
+        school8: { cat4: 105, ngmt: 108, ptm: +1, valueAdded: +3 }
+      },
+      'autumn-2023': {
+        school6: { cat4: 96, ngmt: 96, ptm: -1, valueAdded: 0 },
+        school7: { cat4: 99, ngmt: 98, ptm: 0, valueAdded: -1 },
+        school8: { cat4: 104, ngmt: 107, ptm: +2, valueAdded: +3 }
+      },
+      'summer-2023': {
+        school6: { cat4: 96, ngmt: 98, ptm: +1, valueAdded: +2 },
+        school7: { cat4: 99, ngmt: 98, ptm: -1, valueAdded: -1 },
+        school8: { cat4: 104, ngmt: 105, ptm: +1, valueAdded: +1 }
+      },
+      'spring-2023': {
+        school6: { cat4: 97, ngmt: 97, ptm: 0, valueAdded: 0 },
+        school7: { cat4: 99, ngmt: 99, ptm: +1, valueAdded: 0 },
+        school8: { cat4: 104, ngmt: 104, ptm: 0, valueAdded: 0 }
+      }
+    };
+
+    const schools = [
+      {
+        id: 'school6',
+        name: 'School A - Oakwood Primary',
+        badge: 'Concern',
+        badgeClass: 'badge-red',
+        demographics: { fsm: 54, eal: 32, send: 25, female: 48 },
+        classes: [
+          { id: 'class6a', name: '5A', teacher: 'Mrs Thompson', students: 28 },
+          { id: 'class6b', name: '5B', teacher: 'Mr Patel', students: 29 },
+          { id: 'class6c', name: '5C', teacher: 'Miss Davies', students: 30 },
+          { id: 'class6d', name: '5D', teacher: 'Mr Jones', students: 27 }
+        ]
+      },
+      {
+        id: 'school7',
+        name: 'School B - Riverside Academy',
+        badge: 'On Track',
+        badgeClass: 'badge-amber',
+        demographics: { fsm: 32, eal: 20, send: 16, female: 51 },
+        classes: [
+          { id: 'class7a', name: '5A', teacher: 'Mrs Brown', students: 28 },
+          { id: 'class7b', name: '5B', teacher: 'Mr Taylor', students: 29 },
+          { id: 'class7c', name: '5C', teacher: 'Miss Green', students: 27 },
+          { id: 'class7d', name: '5D', teacher: 'Mrs Wilson', students: 26 }
+        ]
+      },
+      {
+        id: 'school8',
+        name: 'School C - Hillside Primary',
+        badge: 'Excelling',
+        badgeClass: 'badge-green',
+        demographics: { fsm: 47, eal: 24, send: 18, female: 49 },
+        classes: [
+          { id: 'class8a', name: '5A', teacher: 'Mrs Johnson', students: 26 },
+          { id: 'class8b', name: '5B', teacher: 'Mr Williams', students: 27 },
+          { id: 'class8c', name: '5C', teacher: 'Mrs Ahmed', students: 28 },
+          { id: 'class8d', name: '5D', teacher: 'Mr Singh', students: 29 }
+        ]
+      }
+    ];
+
+    async function loadGroupAnalysis() {
+      const analysisGrid = document.getElementById('groupAnalysis');
+      analysisGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #9ca3af;">Loading demographic analysis...</div>';
+
+      try {
+        // Fetch class data for all schools to analyze demographics
+        const allClassData = [];
+        for (const school of schools) {
+          const response = await fetch(`/api/gl-assessment/school/${school.id}/classes`);
+          const result = await response.json();
+          if (result.success) {
+            allClassData.push(...result.data);
+          }
+        }
+
+        // Aggregate all students
+        const allStudents = allClassData.flatMap(cls => cls.students);
+
+        // FSM Analysis
+        const fsmStudents = allStudents.filter(s => s.demographics.fsm);
+        const nonFsmStudents = allStudents.filter(s => !s.demographics.fsm);
+        const fsmAvgNGMT = Math.round(fsmStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / fsmStudents.length);
+        const nonFsmAvgNGMT = Math.round(nonFsmStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / nonFsmStudents.length);
+        const fsmGap = nonFsmAvgNGMT - fsmAvgNGMT;
+
+        // Gender Analysis
+        const femaleStudents = allStudents.filter(s => s.demographics.gender === 'female');
+        const maleStudents = allStudents.filter(s => s.demographics.gender === 'male');
+        const femaleAvgNGMT = Math.round(femaleStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / femaleStudents.length);
+        const maleAvgNGMT = Math.round(maleStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / maleStudents.length);
+        const genderGap = maleAvgNGMT - femaleAvgNGMT;
+
+        // EAL Analysis
+        const ealStudents = allStudents.filter(s => s.demographics.eal);
+        const nonEalStudents = allStudents.filter(s => !s.demographics.eal);
+        const ealAvgNGMT = Math.round(ealStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / ealStudents.length);
+        const nonEalAvgNGMT = Math.round(nonEalStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / nonEalStudents.length);
+        const ealGap = nonEalAvgNGMT - ealAvgNGMT;
+
+        // SEND Analysis
+        const sendStudents = allStudents.filter(s => s.demographics.send);
+        const nonSendStudents = allStudents.filter(s => !s.demographics.send);
+        const sendAvgNGMT = Math.round(sendStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / sendStudents.length);
+        const nonSendAvgNGMT = Math.round(nonSendStudents.reduce((sum, s) => sum + s.ngmt.sas, 0) / nonSendStudents.length);
+        const sendGap = nonSendAvgNGMT - sendAvgNGMT;
+
+        // Render analysis cards
+        analysisGrid.innerHTML = `
+          <!-- FSM Analysis -->
+          <div class="analysis-card">
+            <div class="analysis-card-title">
+              <span>🍽️</span>
+              <span>Free School Meals (FSM)</span>
+            </div>
+            <div class="group-comparison">
+              <div class="group-stat">
+                <div class="group-stat-label">FSM Students</div>
+                <div class="group-stat-value">${fsmAvgNGMT}</div>
+                <div class="group-stat-count">${fsmStudents.length} students</div>
+              </div>
+              <div class="group-stat">
+                <div class="group-stat-label">Non-FSM</div>
+                <div class="group-stat-value">${nonFsmAvgNGMT}</div>
+                <div class="group-stat-count">${nonFsmStudents.length} students</div>
+              </div>
+            </div>
+            <div class="gap-indicator ${fsmGap > 10 ? 'negative' : (fsmGap > 5 ? '' : 'positive')}">
+              ${fsmGap > 0 ? '⚠️' : '✓'} ${fsmGap} point gap (FSM ${fsmGap > 0 ? 'lower' : 'higher'})
+            </div>
+          </div>
+
+          <!-- Gender Analysis -->
+          <div class="analysis-card">
+            <div class="analysis-card-title">
+              <span>👧👦</span>
+              <span>Gender Performance</span>
+            </div>
+            <div class="group-comparison">
+              <div class="group-stat">
+                <div class="group-stat-label">Female</div>
+                <div class="group-stat-value">${femaleAvgNGMT}</div>
+                <div class="group-stat-count">${femaleStudents.length} students</div>
+              </div>
+              <div class="group-stat">
+                <div class="group-stat-label">Male</div>
+                <div class="group-stat-value">${maleAvgNGMT}</div>
+                <div class="group-stat-count">${maleStudents.length} students</div>
+              </div>
+            </div>
+            <div class="gap-indicator ${Math.abs(genderGap) > 5 ? (genderGap > 0 ? 'negative' : '') : 'positive'}">
+              ${Math.abs(genderGap) > 5 ? '⚠️' : '✓'} ${Math.abs(genderGap)} point gap (${genderGap > 0 ? 'Male higher' : 'Female higher'})
+            </div>
+          </div>
+
+          <!-- EAL Analysis -->
+          <div class="analysis-card">
+            <div class="analysis-card-title">
+              <span>🌍</span>
+              <span>English as Additional Language</span>
+            </div>
+            <div class="group-comparison">
+              <div class="group-stat">
+                <div class="group-stat-label">EAL Students</div>
+                <div class="group-stat-value">${ealAvgNGMT}</div>
+                <div class="group-stat-count">${ealStudents.length} students</div>
+              </div>
+              <div class="group-stat">
+                <div class="group-stat-label">Non-EAL</div>
+                <div class="group-stat-value">${nonEalAvgNGMT}</div>
+                <div class="group-stat-count">${nonEalStudents.length} students</div>
+              </div>
+            </div>
+            <div class="gap-indicator ${ealGap > 10 ? 'negative' : (ealGap > 5 ? '' : 'positive')}">
+              ${ealGap > 0 ? '⚠️' : '✓'} ${ealGap} point gap (EAL ${ealGap > 0 ? 'lower' : 'higher'})
+            </div>
+          </div>
+
+          <!-- SEND Analysis -->
+          <div class="analysis-card">
+            <div class="analysis-card-title">
+              <span>🎯</span>
+              <span>Special Educational Needs</span>
+            </div>
+            <div class="group-comparison">
+              <div class="group-stat">
+                <div class="group-stat-label">SEND Students</div>
+                <div class="group-stat-value">${sendAvgNGMT}</div>
+                <div class="group-stat-count">${sendStudents.length} students</div>
+              </div>
+              <div class="group-stat">
+                <div class="group-stat-label">Non-SEND</div>
+                <div class="group-stat-value">${nonSendAvgNGMT}</div>
+                <div class="group-stat-count">${nonSendStudents.length} students</div>
+              </div>
+            </div>
+            <div class="gap-indicator ${sendGap > 10 ? 'negative' : (sendGap > 5 ? '' : 'positive')}">
+              ${sendGap > 0 ? '⚠️' : '✓'} ${sendGap} point gap (SEND ${sendGap > 0 ? 'lower' : 'higher'})
+            </div>
+          </div>
+        `;
+
+      } catch (error) {
+        console.error('Error loading group analysis:', error);
+        analysisGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading demographic analysis</div>';
+      }
+    }
+
+    function updateDashboard() {
+      const term = document.getElementById('termSelect').value;
+      const grid = document.getElementById('schoolsGrid');
+      grid.innerHTML = '';
+
+      schools.forEach(school => {
+        const data = termData[term][school.id];
+        const card = createSchoolCard(school, data, term);
+        grid.appendChild(card);
+      });
+    }
+
+    function createSchoolCard(school, data, term) {
+      const card = document.createElement('div');
+      card.className = 'school-card';
+
+      // Get historical data for mini chart
+      const allTerms = ['spring-2023', 'summer-2023', 'autumn-2023', 'spring-2024', 'summer-2024', 'autumn-2024'];
+      const historicalNGMT = allTerms.map(t => termData[t][school.id].ngmt);
+      const historicalCAT4 = allTerms.map(t => termData[t][school.id].cat4);
+
+      card.innerHTML = `
+        <div class="school-header">
+          <div class="school-name">${school.name}</div>
+          <div class="school-badge ${school.badgeClass}">${school.badge}</div>
+        </div>
+
+        <div class="metrics-compact">
+          <div class="metric-compact">
+            <div class="metric-compact-label">CAT4</div>
+            <div class="metric-compact-value">${data.cat4}</div>
+          </div>
+          <div class="metric-compact">
+            <div class="metric-compact-label">NGMT</div>
+            <div class="metric-compact-value">${data.ngmt}</div>
+            <div class="metric-compact-change ${data.ptm >= 0 ? 'positive' : 'negative'}">
+              ${data.ptm >= 0 ? '+' : ''}${data.ptm} vs prev
+            </div>
+          </div>
+          <div class="metric-compact">
+            <div class="metric-compact-label">VA</div>
+            <div class="metric-compact-value">${data.valueAdded >= 0 ? '+' : ''}${data.valueAdded}</div>
+          </div>
+          <div class="metric-compact">
+            <div class="metric-compact-label">PTM</div>
+            <div class="metric-compact-value">${data.ptm >= 0 ? '+' : ''}${data.ptm}</div>
+          </div>
+        </div>
+
+        <div class="mini-chart" id="chart-${school.id}"></div>
+
+        <div class="demographics-section">
+          <div class="demographics-title">👥 Demographics</div>
+          <div class="demographics-badges">
+            <div class="demo-badge fsm">
+              <span>🍽️</span>
+              <span>FSM ${school.demographics.fsm}%</span>
+            </div>
+            <div class="demo-badge eal">
+              <span>🌍</span>
+              <span>EAL ${school.demographics.eal}%</span>
+            </div>
+            <div class="demo-badge send">
+              <span>🎯</span>
+              <span>SEND ${school.demographics.send}%</span>
+            </div>
+            <div class="demo-badge gender">
+              <span>👧</span>
+              <span>Female ${school.demographics.female}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="classes-section">
+          <div class="classes-title">📂 Classes (${school.classes.length})</div>
+          <div class="classes-list">
+            ${school.classes.map(cls => `
+              <a href="/class/${cls.id}" class="class-link">
+                <span class="class-icon">👥</span>
+                <span>${cls.name} - ${cls.teacher} (${cls.students})</span>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // Render mini chart after DOM insertion
+      setTimeout(() => {
+        Highcharts.chart(`chart-${school.id}`, {
+          chart: {
+            type: 'line',
+            height: 150,
+            backgroundColor: 'transparent'
+          },
+          title: {
+            text: null
+          },
+          credits: {
+            enabled: false
+          },
+          xAxis: {
+            categories: ['Spr 23', 'Sum 23', 'Aut 23', 'Spr 24', 'Sum 24', 'Aut 24'],
+            labels: {
+              style: {
+                fontSize: '10px'
+              }
+            }
+          },
+          yAxis: {
+            title: {
+              text: null
+            },
+            min: 80,
+            max: 120,
+            labels: {
+              style: {
+                fontSize: '10px'
+              }
+            }
+          },
+          legend: {
+            enabled: false
+          },
+          plotOptions: {
+            line: {
+              marker: {
+                enabled: true,
+                radius: 3
+              }
+            }
+          },
+          series: [{
+            name: 'NGMT',
+            data: historicalNGMT,
+            color: school.badgeClass === 'badge-red' ? '#dc2626' : (school.badgeClass === 'badge-green' ? '#10b981' : '#f59e0b'),
+            lineWidth: 2
+          }, {
+            name: 'CAT4',
+            data: historicalCAT4,
+            color: '#9ca3af',
+            dashStyle: 'Dash',
+            lineWidth: 1
+          }],
+          tooltip: {
+            shared: true,
+            valueSuffix: ' SAS'
+          }
+        });
+      }, 100);
+
+      return card;
+    }
+
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible');
+    }
+
+    function filterYear(year) {
+      // Placeholder for year filtering
+      document.querySelectorAll('.filter-pills .pill').forEach(p => {
+        if (p.textContent.includes('Year')) {
+          p.classList.remove('active');
+        }
+      });
+      event.target.classList.add('active');
+    }
+
+    function filterView(view) {
+      // Placeholder for view filtering
+      document.querySelectorAll('.filter-pills .pill').forEach(p => {
+        if (p.textContent.includes('All') || p.textContent.includes('Concern')) {
+          p.classList.remove('active');
+        }
+      });
+      event.target.classList.add('active');
+    }
+
+    // Close sidebar when clicking a link (on mobile)
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          toggleMenu();
+        }
+      });
+    });
+
+    // Initial load
+    updateDashboard();
+    loadGroupAnalysis();
+  </script>
+</body>
+</html>

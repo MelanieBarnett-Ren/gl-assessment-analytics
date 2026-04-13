@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Insights Demo - Horizon Academy Trust</title>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-family-base);
+      background: var(--color-page-background);
+      padding: 0;
+      color: var(--color-text-default);
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .header .tagline {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    /* Problem Statement */
+    .problem-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .problem-box h3 {
+      color: #856404;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+    .problem-box p {
+      color: #856404;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    /* School Cards */
+    .schools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .school-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+      border-left: 6px solid transparent;
+    }
+    .school-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .school-card.urgent { border-left-color: #dc2626; }
+    .school-card.stable { border-left-color: #3b82f6; }
+    .school-card.improving { border-left-color: #10b981; }
+
+    .school-card h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+    .school-card .demographics {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+    .school-card .score {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .school-card .score.low { color: #dc2626; }
+    .school-card .score.average { color: #3b82f6; }
+    .school-card .score.high { color: #10b981; }
+    .school-card .trend {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .trend.declining { background: #fee2e2; color: #991b1b; }
+    .trend.stable { background: #e5e7eb; color: #374151; }
+    .trend.improving { background: #d1fae5; color: #065f46; }
+
+    .school-card button {
+      width: 100%;
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .school-card button:hover {
+      background: #5568d3;
+      transform: scale(1.02);
+    }
+
+    /* Big Action Button */
+    .big-action {
+      text-align: center;
+      margin: 50px 0;
+      padding: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    }
+    .big-action h2 {
+      color: white;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    .big-action p {
+      color: rgba(255,255,255,0.9);
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+    .big-action button {
+      background: white;
+      color: #667eea;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .big-action button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Results */
+    .results {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      margin-top: 40px;
+      display: none;
+    }
+    .results.visible {
+      display: block;
+      animation: slideIn 0.5s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .results h2 {
+      color: #667eea;
+      font-size: 24px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid #e9d8fd;
+    }
+    .insight {
+      background: #faf9fb;
+      border-left: 6px solid #667eea;
+      padding: 24px;
+      margin-bottom: 24px;
+      border-radius: 8px;
+    }
+    .insight.critical { border-left-color: #dc2626; background: #fef2f2; }
+    .insight.positive { border-left-color: #10b981; background: #f0fdf4; }
+    .insight h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+    .insight p {
+      line-height: 1.7;
+      color: #374151;
+      margin-bottom: 12px;
+    }
+    .insight .highlight {
+      background: #fef3c7;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: #92400e;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 60px;
+    }
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #e9d8fd;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loading p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+
+    /* Timer */
+    .timer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      display: none;
+    }
+    .timer.visible {
+      display: block;
+    }
+
+    /* Tooltips */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted #667eea;
+      cursor: help;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 280px;
+      background-color: #1f2937;
+      color: #fff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 12px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -140px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 13px;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #1f2937 transparent transparent transparent;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Timer (hidden by default) -->
+  <div class="timer" id="timer">
+    ⏱️ <span id="timerValue">0.0</span>s
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>🏫 Horizon Academy Trust - AI Insights Demo</h1>
+    <p class="tagline">Automatic analysis of assessment data with AI-powered recommendations</p>
+  </div>
+
+  <div class="container">
+    <!-- Problem Statement -->
+    <div class="problem-box">
+      <h3>⏰ The Problem: Manual Analysis Takes 20-30 Minutes</h3>
+      <p>
+        School leaders have assessment data, but it takes 20-30 minutes to manually analyse charts,
+        compare to similar schools, identify skill-level gaps, and decide on actions.
+        <strong>Our AI does this automatically in seconds.</strong>
+      </p>
+    </div>
+
+    <!-- School Cards -->
+    <div class="schools-grid">
+      <div class="school-card urgent">
+        <h3>School A</h3>
+        <div class="demographics">
+          <span class="tooltip">52% FSM<span class="tooltiptext">Free School Meals: Percentage of students eligible for free school meals, indicating economic disadvantage</span></span> |
+          <span class="tooltip">28% EAL<span class="tooltiptext">English as an Additional Language: Percentage of students for whom English is not their first language</span></span> |
+          <span class="tooltip">21% SEND<span class="tooltiptext">Special Educational Needs and Disabilities: Percentage of students with identified special educational needs</span></span> | 145 students
+        </div>
+        <div class="score low"><span class="tooltip">SAS 92<span class="tooltiptext">Standard Age Score: National average is 100. Scores of 85-115 represent the middle 68% of students. Below 85 indicates well below average.</span></span></div>
+        <span class="trend declining">📉 <span class="tooltip">Declining<span class="tooltiptext">Performance trend: School's scores have decreased over recent assessment periods</span></span></span>
+        <p style="font-size: 14px; color: #6b7280; margin-bottom: 16px;">
+          Below national average, showing decline over last term
+        </p>
+        <button onclick="analyzeSchool('school6')">🔍 Analyse School A</button>
+      </div>
+
+      <div class="school-card stable">
+        <h3>School B</h3>
+        <div class="demographics">
+          <span class="tooltip">32% FSM<span class="tooltiptext">Free School Meals: Percentage of students eligible for free school meals, indicating economic disadvantage</span></span> |
+          <span class="tooltip">14% EAL<span class="tooltiptext">English as an Additional Language: Percentage of students for whom English is not their first language</span></span> |
+          <span class="tooltip">15% SEND<span class="tooltiptext">Special Educational Needs and Disabilities: Percentage of students with identified special educational needs</span></span> | 198 students
+        </div>
+        <div class="score average"><span class="tooltip">SAS 100<span class="tooltiptext">Standard Age Score: National average is 100. Scores of 85-115 represent the middle 68% of students.</span></span></div>
+        <span class="trend stable">➡️ <span class="tooltip">Stable<span class="tooltiptext">Performance trend: School's scores have remained consistent over recent assessment periods</span></span></span>
+        <p style="font-size: 14px; color: #6b7280; margin-bottom: 16px;">
+          National average, consistent performance
+        </p>
+        <button onclick="analyzeSchool('school7')">🔍 Analyse School B</button>
+      </div>
+
+      <div class="school-card improving">
+        <h3>School C</h3>
+        <div class="demographics">
+          <span class="tooltip">48% FSM<span class="tooltiptext">Free School Meals: Percentage of students eligible for free school meals, indicating economic disadvantage</span></span> |
+          <span class="tooltip">25% EAL<span class="tooltiptext">English as an Additional Language: Percentage of students for whom English is not their first language</span></span> |
+          <span class="tooltip">19% SEND<span class="tooltiptext">Special Educational Needs and Disabilities: Percentage of students with identified special educational needs</span></span> | 156 students
+        </div>
+        <div class="score high"><span class="tooltip">SAS 105<span class="tooltiptext">Standard Age Score: National average is 100. Scores of 85-115 represent the middle 68% of students. Above 115 indicates well above average.</span></span></div>
+        <span class="trend improving">📈 <span class="tooltip">Improving<span class="tooltiptext">Performance trend: School's scores have increased over recent assessment periods</span></span></span>
+        <p style="font-size: 14px; color: #6b7280; margin-bottom: 16px;">
+          Similar demographics to School A but 13 points higher!
+        </p>
+        <button onclick="analyzeSchool('school8')">🔍 Analyse School C</button>
+      </div>
+    </div>
+
+    <!-- Big Action Button -->
+    <div class="big-action">
+      <h2>🤖 AI Insights Demo</h2>
+      <p>Click below to automatically analyse all schools and generate AI-powered insights in seconds</p>
+      <button onclick="generateAllInsights()">✨ Generate AI Insights for All Schools</button>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+      <!-- Dynamically populated -->
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3001';
+    let timerInterval;
+    let startTime;
+
+    function startTimer() {
+      startTime = Date.now();
+      document.getElementById('timer').classList.add('visible');
+      timerInterval = setInterval(() => {
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        document.getElementById('timerValue').textContent = elapsed;
+      }, 100);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+      document.getElementById('timer').classList.remove('visible');
+      return elapsed;
+    }
+
+    async function generateAllInsights() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="loading"><div class="spinner"></div><p>🤖 AI analysing assessment data for all schools...</p></div>';
+      results.classList.add('visible');
+
+      startTimer();
+
+      try {
+        // Generate insights for all 3 schools
+        const schools = [
+          { id: 'school6', name: 'School A' },
+          { id: 'school7', name: 'School B' },
+          { id: 'school8', name: 'School C' },
+        ];
+
+        let html = '<h2>🎯 AI-Generated Insights</h2>';
+
+        for (const school of schools) {
+          const response = await fetch(\`\${API_BASE}/api/insights/school/\${school.id}/assessment123\`);
+          const data = await response.json();
+
+          if (data.success && data.data.insights.length > 0) {
+            const insight = data.data.insights[0];  // Show first insight
+
+            const severityClass = insight.severity === 'critical' ? 'critical' :
+                                 insight.severity === 'positive' ? 'positive' : '';
+
+            html += \`
+              <div class="insight \${severityClass}">
+                <h3>\${school.name}: \${insight.title}</h3>
+                <p>\${insight.summary}</p>
+                <p>\${insight.detailedAnalysis.substring(0, 400)}...</p>
+                \${insight.recommendations.length > 0 ? \`
+                  <p><strong>💡 Recommendation:</strong> \${insight.recommendations[0].title} - \${insight.recommendations[0].description}</p>
+                \` : ''}
+              </div>
+            \`;
+          }
+        }
+
+        const elapsed = stopTimer();
+        html += \`<p style="text-align: center; color: #10b981; font-size: 18px; font-weight: 600; margin-top: 30px;">
+          ✅ Analysis complete in \${elapsed} seconds (vs. 20-30 minutes manually)
+        </p>\`;
+
+        results.innerHTML = html;
+
+      } catch (error) {
+        const elapsed = stopTimer();
+        results.innerHTML = \`
+          <div class="insight critical">
+            <h3>⚠️ Error</h3>
+            <p>Failed to generate insights: \${error.message}</p>
+            <p>Make sure the server is running and Claude API key is set in .env</p>
+          </div>
+        \`;
+      }
+    }
+
+    async function analyzeSchool(schoolId) {
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="loading"><div class="spinner"></div><p>🤖 AI analysing school data...</p></div>';
+      results.classList.add('visible');
+
+      startTimer();
+
+      try {
+        const response = await fetch(\`\${API_BASE}/api/insights/school/\${schoolId}/assessment123\`);
+        const data = await response.json();
+
+        const elapsed = stopTimer();
+
+        if (data.success) {
+          const panel = data.data;
+          let html = \`
+            <h2>🎯 AI Insights: \${schoolId === 'school6' ? 'School A' : schoolId === 'school7' ? 'School B' : 'School C'}</h2>
+            <p style="color: #6b7280; margin-bottom: 24px;">
+              Generated in <strong>\${elapsed}s</strong> |
+              Found <strong>\${panel.summary.significantGaps}</strong> significant gaps |
+              Compared to <strong>\${panel.summary.totalComparisons}</strong> similar schools
+            </p>
+          \`;
+
+          panel.insights.slice(0, 3).forEach((insight, idx) => {
+            const severityClass = insight.severity === 'critical' ? 'critical' :
+                                 insight.severity === 'positive' ? 'positive' : '';
+
+            html += \`
+              <div class="insight \${severityClass}">
+                <h3>\${idx + 1}. \${insight.title}</h3>
+                <p>\${insight.summary}</p>
+                <p style="white-space: pre-wrap; margin-top: 12px;">\${insight.detailedAnalysis}</p>
+                \${insight.recommendations.length > 0 ? \`
+                  <div style="background: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                    <strong>💡 Recommendations:</strong>
+                    <ul style="margin: 8px 0 0 20px;">
+                      \${insight.recommendations.map(rec => \`
+                        <li style="margin: 8px 0;">
+                          <strong>\${rec.title}:</strong> \${rec.description}
+                          \${rec.targetMetric ? \`
+                            <br><span class="highlight">Target: \${rec.targetMetric.metric} from \${rec.targetMetric.currentValue} to \${rec.targetMetric.targetValue} (\${rec.targetMetric.timeframe})</span>
+                          \` : ''}
+                        </li>
+                      \`).join('')}
+                    </ul>
+                  </div>
+                \` : ''}
+              </div>
+            \`;
+          });
+
+          results.innerHTML = html;
+        } else {
+          results.innerHTML = \`
+            <div class="insight critical">
+              <h3>⚠️ Error</h3>
+              <p>\${data.error.message}</p>
+            </div>
+          \`;
+        }
+
+      } catch (error) {
+        stopTimer();
+        results.innerHTML = \`
+          <div class="insight critical">
+            <h3>⚠️ Error</h3>
+            <p>Failed to generate insights: \${error.message}</p>
+          </div>
+        \`;
+      }
+    }
+  </script>
+</body>
+</html>

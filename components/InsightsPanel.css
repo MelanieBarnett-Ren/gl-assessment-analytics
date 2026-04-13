@@ -1,0 +1,494 @@
+/**
+ * Styles for InsightsPanel component
+ * Design system: Purple gradients, pill shapes, accessible for ages 7-11
+ */
+
+.insights-panel {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.insights-header {
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e9d8fd;
+  padding-bottom: 16px;
+}
+
+.insights-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #553c9a;
+  margin: 0 0 12px 0;
+}
+
+.insights-summary {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.insights-summary span {
+  background: #f3f4f6;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.cache-info {
+  margin-left: auto;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* Loading state */
+.insights-panel.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e9d8fd;
+  border-top-color: #7c3aed;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error state */
+.insights-panel.error {
+  background: #fef2f2;
+  border: 2px solid #fca5a5;
+  color: #991b1b;
+}
+
+.insights-panel.error h3 {
+  margin-top: 0;
+}
+
+.insights-panel.error button {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.insights-panel.error button:hover {
+  background: #b91c1c;
+}
+
+/* Empty state */
+.insights-panel.empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6b7280;
+}
+
+/* Insights list */
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Insight card */
+.insight-card {
+  background: white;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.insight-card:hover {
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.12);
+}
+
+.insight-card.expanded {
+  border-color: #7c3aed;
+}
+
+/* Severity colors */
+.insight-card.severity-critical {
+  border-left: 4px solid #dc2626;
+}
+
+.insight-card.severity-attention {
+  border-left: 4px solid #f59e0b;
+}
+
+.insight-card.severity-positive {
+  border-left: 4px solid #10b981;
+}
+
+.insight-card.severity-neutral {
+  border-left: 4px solid #6b7280;
+}
+
+.insight-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.insight-header:hover {
+  background: #faf9fb;
+}
+
+.insight-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.insight-title-section {
+  flex: 1;
+}
+
+.insight-title-section h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.insight-summary {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.expand-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #7c3aed;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.insight-card.expanded .expand-button {
+  transform: rotate(90deg);
+}
+
+/* Insight body */
+.insight-body {
+  padding: 0 20px 20px 20px;
+  border-top: 1px solid #e9d8fd;
+}
+
+.insight-body section {
+  margin-top: 20px;
+}
+
+.insight-body h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #553c9a;
+  margin: 0 0 12px 0;
+}
+
+.insight-body h5 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 12px 0 8px 0;
+}
+
+.analysis-content {
+  line-height: 1.6;
+  color: #374151;
+}
+
+.analysis-content p {
+  margin: 8px 0;
+}
+
+.analysis-content li {
+  margin: 6px 0;
+  margin-left: 20px;
+}
+
+/* Skill breakdown */
+.skill-breakdown {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.skill-breakdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+}
+
+.skill-breakdown li {
+  padding: 8px;
+  margin: 6px 0;
+  background: white;
+  border-radius: 6px;
+  border-left: 3px solid #d1d5db;
+}
+
+.skill-breakdown li.impact-high {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+}
+
+.skill-breakdown li.impact-medium {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.skill-breakdown li.impact-low {
+  border-left-color: #10b981;
+}
+
+.common-errors {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Trend info */
+.trend-info {
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.trend-improving {
+  color: #059669;
+  font-weight: 600;
+}
+
+.trend-stable {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.trend-declining {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Recommendations */
+.insight-recommendations {
+  background: #faf5ff;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.recommendation-card {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #e9d8fd;
+}
+
+.recommendation-card:last-child {
+  margin-bottom: 0;
+}
+
+.recommendation-card h5 {
+  margin: 0 0 8px 0;
+  color: #553c9a;
+  font-size: 15px;
+}
+
+.recommendation-card p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.recommendation-card .rationale {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.target-metric {
+  background: #ede9fe;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #5b21b6;
+}
+
+.peer-example {
+  background: #ecfdf5;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  border-left: 3px solid #10b981;
+}
+
+.peer-example strong {
+  color: #065f46;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.peer-example p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #047857;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.action-button {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background: #6d28d9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(124, 58, 237, 0.3);
+}
+
+.action-button.contact_peer {
+  background: #10b981;
+}
+
+.action-button.contact_peer:hover {
+  background: #059669;
+}
+
+.action-button.create_plan {
+  background: #f59e0b;
+}
+
+.action-button.create_plan:hover {
+  background: #d97706;
+}
+
+/* Comparison cohorts */
+.comparison-cohorts {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.comparison-cohorts ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+}
+
+.comparison-cohorts li {
+  padding: 12px;
+  margin: 8px 0;
+  background: white;
+  border-radius: 6px;
+  border-left: 3px solid #7c3aed;
+}
+
+.comparison-cohorts small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* Footer */
+.insights-footer {
+  background: #fffbeb;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 3px solid #f59e0b;
+}
+
+.insights-footer p {
+  margin: 0;
+  font-size: 13px;
+  color: #92400e;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .insights-panel {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .insights-header h2 {
+    font-size: 20px;
+  }
+
+  .insights-summary {
+    font-size: 12px;
+  }
+
+  .insight-header {
+    padding: 16px;
+  }
+
+  .insight-title-section h3 {
+    font-size: 16px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .insight-card {
+    border: 2px solid #000;
+  }
+
+  .insight-header:hover {
+    background: #e5e7eb;
+  }
+}
