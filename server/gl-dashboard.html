@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GL Assessment Dashboard - Visual Analytics</title>
 
+  <!-- Preconnect to Google Fonts for faster loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Inter Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+
   <!-- Highcharts -->
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/heatmap.js"></script>
@@ -15,6 +22,9 @@
 
   <!-- Global Stylesheet -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- PDF Export -->
+  <link rel="stylesheet" href="pdf-export.css">
 
   <style>
     body {
@@ -608,7 +618,7 @@
       chart: {
         backgroundColor: '#ffffff',
         style: {
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
         }
       },
       title: {
@@ -1040,5 +1050,7 @@
       });
     });
   </script>
+  <!-- PDF Export Script -->
+  <script src="pdf-export.js"></script>
 </body>
 </html>

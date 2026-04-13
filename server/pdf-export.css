@@ -1,0 +1,493 @@
+/**
+ * PDF Export Button & Modal Styles
+ */
+
+/* ============================================
+   FLOATING ACTION BUTTON
+   ============================================ */
+
+#pdf-export-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+}
+
+.pdf-fab-wrapper {
+  position: relative;
+}
+
+.pdf-fab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+  transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.pdf-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+}
+
+.pdf-fab:active {
+  transform: translateY(0);
+}
+
+.pdf-fab svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pdf-fab-text {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================
+   DROPDOWN MENU
+   ============================================ */
+
+.pdf-menu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pdf-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pdf-menu-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.pdf-menu-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.pdf-menu-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1f2937;
+}
+
+.pdf-menu-content {
+  padding: 8px;
+}
+
+.pdf-menu-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 4px;
+  text-align: left;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.pdf-menu-item:hover {
+  background: #f9fafb;
+  border-color: #d946ef;
+}
+
+.pdf-menu-item svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #a855f7;
+}
+
+.pdf-menu-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.pdf-menu-item-desc {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+
+.pdf-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pdf-modal-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.pdf-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pdf-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.pdf-modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.pdf-modal-close:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.pdf-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.pdf-modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 0 0 16px 16px;
+}
+
+/* ============================================
+   PAGE SELECTOR
+   ============================================ */
+
+.pdf-checkbox-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pdf-text-btn {
+  background: none;
+  border: none;
+  color: #a855f7;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.pdf-text-btn:hover {
+  background: #f3f4f6;
+  color: #d946ef;
+}
+
+.pdf-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pdf-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f9fafb;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.pdf-checkbox-item:hover {
+  background: #f3f4f6;
+  border-color: #d946ef;
+}
+
+.pdf-checkbox-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #a855f7;
+}
+
+.pdf-checkbox-item span {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.pdf-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.pdf-btn-primary {
+  background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+  color: white;
+}
+
+.pdf-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+}
+
+.pdf-btn-secondary {
+  background: white;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.pdf-btn-secondary:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #1f2937;
+}
+
+/* ============================================
+   PROGRESS MODAL
+   ============================================ */
+
+.pdf-progress-content {
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+}
+
+.pdf-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f4f6;
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#pdf-progress-message {
+  font-size: 16px;
+  color: #1f2937;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  /* Hide PDF export button when printing */
+  #pdf-export-container,
+  .pdf-fab-wrapper,
+  .pdf-fab,
+  .pdf-menu {
+    display: none !important;
+  }
+
+  /* Hide navigation menus when printing */
+  .hamburger-menu,
+  .sidebar,
+  .sidebar-overlay,
+  .menu-toggle {
+    display: none !important;
+  }
+
+  /* Adjust body padding for print */
+  body {
+    padding-top: 0 !important;
+  }
+
+  /* Ensure charts and visualizations are visible */
+  .chart-card,
+  .dashboard-grid,
+  .summary-cards {
+    break-inside: avoid;
+  }
+
+  /* Add page breaks before major sections */
+  .section-break {
+    page-break-before: always;
+  }
+
+  /* Optimize colors for print */
+  body {
+    background: white !important;
+  }
+
+  /* Ensure links are visible */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #6b7280;
+  }
+
+  a[href^="/"]:after,
+  a[href^="#"]:after {
+    content: "";
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .pdf-fab {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .pdf-fab-text {
+    display: none;
+  }
+
+  .pdf-menu {
+    width: calc(100vw - 48px);
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .pdf-modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .pdf-modal-header,
+  .pdf-modal-body,
+  .pdf-modal-footer {
+    padding: 16px;
+  }
+
+  #pdf-export-container {
+    bottom: 16px;
+    right: 16px;
+  }
+}
