@@ -109,7 +109,7 @@ app.get('/api/insights/:viewLevel/:cohortId/:assessmentId', async (req, res) => 
     // Detect outliers with relaxed mode to ensure we always get skill-level insights
     const outliers = detectOutliers(
       targetCohort.assessment.skillDomainScores,
-      similarCohorts.map(c => ({ skills: c.assessment.skillDomainScores })),
+      similarCohorts.map((c: any) => ({ skills: c.assessment.skillDomainScores })),
       {
         minEffectSize: 0.5,
         minZScore: 1.5,
@@ -135,7 +135,7 @@ app.get('/api/insights/:viewLevel/:cohortId/:assessmentId', async (req, res) => 
           assessment: targetCohort.assessment,
           demographics: targetCohort.demographics,
         },
-        similarCohorts: similarCohorts.map(sc => ({
+        similarCohorts: similarCohorts.map((sc: any) => ({
           cohortId: sc.cohortId,
           cohortName: sc.cohortName,
           assessment: sc.assessment,
@@ -338,7 +338,7 @@ app.get('/api/gl-assessment/all', (req, res) => {
     console.error('Error generating GL Assessment insights:', error);
     res.status(500).json({
       success: false,
-      error: { message: error.message },
+      error: { message: error instanceof Error ? error.message : 'Unknown error' },
     });
   }
 });
@@ -362,7 +362,7 @@ app.get('/api/gl-assessment/school/:schoolId/classes', (req, res) => {
     console.error('Error getting class data:', error);
     res.status(500).json({
       success: false,
-      error: { message: error.message },
+      error: { message: error instanceof Error ? error.message : 'Unknown error' },
     });
   }
 });
@@ -393,7 +393,7 @@ app.get('/api/gl-assessment/class/:classId', (req, res) => {
     console.error('Error getting class data:', error);
     res.status(500).json({
       success: false,
-      error: { message: error.message },
+      error: { message: error instanceof Error ? error.message : 'Unknown error' },
     });
   }
 });
@@ -941,7 +941,7 @@ function generateMockInsightPanel(
 
     // Skill domain analysis - find weakest domain
     const weakestDomain = targetCohort.assessment.skillDomainScores
-      .reduce((min, skill) => skill.score < min.score ? skill : min);
+      .reduce((min: any, skill: any) => skill.score < min.score ? skill : min);
 
     if (weakestDomain.score < 50) {
       mockInsights.push({
@@ -959,7 +959,7 @@ function generateMockInsightPanel(
           `• Score: ${weakestDomain.score}%\n` +
           `• Items Correct: ${weakestDomain.itemsCorrect}/${weakestDomain.itemsAttempted}\n\n` +
           `Skill Breakdown:\n` +
-          weakestDomain.skillBreakdown.map(sb => `• ${sb.skill}: ${sb.score}%`).join('\n'),
+          weakestDomain.skillBreakdown.map((sb: any) => `• ${sb.skill}: ${sb.score}%`).join('\n'),
         evidence: {
           currentPerformance: weakestDomain.score,
           isSignificant: true,

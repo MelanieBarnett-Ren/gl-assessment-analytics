@@ -51,7 +51,7 @@ export class AIService {
 
     this.config = {
       apiKey: config.apiKey,
-      awsRegion: config.awsRegion,
+      awsRegion: config.awsRegion || 'us-east-1',
       awsAccessKeyId: config.awsAccessKeyId,
       awsSecretAccessKey: config.awsSecretAccessKey,
       awsSessionToken: config.awsSessionToken,
@@ -71,7 +71,7 @@ export class AIService {
     const userPrompt = this.buildPromptForViewLevel(context);
 
     try {
-      const response = await this.client.messages.create({
+      const response = await (this.client as any).messages.create({
         model: this.config.model,
         max_tokens: this.config.maxTokens,
         temperature: this.config.temperature,
@@ -93,7 +93,7 @@ export class AIService {
       });
 
       // Extract text content
-      const textContent = response.content.find(c => c.type === 'text');
+      const textContent = response.content.find((c: any) => c.type === 'text');
       if (!textContent || textContent.type !== 'text') {
         throw new Error('No text content in Claude response');
       }
@@ -163,7 +163,7 @@ export class AIService {
     const prompt = generateMisconceptionPrompt(skill, studentErrors, correctAnswer);
 
     try {
-      const response = await this.client.messages.create({
+      const response = await (this.client as any).messages.create({
         model: this.config.model,
         max_tokens: 2048,
         temperature: this.config.temperature,
@@ -176,7 +176,7 @@ export class AIService {
         ],
       });
 
-      const textContent = response.content.find(c => c.type === 'text');
+      const textContent = response.content.find((c: any) => c.type === 'text');
       if (!textContent || textContent.type !== 'text') {
         throw new Error('No text content in Claude response');
       }
