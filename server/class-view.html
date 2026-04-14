@@ -1036,14 +1036,19 @@
 
       // Value Added Analysis
       html += '<div class="value-added-section ' + vaClass + '">';
-      html += '  <h2>Value-Added Analysis</h2>';
+      html += '  <h2 style="display: flex; align-items: center; gap: 8px;">';
+      html += '    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">';
+      html += '      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />';
+      html += '    </svg>';
+      html += '    Value-Added Analysis';
+      html += '  </h2>';
       html += '  <div class="va-score ' + vaClass + '">' + (summary.valueAdded > 0 ? '+' : '') + summary.valueAdded + ' SAS</div>';
       if (summary.valueAdded < -2) {
-        html += '  <p><strong>⚠️ CONCERN:</strong> Class underachieving vs. cognitive ability</p>';
+        html += '  <p><strong>CONCERN:</strong> Class underachieving vs. cognitive ability</p>';
       } else if (summary.valueAdded > 2) {
-        html += '  <p><strong>✅ EXCELLENT:</strong> Class exceeding cognitive ability predictions</p>';
+        html += '  <p><strong>EXCELLENT:</strong> Class exceeding cognitive ability predictions</p>';
       } else {
-        html += '  <p><strong>➡️ AS EXPECTED:</strong> Class working to potential</p>';
+        html += '  <p><strong>AS EXPECTED:</strong> Class working to potential</p>';
       }
       html += '</div>';
 
@@ -1056,9 +1061,24 @@
 
       // Tabs
       html += '<div class="tabs">';
-      html += '  <button class="tab active" onclick="switchTab(\'focus\')">👥 Focus Groups</button>';
-      html += '  <button class="tab" onclick="switchTab(\'interventions\')">🎯 Interventions</button>';
-      html += '  <button class="tab" onclick="switchTab(\'students\')">📊 Student Data & Performance</button>';
+      html += '  <button class="tab active" onclick="switchTab(\'focus\')">';
+      html += '    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px;">';
+      html += '      <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />';
+      html += '    </svg>';
+      html += '    Focus Groups';
+      html += '  </button>';
+      html += '  <button class="tab" onclick="switchTab(\'interventions\')">';
+      html += '    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px;">';
+      html += '      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />';
+      html += '    </svg>';
+      html += '    Interventions';
+      html += '  </button>';
+      html += '  <button class="tab" onclick="switchTab(\'students\')">';
+      html += '    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px;">';
+      html += '      <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />';
+      html += '    </svg>';
+      html += '    Student Data & Performance';
+      html += '  </button>';
       html += '</div>';
 
       // Tab 1: Focus Groups
@@ -1091,7 +1111,13 @@
 
       // Tab 2: Interventions
       html += '<div id="interventions-tab" class="tab-content">';
-      html += '  <h2>🎯 Intervention Groups <span style="font-size: 14px; font-weight: 400; color: var(--color-50);">(Students grouped by similar skill needs)</span></h2>';
+      html += '  <h2 style="display: flex; align-items: center; gap: 8px;">';
+      html += '    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">';
+      html += '      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />';
+      html += '    </svg>';
+      html += '    Intervention Groups';
+      html += '    <span style="font-size: 14px; font-weight: 400; color: var(--color-50);">(Students grouped by similar skill needs)</span>';
+      html += '  </h2>';
       html += '  <p style="color: var(--color-50); margin-bottom: 20px; font-size: 14px;">Take action with small groups of students who need the same intervention</p>';
       html += '  <div id="interventionGroupsContainer"></div>';
       html += '</div>';
@@ -1102,22 +1128,37 @@
       html += '    <h2><span class="tooltip">Performance Status (RAG)<span class="tooltiptext">Students grouped by SAS scores: Red (<90 = concern), Amber (90-110 = expected), Green (>110 = exceeding)</span></span></h2>';
       html += '    <div class="focus-grid">';
       html += '      <div class="focus-card rag-red clickable" onclick="filterByRAG(\'red\')" title="Click to filter students needing support">';
-      html += '        <h3>🔴 Needing Support</h3>';
+      html += '        <h3 style="display: flex; align-items: center; gap: 6px;">';
+      html += '          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">';
+      html += '            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />';
+      html += '          </svg>';
+      html += '          Needing Support';
+      html += '        </h3>';
       html += '        <div class="count">' + ragCounts.red + '</div>';
       html += '        <p style="font-size: 12px; margin-top: 8px;">SAS < 90</p>';
-      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to filter</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">Click to filter</p>';
       html += '      </div>';
       html += '      <div class="focus-card rag-amber clickable" onclick="filterByRAG(\'amber\')" title="Click to filter students performing as expected">';
-      html += '        <h3>🟡 As Expected</h3>';
+      html += '        <h3 style="display: flex; align-items: center; gap: 6px;">';
+      html += '          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">';
+      html += '            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />';
+      html += '          </svg>';
+      html += '          As Expected';
+      html += '        </h3>';
       html += '        <div class="count">' + ragCounts.amber + '</div>';
       html += '        <p style="font-size: 12px; margin-top: 8px;">SAS 90-110</p>';
-      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to filter</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">Click to filter</p>';
       html += '      </div>';
       html += '      <div class="focus-card rag-green clickable" onclick="filterByRAG(\'green\')" title="Click to filter high achievers">';
-      html += '        <h3>🟢 High Achievers</h3>';
+      html += '        <h3 style="display: flex; align-items: center; gap: 6px;">';
+      html += '          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">';
+      html += '            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />';
+      html += '          </svg>';
+      html += '          High Achievers';
+      html += '        </h3>';
       html += '        <div class="count">' + ragCounts.green + '</div>';
       html += '        <p style="font-size: 12px; margin-top: 8px;">SAS > 110</p>';
-      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to filter</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">Click to filter</p>';
       html += '      </div>';
       html += '    </div>';
       html += '  </div>';
