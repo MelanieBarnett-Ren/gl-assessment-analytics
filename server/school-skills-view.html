@@ -1133,10 +1133,10 @@
 
       classesData.forEach(function(classData) {
         const avgSAS = Math.round(
-          classData.students.reduce((sum, s) => sum + s.ngmt.overall.sas, 0) / classData.students.length
+          classData.students.reduce((sum, s) => sum + s.ngmt.sas, 0) / classData.students.length
         );
         const avgStanine = Math.round(
-          classData.students.reduce((sum, s) => sum + s.ngmt.overall.stanine, 0) / classData.students.length
+          classData.students.reduce((sum, s) => sum + s.ngmt.stanine, 0) / classData.students.length
         );
         const scoreClass = getScoreClass(avgSAS);
 
