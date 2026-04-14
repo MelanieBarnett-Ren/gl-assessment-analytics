@@ -406,6 +406,18 @@
    ============================================ */
 
 @media print {
+  /* Set page size and margins for optimal PDF output */
+  @page {
+    size: A4 landscape;
+    margin: 1cm 1.5cm;
+  }
+
+  /* Alternative: Letter size for US */
+  /* @page {
+    size: letter landscape;
+    margin: 0.75in 1in;
+  } */
+
   /* Hide PDF export button when printing */
   #pdf-export-container,
   .pdf-fab-wrapper,
@@ -422,38 +434,142 @@
     display: none !important;
   }
 
-  /* Adjust body padding for print */
+  /* Optimize body layout for print */
   body {
     padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    background: white !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
   }
 
-  /* Ensure charts and visualizations are visible */
-  .chart-card,
+  /* Container adjustments */
+  .container,
   .dashboard-grid,
+  .schools-grid,
+  .stats-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Ensure full width for cards and sections */
+  .school-card,
+  .chart-card,
+  .stat-card,
+  .insight-card,
+  .tile,
+  .export-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Grid layouts for print */
+  .dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1cm !important;
+  }
+
+  .schools-grid,
+  .stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5cm !important;
+  }
+
+  /* Ensure charts and visualizations are visible and properly sized */
+  .chart-card,
   .summary-cards {
     break-inside: avoid;
   }
 
+  /* Chart containers should be full width */
+  .highcharts-container,
+  svg.highcharts-root {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
   /* Add page breaks before major sections */
-  .section-break {
+  .section-break,
+  .page-break {
     page-break-before: always;
   }
 
-  /* Optimize colors for print */
-  body {
-    background: white !important;
+  /* Table adjustments */
+  table {
+    width: 100% !important;
+    font-size: 10pt !important;
   }
 
-  /* Ensure links are visible */
+  /* Hide interactive elements */
+  button:not(.no-print-hide),
+  .drill-down-btn,
+  .export-btn,
+  .insight-action,
+  .report-btn {
+    display: none !important;
+  }
+
+  /* Optimize text for print */
+  body, p, li, td, th {
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+  }
+
+  h1 { font-size: 18pt !important; }
+  h2 { font-size: 16pt !important; }
+  h3 { font-size: 14pt !important; }
+  h4 { font-size: 12pt !important; }
+  h5, h6 { font-size: 11pt !important; }
+
+  /* Ensure proper color contrast for print */
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Remove link URLs (too cluttered) */
   a[href]:after {
-    content: " (" attr(href) ")";
-    font-size: 0.8em;
-    color: #6b7280;
+    content: "" !important;
   }
 
-  a[href^="/"]:after,
-  a[href^="#"]:after {
-    content: "";
+  /* Header and breadcrumb adjustments */
+  .header,
+  .page-header {
+    padding: 0.5cm !important;
+    margin-bottom: 0.5cm !important;
+  }
+
+  .breadcrumb {
+    font-size: 9pt !important;
+    margin-bottom: 0.3cm !important;
+  }
+
+  /* Avoid page breaks in the middle of important content */
+  .insight-card,
+  .school-card,
+  .stat-card,
+  .objective-compact {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Optimize shadows and borders for print */
+  .card,
+  .school-card,
+  .chart-card {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
   }
 }
 

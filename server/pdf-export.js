@@ -218,20 +218,43 @@ class PDFExporter {
   }
 
   exportCurrentPage() {
+    // Show instructions for better PDF output
+    const instructions =
+      '📄 PDF Export Tips:\n\n' +
+      '1. In the print dialog, select "Save as PDF" as destination\n' +
+      '2. Set orientation to "Landscape" for best results\n' +
+      '3. Enable "Background graphics" to include charts\n' +
+      '4. Use "Default" or "100%" scale\n\n' +
+      'Click OK to open print dialog';
+
+    if (!confirm(instructions)) {
+      return;
+    }
+
     // Add print-specific class for styling
     document.body.classList.add('printing');
 
-    // Hide the PDF export button before printing
+    // Hide the PDF export button and other UI elements before printing
     const fabWrapper = document.querySelector('.pdf-fab-wrapper');
+    const sidebar = document.querySelector('.sidebar');
+    const hamburger = document.querySelector('.hamburger-menu');
+
     if (fabWrapper) fabWrapper.style.display = 'none';
+    if (sidebar) sidebar.style.display = 'none';
+    if (hamburger) hamburger.style.display = 'none';
 
-    // Use browser's native print dialog
-    window.print();
-
-    // Restore after print
+    // Small delay to ensure styles are applied
     setTimeout(() => {
-      document.body.classList.remove('printing');
-      if (fabWrapper) fabWrapper.style.display = 'block';
+      // Use browser's native print dialog
+      window.print();
+
+      // Restore after print
+      setTimeout(() => {
+        document.body.classList.remove('printing');
+        if (fabWrapper) fabWrapper.style.display = 'block';
+        if (sidebar) sidebar.style.display = '';
+        if (hamburger) hamburger.style.display = '';
+      }, 100);
     }, 100);
   }
 
