@@ -906,6 +906,8 @@
             const skillName = skillKey.replace(/([A-Z])/g, ' $1').trim();
             const capitalizedName = skillName.charAt(0).toUpperCase() + skillName.slice(1);
 
+            console.log(`Rendering skill: ${skillKey} = ${capitalizedName}, score: ${skillScore}`);
+
             html += '    <div class="skill-item">';
             html += '      <div class="skill-name">' + capitalizedName + '</div>';
             html += '      <div class="skill-bar-container">';
