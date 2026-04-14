@@ -820,13 +820,13 @@
           </span>
           <span>Skills Analysis</span>
         </a>
-        <a href="/school/school6/strand/number-fractions" class="nav-link">
+        <a href="/school/school6/strands" class="nav-link">
           <span class="nav-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
             </svg>
           </span>
-          <span>Strand Drill-Down</span>
+          <span>Strand Analysis</span>
         </a>
       </div>
 
@@ -909,6 +909,7 @@
     <div class="tabs">
       <button class="tab active" onclick="switchTab('domains')">📊 Domains</button>
       <button class="tab" onclick="switchTab('skills')">🎯 Skills Breakdown</button>
+      <button class="tab" onclick="window.location.href='/school/' + schoolId + '/strands'">📐 Strands</button>
       <button class="tab" onclick="switchTab('classes')">👥 Classes</button>
       <button class="tab" onclick="switchTab('heatmap')">🔥 Class Heatmap</button>
       <button class="tab" onclick="switchTab('items')">📝 Item Analysis</button>
@@ -983,11 +984,21 @@
     function switchTab(tabName) {
       // Update tab buttons
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      event.target.classList.add('active');
+
+      // Find and activate the correct tab button
+      const tabs = document.querySelectorAll('.tab');
+      const tabNames = ['domains', 'skills', 'strands', 'classes', 'heatmap', 'items'];
+      const tabIndex = tabNames.indexOf(tabName);
+      if (tabIndex >= 0 && tabs[tabIndex]) {
+        tabs[tabIndex].classList.add('active');
+      }
 
       // Update content
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      document.getElementById(tabName + '-tab').classList.add('active');
+      const targetTab = document.getElementById(tabName + '-tab');
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
     }
 
     function getScoreClass(score) {
@@ -1030,6 +1041,7 @@
         if (classResult.success) {
           classesData = classResult.data;
           renderClassCards();
+          renderClasses();
           renderHeatmap();
           renderItems();
         }
@@ -1062,79 +1074,74 @@
       if (!schoolData || !schoolData.ngmt || !schoolData.ngmt.domains) return;
 
       const ngmt = schoolData.ngmt;
-      let html = '<div class="domains-grid">';
 
-      // Overall
-      html += '<div class="domain-card">';
-      html += '  <h3><span class="tooltip">Overall NGMT<span class="tooltiptext">Overall mathematics attainment score across all domains</span></span></h3>';
-      html += '  <div class="domain-score ' + getScoreClass(ngmt.overall.sas) + '">' + ngmt.overall.sas + '</div>';
-      html += '  <div style="font-size: 14px; color: var(--color-50);">SAS (Stanine ' + ngmt.overall.stanine + ')</div>';
+      // Overall NGMT summary at top
+      let html = '<div style="background: white; border-radius: 16px; padding: 32px; margin-bottom: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center;">';
+      html += '  <div style="font-size: 16px; color: #6b7280; font-weight: 500; margin-bottom: 8px;">Overall Mathematics Performance</div>';
+      html += '  <div style="font-size: 56px; font-weight: 700; color: ' + (getScoreClass(ngmt.overall.sas) === 'high' ? '#10b981' : getScoreClass(ngmt.overall.sas) === 'good' ? '#059669' : getScoreClass(ngmt.overall.sas) === 'medium' ? '#f59e0b' : '#dc2626') + ';">' + ngmt.overall.sas + '</div>';
+      html += '  <div style="font-size: 14px; color: #9ca3af;">SAS Score (Stanine ' + ngmt.overall.stanine + ')</div>';
       html += '</div>';
 
-      // Each domain with strand links
-      const domains = [
+      // Strand cards
+      html += '<h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #1f2937;">Curriculum Strands</h2>';
+      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px;">';
+
+      const strandsData = [
         {
-          key: 'number',
-          name: 'Number',
-          tooltip: 'Place value, four operations, fractions, decimals, percentages, ratio',
-          strands: [
-            { id: 'number-fractions', name: 'Fractions, Decimals & %' },
-            { id: 'number-operations', name: 'Four Operations' }
-          ]
+          id: 'number-fractions',
+          name: 'Fractions, Decimals & Percentages',
+          description: 'Converting between forms, ordering, and solving problems',
+          icon: '🔢',
+          domainKey: 'number'
         },
         {
-          key: 'algebra',
-          name: 'Algebra',
-          tooltip: 'Sequences, patterns, expressions, equations',
-          strands: [
-            { id: 'algebra-sequences', name: 'Sequences & Patterns' }
-          ]
+          id: 'number-operations',
+          name: 'Four Operations',
+          description: 'Addition, subtraction, multiplication, and division',
+          icon: '➗',
+          domainKey: 'number'
         },
-        { key: 'shapeSpaceMeasures', name: 'Shape, Space & Measures', tooltip: '2D/3D shapes, position, direction, measurement, perimeter, area', strands: [] },
-        { key: 'handlingData', name: 'Handling Data', tooltip: 'Reading charts, interpreting data, probability', strands: [] }
+        {
+          id: 'algebra-sequences',
+          name: 'Sequences & Patterns',
+          description: 'Number sequences, formulae, and algebraic problems',
+          icon: '📐',
+          domainKey: 'algebra'
+        }
       ];
 
-      domains.forEach(function(domain) {
-        const domainData = ngmt.domains[domain.key];
-        if (domainData && domainData.score && domainData.skills) {
-          html += '<div class="domain-card">';
-          html += '  <h3><span class="tooltip">' + domain.name + '<span class="tooltiptext">' + domain.tooltip + '</span></span></h3>';
-          html += '  <div class="domain-score ' + getScoreClass(domainData.score.sas) + '">' + domainData.score.sas + '</div>';
-          html += '  <div style="font-size: 14px; color: var(--color-50);">SAS (Stanine ' + domainData.score.stanine + ')</div>';
+      strandsData.forEach(function(strand) {
+        const domainData = ngmt.domains[strand.domainKey];
+        const avgScore = domainData && domainData.score ? domainData.score.sas : 100;
+        const scoreClass = getScoreClass(avgScore);
+        const scoreColor = scoreClass === 'high' ? '#10b981' : scoreClass === 'good' ? '#059669' : scoreClass === 'medium' ? '#f59e0b' : '#dc2626';
 
-          // Skills breakdown
-          html += '  <div class="skills-list">';
-          Object.keys(domainData.skills).forEach(function(skillKey) {
-            const skillScore = domainData.skills[skillKey];
-            const skillName = skillKey.replace(/([A-Z])/g, ' $1').trim();
-            const capitalizedName = skillName.charAt(0).toUpperCase() + skillName.slice(1);
+        html += '<a href="/school/' + schoolId + '/strand/' + strand.id + '" style="text-decoration: none; display: block;">';
+        html += '  <div style="background: white; border-radius: 16px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; cursor: pointer; height: 100%; border: 2px solid transparent;" onmouseover="this.style.transform=\'translateY(-4px)\'; this.style.boxShadow=\'0 8px 24px rgba(186, 17, 155, 0.15)\'; this.style.borderColor=\'#ba119b\';" onmouseout="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'0 2px 12px rgba(0,0,0,0.08)\'; this.style.borderColor=\'transparent\';">';
 
-            console.log(`Rendering skill: ${skillKey} = ${capitalizedName}, score: ${skillScore}`);
+        // Header with icon and score
+        html += '    <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: 16px;">';
+        html += '      <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f8e5f2 0%, #fce7f3 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;">' + strand.icon + '</div>';
+        html += '      <div style="text-align: right;">';
+        html += '        <div style="font-size: 32px; font-weight: 700; color: ' + scoreColor + ';">' + avgScore + '</div>';
+        html += '        <div style="font-size: 12px; color: #9ca3af;">SAS Score</div>';
+        html += '      </div>';
+        html += '    </div>';
 
-            html += '    <div class="skill-item">';
-            html += '      <div class="skill-name">' + capitalizedName + '</div>';
-            html += '      <div class="skill-bar-container">';
-            html += '        <div class="skill-bar ' + getScoreClass(skillScore) + '" style="width: ' + Math.max(skillScore, 8) + '%; min-width: 24px;"></div>';
-            html += '      </div>';
-            html += '      <div class="skill-score">' + skillScore + '%</div>';
-            html += '    </div>';
-          });
-          html += '  </div>';
+        // Strand name and description
+        html += '    <h3 style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 8px;">' + strand.name + '</h3>';
+        html += '    <p style="font-size: 14px; color: #6b7280; line-height: 1.6; margin-bottom: 16px;">' + strand.description + '</p>';
 
-          // Strand drill-down links
-          if (domain.strands && domain.strands.length > 0) {
-            html += '  <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-table-border);">';
-            html += '    <div style="font-size: 12px; color: var(--color-50); margin-bottom: 8px; font-weight: 600;">DRILL DOWN TO STRANDS:</div>';
-            domain.strands.forEach(function(strand) {
-              html += '    <a href="/school/' + schoolId + '/strand/' + strand.id + '" class="strand-link">';
-              html += '      🎯 ' + strand.name + ' →';
-              html += '    </a>';
-            });
-            html += '  </div>';
-          }
+        // View details button
+        html += '    <div style="display: flex; align-items: center; color: #ba119b; font-weight: 500; font-size: 14px;">';
+        html += '      View Detailed Analysis';
+        html += '      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; margin-left: 6px;">';
+        html += '        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />';
+        html += '      </svg>';
+        html += '    </div>';
 
-          html += '</div>';
-        }
+        html += '  </div>';
+        html += '</a>';
       });
 
       html += '</div>';

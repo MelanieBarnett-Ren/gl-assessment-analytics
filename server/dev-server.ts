@@ -519,6 +519,14 @@ app.get('/school/:schoolId/skills', (req, res) => {
 });
 
 /**
+ * GET /school/:schoolId/strands
+ * Strands landing page (shows all available strands)
+ */
+app.get('/school/:schoolId/strands', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strands-landing.html'));
+});
+
+/**
  * GET /school/:schoolId/strand/:strandId
  * Strand-level drill-down page (visual dashboard)
  */
