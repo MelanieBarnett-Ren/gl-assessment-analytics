@@ -98,13 +98,38 @@ export class AIService {
         throw new Error('No text content in Claude response');
       }
 
-      // Parse JSON response
+      // Parse JSON response with error handling
       const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         throw new Error('Could not extract JSON from Claude response');
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
+      let parsed;
+      try {
+        // Try to parse the JSON directly
+        parsed = JSON.parse(jsonMatch[0]);
+      } catch (parseError) {
+        // If parsing fails, try to clean up common JSON issues
+        console.log('Initial JSON parse failed, attempting to clean JSON...');
+        let cleanedJson = jsonMatch[0]
+          // Remove trailing commas before closing braces/brackets
+          .replace(/,(\s*[}\]])/g, '$1')
+          // Remove comments (// and /* */)
+          .replace(/\/\/.*$/gm, '')
+          .replace(/\/\*[\s\S]*?\*\//g, '')
+          // Fix unescaped quotes in strings (best effort)
+          .replace(/([^\\])"([^"]*)"([^:])/g, '$1\\"$2\\"$3');
+
+        try {
+          parsed = JSON.parse(cleanedJson);
+          console.log('✅ Successfully parsed cleaned JSON');
+        } catch (secondError) {
+          console.error('Claude response (first 500 chars):', textContent.text.substring(0, 500));
+          console.error('JSON extract (first 500 chars):', jsonMatch[0].substring(0, 500));
+          throw new Error(`Failed to parse JSON even after cleaning: ${secondError instanceof Error ? secondError.message : 'Unknown error'}`);
+        }
+      }
+
       const insights = this.normalizeInsights(parsed.insights, context);
 
       // Calculate token usage
@@ -155,7 +180,17 @@ export class AIService {
         throw new Error('Could not extract JSON from Claude response');
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
+      let parsed;
+      try {
+        parsed = JSON.parse(jsonMatch[0]);
+      } catch (parseError) {
+        // Clean up common JSON issues
+        let cleanedJson = jsonMatch[0]
+          .replace(/,(\s*[}\]])/g, '$1')
+          .replace(/\/\/.*$/gm, '')
+          .replace(/\/\*[\s\S]*?\*\//g, '');
+        parsed = JSON.parse(cleanedJson);
+      }
 
       return {
         skill,
