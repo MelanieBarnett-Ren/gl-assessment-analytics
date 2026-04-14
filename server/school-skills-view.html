@@ -86,9 +86,9 @@
 
     body .school-btn {
       padding: 10px 20px !important;
-      border: 2px solid rgba(255, 255, 255, 0.3) !important;
-      background: rgba(255, 255, 255, 0.1) !important;
-      color: white !important;
+      border: 2px solid rgba(186, 17, 155, 0.3) !important;
+      background: rgba(186, 17, 155, 0.05) !important;
+      color: #ba119b !important;
       border-radius: 8px !important;
       cursor: pointer !important;
       font-size: 14px !important;
@@ -98,14 +98,14 @@
     }
 
     body .school-btn:hover {
-      border-color: rgba(255, 255, 255, 0.6) !important;
-      background: rgba(255, 255, 255, 0.2) !important;
+      border-color: #ba119b !important;
+      background: rgba(186, 17, 155, 0.1) !important;
     }
 
     body .school-btn.active {
-      border-color: white !important;
-      background: white !important;
-      color: #ba119b !important;
+      border-color: #ba119b !important;
+      background: #ba119b !important;
+      color: white !important;
     }
 
     body .container {
@@ -1155,45 +1155,54 @@
     function renderSkills() {
       if (!schoolData || !schoolData.skillGaps) return;
 
-      let html = '<h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #1f2937;">Top Skills Needing Attention</h2>';
-      html += '<p style="color: #6b7280; margin-bottom: 32px; font-size: 14px;">Based on PTM item-level data compared to national averages</p>';
+      let html = '<h2 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #1f2937;">Skills Requiring Additional Support</h2>';
+      html += '<p style="color: #6b7280; margin-bottom: 24px; font-size: 14px;">Based on PTM item-level data compared to national averages</p>';
 
-      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">';
+      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">';
 
       schoolData.skillGaps.forEach(function(gap) {
         const isCritical = gap.severity === 'critical';
-        const bgColor = isCritical ? '#fef2f2' : '#fffbeb';
-        const borderColor = isCritical ? '#dc2626' : '#f59e0b';
-        const textColor = isCritical ? '#991b1b' : '#92400e';
-        const scoreColor = isCritical ? '#dc2626' : '#f59e0b';
-        const icon = isCritical ? '🔴' : '🟡';
+        // Softer, more muted colors
+        const accentColor = isCritical ? '#ef4444' : '#f59e0b';
+        const lightAccent = isCritical ? '#fee2e2' : '#fef3c7';
+        const statusBadge = isCritical ? 'High Priority' : 'Monitor';
+        const statusBadgeColor = isCritical ? '#dc2626' : '#d97706';
 
-        html += '<div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 2px solid ' + borderColor + '; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform=\'translateY(-4px)\'; this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.15)\';" onmouseout="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'0 2px 12px rgba(0,0,0,0.08)\';">';
+        html += '<div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid ' + accentColor + '; transition: all 0.2s ease;" onmouseover="this.style.boxShadow=\'0 4px 12px rgba(0,0,0,0.12)\';" onmouseout="this.style.boxShadow=\'0 1px 3px rgba(0,0,0,0.1)\';">';
 
-        // Header with icon and severity
-        html += '  <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: 16px;">';
-        html += '    <div style="width: 48px; height: 48px; background: ' + bgColor + '; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">' + icon + '</div>';
-        html += '    <div style="text-align: right;">';
-        html += '      <div style="font-size: 36px; font-weight: 700; color: ' + scoreColor + '; line-height: 1;">' + gap.yourScore + '%</div>';
-        html += '      <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 600; margin-top: 4px;">School Score</div>';
-        html += '    </div>';
+        // Header row with skill name and badge
+        html += '  <div style="display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 16px;">';
+        html += '    <h3 style="font-size: 15px; font-weight: 600; color: #1f2937; margin: 0; line-height: 1.4; flex: 1;">' + gap.skill + '</h3>';
+        html += '    <span style="font-size: 11px; font-weight: 600; color: ' + statusBadgeColor + '; background: ' + lightAccent + '; padding: 4px 10px; border-radius: 12px; white-space: nowrap;">' + statusBadge + '</span>';
         html += '  </div>';
 
-        // Skill name
-        html += '  <h3 style="font-size: 16px; font-weight: 600; color: #1f2937; margin-bottom: 12px; line-height: 1.4;">' + gap.skill + '</h3>';
+        // Metrics row - compact layout
+        html += '  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">';
 
-        // Gap indicator
-        html += '  <div style="background: ' + bgColor + '; padding: 12px; border-radius: 8px; margin-bottom: 16px;">';
-        html += '    <div style="display: flex; justify-content: space-between; align-items: center;">';
-        html += '      <span style="font-size: 13px; color: ' + textColor + '; font-weight: 600;">Gap below national:</span>';
-        html += '      <span style="font-size: 18px; color: ' + scoreColor + '; font-weight: 700;">-' + gap.gap + '%</span>';
+        // School score
+        html += '    <div style="text-align: center; padding: 12px 8px; background: #f9fafb; border-radius: 8px;">';
+        html += '      <div style="font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px;">School</div>';
+        html += '      <div style="font-size: 20px; font-weight: 700; color: #1f2937; line-height: 1;">' + gap.yourScore + '%</div>';
         html += '    </div>';
+
+        // National score
+        html += '    <div style="text-align: center; padding: 12px 8px; background: #f9fafb; border-radius: 8px;">';
+        html += '      <div style="font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px;">National</div>';
+        html += '      <div style="font-size: 20px; font-weight: 700; color: #10b981; line-height: 1;">' + gap.nationalAverage + '%</div>';
+        html += '    </div>';
+
+        // Gap
+        html += '    <div style="text-align: center; padding: 12px 8px; background: ' + lightAccent + '; border-radius: 8px;">';
+        html += '      <div style="font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px;">Gap</div>';
+        html += '      <div style="font-size: 20px; font-weight: 700; color: ' + accentColor + '; line-height: 1;">-' + gap.gap + '%</div>';
+        html += '    </div>';
+
         html += '  </div>';
 
-        // National comparison
-        html += '  <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e5e7eb;">';
-        html += '    <span style="font-size: 12px; color: #6b7280;">National Average:</span>';
-        html += '    <span style="font-size: 16px; color: #10b981; font-weight: 600;">' + gap.nationalAverage + '%</span>';
+        // Progress bar showing gap visually
+        html += '  <div style="background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden;">';
+        const schoolPercent = (gap.yourScore / gap.nationalAverage) * 100;
+        html += '    <div style="background: ' + accentColor + '; height: 100%; width: ' + schoolPercent + '%; transition: width 0.3s ease;"></div>';
         html += '  </div>';
 
         html += '</div>';

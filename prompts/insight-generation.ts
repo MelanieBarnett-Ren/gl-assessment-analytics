@@ -238,6 +238,8 @@ Generate 3-5 key insights for school leaders. CRITICAL: Always generate skill-le
 4. **Actionable Targets** - Specific, measurable targets (e.g., "Target: 68% on multiplying fractions by next assessment")
 5. **Practical Interventions** - Concrete teaching strategies, not vague advice
 
+**IMPORTANT**: Output VALID JSON only. Ensure all strings are properly quoted, all commas are in place, and all brackets/braces are closed. Keep detailedAnalysis concise (max 300 words) to ensure valid JSON structure.
+
 Output as JSON array matching this structure:
 {
   "insights": [
@@ -247,7 +249,7 @@ Output as JSON array matching this structure:
       "priority": 1-5,
       "title": "Brief headline (e.g., 'Year 9 Maths: -15% vs. similar schools')",
       "summary": "One sentence",
-      "detailedAnalysis": "Full breakdown with skill-level detail, foundation gaps, and peer comparisons",
+      "detailedAnalysis": "Full breakdown with skill-level detail, foundation gaps, and peer comparisons (max 300 words)",
       "recommendations": [
         {
           "title": "Focus area",

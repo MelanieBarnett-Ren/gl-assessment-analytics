@@ -177,7 +177,7 @@ app.get('/api/insights/:viewLevel/:cohortId/:assessmentId', async (req, res) => 
           peerLearningOpportunities: insights.filter(i => i.type === 'peer_learning').length,
         },
         generatedAt: new Date(),
-        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour cache instead of 15 minutes
       };
     } else {
       // Use mock insights for demo
@@ -694,8 +694,122 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'landing.html'));
 });
 
+/**
+ * Pre-generate AI insights for all schools on startup
+ * This ensures insights are immediately available when users click the button
+ */
+async function preGenerateInsights() {
+  if (!aiService) {
+    console.log('⚠️  Skipping insight pre-generation (no AI service available)');
+    return;
+  }
+
+  console.log('\n🔄 Pre-generating AI insights for all schools...');
+
+  try {
+    const mockData = getMockData();
+    const schools = mockData.cohorts.filter((c: any) => c.cohortId.startsWith('school'));
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const school of schools) {
+      try {
+        // Simulate the API call to generate and cache insights
+        const cacheKey = `school_${school.cohortId}_assessment123`;
+
+        // Skip if already cached
+        if (cache.get(cacheKey)) {
+          console.log(`   ✓ ${school.cohortName} (already cached)`);
+          successCount++;
+          continue;
+        }
+
+        // Find similar cohorts
+        const similarCohorts = findSimilarCohorts(
+          school,
+          mockData.cohorts.filter((c: any) => c.cohortId !== school.cohortId),
+          { maxResults: 10, minSimilarityScore: 0.7 }
+        );
+
+        // Detect outliers
+        const outliers = detectOutliers(
+          school.assessment.skillDomainScores,
+          similarCohorts.map((c: any) => ({ skills: c.assessment.skillDomainScores })),
+          {
+            minEffectSize: 0.5,
+            minZScore: 1.5,
+            significanceLevel: 0.05,
+            relaxedMode: true,
+            minResultsInRelaxedMode: 5
+          }
+        );
+
+        // Generate insights with Claude
+        const context = {
+          viewLevel: 'school' as ViewLevel,
+          targetCohort: {
+            cohortId: school.cohortId,
+            cohortName: school.cohortName,
+            assessment: school.assessment,
+            demographics: school.demographics,
+          },
+          similarCohorts: similarCohorts.map((sc: any) => ({
+            cohortId: sc.cohortId,
+            cohortName: sc.cohortName,
+            assessment: sc.assessment,
+            demographics: sc.demographics,
+            similarityScore: sc.similarityScore,
+          })),
+          outliers: outliers.map((o: any) => ({
+            skill: o.skill,
+            domain: o.contentDomain,
+            gap: o.gap,
+            effectSize: o.effectSize,
+          })),
+        };
+
+        const { insights } = await aiService.generateInsights(context);
+
+        const insightPanel = {
+          panelId: `panel_school_${school.cohortId}_${Date.now()}`,
+          viewLevel: 'school' as ViewLevel,
+          cohortId: school.cohortId,
+          assessmentId: 'assessment123',
+          insights: insights.slice(0, 5),
+          summary: {
+            totalComparisons: similarCohorts.length,
+            significantGaps: outliers.filter((o: any) => o.severity === 'critical' || o.severity === 'high').length,
+            peerLearningOpportunities: insights.filter((i: any) => i.type === 'peer_learning').length,
+          },
+          generatedAt: new Date(),
+          expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Cache for 1 hour instead of 15 min
+        };
+
+        // Cache the result
+        cache.set(cacheKey, {
+          data: insightPanel,
+          expiresAt: insightPanel.expiresAt,
+        });
+
+        console.log(`   ✓ ${school.cohortName} (${insights.length} insights generated)`);
+        successCount++;
+
+      } catch (error) {
+        console.error(`   ✗ ${school.cohortName} failed:`, error instanceof Error ? error.message : 'Unknown error');
+        failCount++;
+      }
+    }
+
+    console.log(`\n✅ Pre-generation complete: ${successCount} successful, ${failCount} failed`);
+
+  } catch (error) {
+    console.error('❌ Failed to pre-generate insights:', error);
+  }
+}
+
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log('\n' + '='.repeat(70));
   console.log('🚀 Comparative Cohort Intelligence - Dev Server');
   console.log('='.repeat(70));
@@ -713,6 +827,11 @@ app.listen(PORT, () => {
   console.log('='.repeat(70));
   console.log(aiService ? '✅ Claude API ready' : '⚠️  Using mock insights (set ANTHROPIC_API_KEY in .env)');
   console.log('='.repeat(70) + '\n');
+
+  // Pre-generate insights in the background (non-blocking)
+  preGenerateInsights().catch(err => {
+    console.error('❌ Background insight generation failed:', err);
+  });
 });
 
 // ============================================================================
