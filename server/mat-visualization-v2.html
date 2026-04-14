@@ -809,7 +809,7 @@
     <!-- School Cards -->
     <div class="schools-grid">
       <!-- School A -->
-      <div class="school-card">
+      <div class="school-card" data-year="5" data-assessment="ngmt">
         <div class="school-header">
           <div class="school-title">
             <h3>🏫 School A</h3>
@@ -884,7 +884,7 @@
       </div>
 
       <!-- School B -->
-      <div class="school-card">
+      <div class="school-card" data-year="5" data-assessment="ngmt">
         <div class="school-header">
           <div class="school-title">
             <h3>🏫 School B</h3>
@@ -952,7 +952,7 @@
       </div>
 
       <!-- School C -->
-      <div class="school-card">
+      <div class="school-card" data-year="5" data-assessment="ngmt">
         <div class="school-header">
           <div class="school-title">
             <h3>🏫 School C</h3>
@@ -1134,8 +1134,22 @@
       schoolCards.forEach(card => {
         let shouldShow = true;
 
+        // Filter by year
+        const cardYear = parseInt(card.getAttribute('data-year'));
+        if (cardYear && cardYear !== currentYear) {
+          shouldShow = false;
+        }
+
+        // Filter by assessment type (if not 'all')
+        if (currentAssessment !== 'all') {
+          const cardAssessment = card.getAttribute('data-assessment');
+          if (cardAssessment !== currentAssessment) {
+            shouldShow = false;
+          }
+        }
+
         // Filter by view (concern only shows schools with negative value added)
-        if (currentView === 'concern') {
+        if (shouldShow && currentView === 'concern') {
           const valueAddedElement = card.querySelector('.metric-box:nth-child(3) .metric-value');
           if (valueAddedElement) {
             const valueAdded = parseInt(valueAddedElement.textContent);

@@ -884,6 +884,7 @@
         name: 'School A - Oakwood Primary',
         badge: 'Concern',
         badgeClass: 'badge-red',
+        year: 5,
         demographics: { fsm: 54, eal: 32, send: 25, female: 48 },
         classes: [
           { id: 'class6a', name: '5A', teacher: 'Mrs Thompson', students: 28 },
@@ -897,6 +898,7 @@
         name: 'School B - Riverside Academy',
         badge: 'On Track',
         badgeClass: 'badge-amber',
+        year: 5,
         demographics: { fsm: 32, eal: 20, send: 16, female: 51 },
         classes: [
           { id: 'class7a', name: '5A', teacher: 'Mrs Brown', students: 28 },
@@ -910,6 +912,7 @@
         name: 'School C - Hillside Primary',
         badge: 'Excelling',
         badgeClass: 'badge-green',
+        year: 5,
         demographics: { fsm: 47, eal: 24, send: 18, female: 49 },
         classes: [
           { id: 'class8a', name: '5A', teacher: 'Mrs Johnson', students: 26 },
@@ -1072,13 +1075,16 @@
       const grid = document.getElementById('schoolsGrid');
       grid.innerHTML = '';
 
-      schools.forEach(school => {
+      // Filter schools by year before rendering
+      const filteredSchools = schools.filter(school => school.year === currentYearFilter);
+
+      filteredSchools.forEach(school => {
         const data = termData[term][school.id];
         const card = createSchoolCard(school, data, term);
         grid.appendChild(card);
       });
 
-      // Reapply current filter after updating cards
+      // Reapply current view filter after updating cards
       if (currentViewFilter !== 'all') {
         filterView(currentViewFilter);
       }
@@ -1476,9 +1482,21 @@
         }
       });
 
-      // Note: All current data is Year 5, Year 6 filtering is not yet implemented
-      // This is ready for when Year 6 data is added to the schools array
-      console.log('Year filter set to:', year, '(Year 6 data not yet available)');
+      // Rerender dashboard with filtered schools
+      updateDashboard();
+
+      // Check if there are any schools for this year
+      const filteredSchools = schools.filter(school => school.year === year);
+      if (filteredSchools.length === 0) {
+        const grid = document.getElementById('schoolsGrid');
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <div style="font-size: 48px; margin-bottom: 16px;">📚</div>
+            <h3 style="color: #1f2937; margin-bottom: 8px;">No Year ${year} Data Available</h3>
+            <p style="color: #6b7280; font-size: 14px;">All current data is for Year 5. Year ${year} data will be available when added to the system.</p>
+          </div>
+        `;
+      }
     }
 
     function filterView(view) {
