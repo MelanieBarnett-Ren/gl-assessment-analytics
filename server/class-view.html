@@ -172,18 +172,62 @@
       padding: 16px;
       border-radius: 8px;
       text-align: center;
+      transition: all 0.2s ease;
+    }
+    .focus-card.clickable {
+      cursor: pointer;
+    }
+    .focus-card.clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     .focus-card.foundation {
       background: #fef2f2;
       border: 2px solid #fca5a5;
     }
+    .focus-card.foundation.clickable:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
     .focus-card.consolidation {
       background: #eff6ff;
       border: 2px solid #93c5fd;
     }
+    .focus-card.consolidation.clickable:hover {
+      background: #dbeafe;
+      border-color: #60a5fa;
+    }
     .focus-card.extension {
       background: #f0fdf4;
       border: 2px solid #86efac;
+    }
+    .focus-card.extension.clickable:hover {
+      background: #dcfce7;
+      border-color: #4ade80;
+    }
+    .focus-card.rag-red {
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+    }
+    .focus-card.rag-red.clickable:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+    .focus-card.rag-amber {
+      background: #fefce8;
+      border: 2px solid #fde047;
+    }
+    .focus-card.rag-amber.clickable:hover {
+      background: #fef9c3;
+      border-color: #facc15;
+    }
+    .focus-card.rag-green {
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+    }
+    .focus-card.rag-green.clickable:hover {
+      background: #dcfce7;
+      border-color: #4ade80;
     }
     .focus-card h3 {
       font-size: 14px;
@@ -849,6 +893,7 @@
     // Global variables for filtering
     let allStudents = [];
     let filteredStudents = [];
+    let currentClassData = null;
     let currentFilters = {
       ragStatus: 'all',
       focusGroup: 'all',
@@ -856,6 +901,9 @@
     };
 
     function renderClassView(classData) {
+      // Store class data globally for exports
+      currentClassData = classData;
+
       const summary = classData.classSummary;
       const vaClass = summary.valueAdded >= 0 ? 'positive' : 'negative';
 
@@ -916,20 +964,54 @@
       html += '<div class="focus-groups">';
       html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected)</span></span></h2>';
       html += '  <div class="focus-grid">';
-      html += '    <div class="focus-card foundation">';
+      html += '    <div class="focus-card foundation clickable" onclick="filterByFocus(\'foundation\')" title="Click to view Foundation students">';
       html += '      <h3>Foundation</h3>';
       html += '      <div class="count">' + summary.focusGroups.foundation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Need support</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
       html += '    </div>';
-      html += '    <div class="focus-card consolidation">';
+      html += '    <div class="focus-card consolidation clickable" onclick="filterByFocus(\'consolidation\')" title="Click to view Consolidation students">';
       html += '      <h3>Consolidation</h3>';
       html += '      <div class="count">' + summary.focusGroups.consolidation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Core teaching</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
       html += '    </div>';
-      html += '    <div class="focus-card extension">';
+      html += '    <div class="focus-card extension clickable" onclick="filterByFocus(\'extension\')" title="Click to view Extension students">';
       html += '      <h3>Extension</h3>';
       html += '      <div class="count">' + summary.focusGroups.extension + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Ready to stretch</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      // RAG Status Summary
+      const ragCounts = {
+        red: classData.students.filter(s => s.ngmt.sas < 90).length,
+        amber: classData.students.filter(s => s.ngmt.sas >= 90 && s.ngmt.sas <= 110).length,
+        green: classData.students.filter(s => s.ngmt.sas > 110).length
+      };
+
+      html += '<div class="focus-groups">';
+      html += '  <h2><span class="tooltip">Performance Status (RAG)<span class="tooltiptext">Students grouped by SAS scores: Red (<90 = concern), Amber (90-110 = expected), Green (>110 = exceeding)</span></span></h2>';
+      html += '  <div class="focus-grid">';
+      html += '    <div class="focus-card rag-red clickable" onclick="filterByRAG(\'red\')" title="Click to view students needing support">';
+      html += '      <h3>🔴 Needing Support</h3>';
+      html += '      <div class="count">' + ragCounts.red + '</div>';
+      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS < 90</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '    </div>';
+      html += '    <div class="focus-card rag-amber clickable" onclick="filterByRAG(\'amber\')" title="Click to view students performing as expected">';
+      html += '      <h3>🟡 As Expected</h3>';
+      html += '      <div class="count">' + ragCounts.amber + '</div>';
+      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS 90-110</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '    </div>';
+      html += '    <div class="focus-card rag-green clickable" onclick="filterByRAG(\'green\')" title="Click to view high achievers">';
+      html += '      <h3>🟢 High Achievers</h3>';
+      html += '      <div class="count">' + ragCounts.green + '</div>';
+      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS > 110</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
       html += '    </div>';
       html += '  </div>';
       html += '</div>';
@@ -1112,42 +1194,170 @@
 
     // Export Functions
     function exportFilteredCSV() {
-      const headers = ['Student Name', 'CAT4 SAS', 'CAT4 RAG', 'NGMT SAS', 'NGMT RAG', 'Value Added', 'PTM Progress', 'Focus Group', 'FSM', 'EAL', 'SEND'];
+      const classInfo = currentClassData;
+      const summary = classInfo.classSummary;
+
+      // Enhanced headers with detailed breakdowns
+      const headers = [
+        'Student Name',
+        'Student ID',
+        'Focus Group',
+
+        // CAT4 Details
+        'CAT4 Mean SAS',
+        'CAT4 Stanine',
+        'CAT4 RAG',
+        'CAT4 Verbal',
+        'CAT4 Quantitative',
+        'CAT4 NonVerbal',
+        'CAT4 Spatial',
+
+        // NGMT Details
+        'NGMT SAS',
+        'NGMT Stanine',
+        'NGMT RAG',
+        'NGMT Number',
+        'NGMT Algebra',
+        'NGMT Shape/Space',
+        'NGMT Data',
+
+        // Value Added
+        'Value Added (SAS)',
+        'VA Status',
+
+        // PTM Progress
+        'PTM SAS',
+        'PTM Progress',
+
+        // Demographics
+        'FSM',
+        'EAL',
+        'SEND',
+        'Gender',
+
+        // Recommendations
+        'Intervention Priority',
+        'Recommended Action'
+      ];
+
       const rows = filteredStudents.map(student => {
         const va = student.ngmt.sas - student.cat4.meanSAS;
         const ngmtRAG = student.ngmt.sas < 90 ? 'Red' : student.ngmt.sas > 110 ? 'Green' : 'Amber';
         const cat4RAG = student.cat4.meanSAS < 90 ? 'Red' : student.cat4.meanSAS > 110 ? 'Green' : 'Amber';
+        const vaStatus = va < -5 ? 'Underachieving' : va > 5 ? 'Exceeding' : 'On Track';
+
+        // Determine intervention priority
+        let priority = 'Low';
+        let action = 'Continue current support';
+
+        if (ngmtRAG === 'Red' && va < -3) {
+          priority = 'High';
+          action = 'Immediate intervention needed - significant underachievement vs ability';
+        } else if (ngmtRAG === 'Red') {
+          priority = 'High';
+          action = 'Targeted support needed - below expected standard';
+        } else if (va < -5) {
+          priority = 'Medium';
+          action = 'Monitor closely - underachieving vs cognitive ability';
+        } else if (student.focusGroup === 'foundation') {
+          priority = 'Medium';
+          action = 'Foundation group - focus on prerequisite skills';
+        } else if (ngmtRAG === 'Green' && student.focusGroup === 'extension') {
+          priority = 'Low';
+          action = 'Stretch & challenge - provide extension activities';
+        }
 
         return [
           student.studentName,
+          student.studentId,
+          student.focusGroup.charAt(0).toUpperCase() + student.focusGroup.slice(1),
+
+          // CAT4
           student.cat4.meanSAS,
+          student.cat4.stanine,
           cat4RAG,
+          student.cat4.verbal,
+          student.cat4.quantitative,
+          student.cat4.nonVerbal,
+          student.cat4.spatial,
+
+          // NGMT
           student.ngmt.sas,
+          student.ngmt.stanine,
           ngmtRAG,
+          student.ngmt.domains.number,
+          student.ngmt.domains.algebra,
+          student.ngmt.domains.shapeSpace,
+          student.ngmt.domains.data,
+
+          // Value Added
           (va > 0 ? '+' : '') + va,
+          vaStatus,
+
+          // PTM
+          student.ptm.sas,
           (student.ptm.progress > 0 ? '+' : '') + student.ptm.progress,
-          student.focusGroup,
+
+          // Demographics
           student.demographics.fsm ? 'Yes' : 'No',
           student.demographics.eal ? 'Yes' : 'No',
-          student.demographics.send ? 'Yes' : 'No'
+          student.demographics.send ? 'Yes' : 'No',
+          student.demographics.gender === 'male' ? 'Male' : 'Female',
+
+          // Recommendations
+          priority,
+          action
         ];
       });
 
+      // Enhanced metadata section
       const csvContent = [
-        ['Class Student Data Export'],
-        [`Exported: ${new Date().toLocaleString()}`],
-        [`Filters Applied: RAG=${currentFilters.ragStatus}, Focus=${currentFilters.focusGroup}, Demo=${currentFilters.demographic}`],
-        [`Total Students: ${filteredStudents.length}`],
+        ['GL ASSESSMENT - CLASS STUDENT DATA EXPORT'],
         [],
+        ['CLASS INFORMATION'],
+        [`Class: ${classInfo.className}`],
+        [`School: ${classInfo.schoolId === 'class6a' ? 'School A - Oakwood Primary' : classInfo.schoolId}`],
+        [`Year Group: Year ${classInfo.yearGroup}`],
+        [`Teacher: ${classInfo.teacherName}`],
+        [`Total Students in Class: ${classInfo.studentCount}`],
+        [],
+        ['CLASS SUMMARY'],
+        [`Average CAT4: ${summary.avgCAT4} SAS (Cognitive Ability)`],
+        [`Average NGMT: ${summary.avgNGMT} SAS (Maths Attainment)`],
+        [`Value Added: ${summary.valueAdded > 0 ? '+' : ''}${summary.valueAdded} SAS (${summary.valueAdded < -2 ? 'Concern - Underachieving' : summary.valueAdded > 2 ? 'Excellent - Exceeding' : 'As Expected'})`],
+        [],
+        ['DEMOGRAPHICS'],
+        [`FSM: ${summary.fsmPercentage}%`],
+        [`EAL: ${summary.ealPercentage}%`],
+        [`SEND: ${summary.sendPercentage}%`],
+        [],
+        ['FOCUS GROUPS'],
+        [`Foundation (needing support): ${summary.focusGroups.foundation} students`],
+        [`Consolidation (core teaching): ${summary.focusGroups.consolidation} students`],
+        [`Extension (ready to stretch): ${summary.focusGroups.extension} students`],
+        [],
+        ['EXPORT DETAILS'],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Filters Applied: RAG Status=${currentFilters.ragStatus}, Focus Group=${currentFilters.focusGroup}, Demographics=${currentFilters.demographic}`],
+        [`Students in Export: ${filteredStudents.length} of ${allStudents.length}`],
+        [],
+        ['KEY INFORMATION'],
+        ['- SAS (Standardised Age Score): 100 = national average, 85-115 = typical range'],
+        ['- Stanine: 1-3 = below average, 4-6 = average, 7-9 = above average'],
+        ['- Value Added: Difference between CAT4 (ability) and NGMT (attainment)'],
+        ['- RAG Status: Red (<90 concern), Amber (90-110 expected), Green (>110 exceeding)'],
+        ['- Focus Groups: Foundation (below expected), Consolidation (at expected), Extension (above expected)'],
+        [],
+        ['DETAILED STUDENT DATA'],
         headers,
         ...rows
-      ].map(row => row.join(',')).join('\n');
+      ].map(row => Array.isArray(row) ? row.join(',') : row).join('\n');
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      link.setAttribute('download', `class_students_${new Date().toISOString().split('T')[0]}.csv`);
+      link.setAttribute('download', `${classInfo.className.replace(/\s+/g, '_')}_detailed_export_${new Date().toISOString().split('T')[0]}.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();

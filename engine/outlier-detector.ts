@@ -8,12 +8,16 @@ export interface OutlierConfig {
   minEffectSize: number;        // Minimum Cohen's d (default: 0.5 = medium)
   minZScore: number;             // Minimum z-score (default: 1.5)
   significanceLevel: number;     // Alpha level (default: 0.05)
+  relaxedMode?: boolean;         // If true, return relative weaknesses even without statistical significance
+  minResultsInRelaxedMode?: number; // Minimum number of results to return in relaxed mode (default: 3)
 }
 
 export const DEFAULT_OUTLIER_CONFIG: OutlierConfig = {
   minEffectSize: 0.5,   // Medium effect size
   minZScore: 1.5,       // ~93rd percentile
   significanceLevel: 0.05,
+  relaxedMode: false,
+  minResultsInRelaxedMode: 3,
 };
 
 export type OutlierSeverity = 'critical' | 'high' | 'moderate' | 'low';
@@ -159,6 +163,7 @@ export function detectOutliers(
   config: OutlierConfig = DEFAULT_OUTLIER_CONFIG
 ): OutlierResult[] {
   const outliers: OutlierResult[] = [];
+  const allCandidates: OutlierResult[] = []; // For relaxed mode
 
   // For each skill in target, compare against comparison cohorts
   targetSkills.forEach(targetSkill => {
@@ -179,8 +184,13 @@ export function detectOutliers(
         config
       );
 
-      if (domainOutlier && domainOutlier.isSignificant) {
-        outliers.push(domainOutlier);
+      if (domainOutlier) {
+        if (domainOutlier.isSignificant) {
+          outliers.push(domainOutlier);
+        }
+        if (config.relaxedMode) {
+          allCandidates.push(domainOutlier);
+        }
       }
     }
 
@@ -204,20 +214,52 @@ export function detectOutliers(
           config
         );
 
-        if (skillOutlier && skillOutlier.isSignificant) {
-          outliers.push(skillOutlier);
+        if (skillOutlier) {
+          if (skillOutlier.isSignificant) {
+            outliers.push(skillOutlier);
+          }
+          if (config.relaxedMode) {
+            allCandidates.push(skillOutlier);
+          }
         }
       }
     });
   });
 
   // Sort by severity (critical first) then by effect size
-  return outliers.sort((a, b) => {
+  const sortedOutliers = outliers.sort((a, b) => {
     const severityOrder = { critical: 0, high: 1, moderate: 2, low: 3 };
     const severityDiff = severityOrder[a.severity] - severityOrder[b.severity];
     if (severityDiff !== 0) return severityDiff;
     return Math.abs(b.effectSize) - Math.abs(a.effectSize);
   });
+
+  // In relaxed mode, if we don't have enough significant outliers, add relative weak areas
+  if (config.relaxedMode && config.minResultsInRelaxedMode) {
+    const minResults = config.minResultsInRelaxedMode;
+    if (sortedOutliers.length < minResults) {
+      // Sort all candidates by gap (most negative = weakest areas)
+      const sortedCandidates = allCandidates.sort((a, b) => a.gap - b.gap);
+
+      // Add the weakest areas (most negative gaps) that aren't already in outliers
+      const existingIds = new Set(sortedOutliers.map(o => `${o.contentDomain}:${o.skill}`));
+      const additionalResults: OutlierResult[] = [];
+
+      for (const candidate of sortedCandidates) {
+        const candidateId = `${candidate.contentDomain}:${candidate.skill}`;
+        if (!existingIds.has(candidateId) && candidate.gap < 0) {
+          additionalResults.push(candidate);
+          if (sortedOutliers.length + additionalResults.length >= minResults) {
+            break;
+          }
+        }
+      }
+
+      return [...sortedOutliers, ...additionalResults];
+    }
+  }
+
+  return sortedOutliers;
 }
 
 /**

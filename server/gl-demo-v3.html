@@ -573,6 +573,28 @@
       color: #7c3aed;
     }
 
+    .ai-action-btn {
+      padding: 6px 12px;
+      background: linear-gradient(135deg, #ba119b, #d946ef);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .ai-action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(186, 17, 155, 0.3);
+    }
+
+    .ai-action-btn:active {
+      transform: translateY(0);
+    }
+
     /* Group Analysis Section */
     .group-analysis {
       background: white;
@@ -1247,7 +1269,17 @@
                 <div class="ai-insight-detail">${insight.summary}</div>
                 ${insight.recommendations && insight.recommendations.length > 0 ? `
                   <div class="ai-insight-recommendation">
-                    💡 <strong>Recommendation:</strong> ${insight.recommendations[0].title} - ${insight.recommendations[0].description.substring(0, 150)}...
+                    💡 <strong>Recommendation:</strong> ${insight.recommendations[0].title}
+                    <div style="margin-top: 8px; font-size: 13px;">${insight.recommendations[0].description}</div>
+                    ${insight.recommendations[0].dashboardActions && insight.recommendations[0].dashboardActions.length > 0 ? `
+                      <div class="ai-insight-actions" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                        ${insight.recommendations[0].dashboardActions.map(action => `
+                          <button class="ai-action-btn" onclick="${action.targetUrl ? `window.location.href='${action.targetUrl}'` : `alert('Action: ${action.label}')`}">
+                            ${action.label}
+                          </button>
+                        `).join('')}
+                      </div>
+                    ` : ''}
                   </div>
                 ` : ''}
               </div>
@@ -1255,7 +1287,20 @@
           });
 
           html += '</div>';
+
+          // Add export button
+          html += `
+            <div style="margin-top: 16px; text-align: center;">
+              <button class="ai-action-btn" onclick="exportInsights('${schoolId}', '${schoolName}', ${JSON.stringify(insights).replace(/"/g, '&quot;')})">
+                📥 Export Insights to CSV
+              </button>
+            </div>
+          `;
+
           insightsContainer.innerHTML = html;
+
+          // Store insights globally for export
+          window.currentInsights = { schoolId, schoolName, insights, data: data.data };
 
           // Reset button
           button.disabled = false;
@@ -1281,6 +1326,132 @@
         button.disabled = false;
         button.textContent = '🤖 Generate AI Insights';
       }
+    }
+
+    function exportInsights(schoolId, schoolName, insights) {
+      if (!window.currentInsights) {
+        alert('No insights available to export. Please generate insights first.');
+        return;
+      }
+
+      const data = window.currentInsights;
+      const insightsData = data.data;
+
+      // Build comprehensive CSV
+      const csvRows = [];
+
+      // Header section
+      csvRows.push(['GL ASSESSMENT - AI INSIGHTS EXPORT']);
+      csvRows.push([]);
+      csvRows.push(['SCHOOL INFORMATION']);
+      csvRows.push(['School ID', schoolId]);
+      csvRows.push(['School Name', schoolName]);
+      csvRows.push(['Generated', new Date().toLocaleString()]);
+      csvRows.push([]);
+
+      // Summary section
+      if (insightsData.summary) {
+        csvRows.push(['SUMMARY STATISTICS']);
+        csvRows.push(['Total Comparisons', insightsData.summary.totalComparisons]);
+        csvRows.push(['Significant Gaps Found', insightsData.summary.significantGaps]);
+        csvRows.push(['Peer Learning Opportunities', insightsData.summary.peerLearningOpportunities]);
+        csvRows.push([]);
+      }
+
+      // Each insight
+      data.insights.forEach((insight, index) => {
+        csvRows.push([`INSIGHT ${index + 1}: ${insight.title.toUpperCase()}`]);
+        csvRows.push([]);
+        csvRows.push(['Priority', insight.priority || 'N/A']);
+        csvRows.push(['Severity', insight.severity]);
+        csvRows.push(['Type', insight.type]);
+        csvRows.push([]);
+        csvRows.push(['Summary']);
+        csvRows.push([insight.summary]);
+        csvRows.push([]);
+        csvRows.push(['Detailed Analysis']);
+        csvRows.push([insight.detailedAnalysis || 'N/A']);
+        csvRows.push([]);
+
+        // Evidence
+        if (insight.evidence) {
+          csvRows.push(['EVIDENCE']);
+          csvRows.push(['Current Performance', insight.evidence.currentPerformance || 'N/A']);
+          csvRows.push(['Comparison Performance', insight.evidence.comparisonPerformance || 'N/A']);
+          csvRows.push(['Gap', insight.evidence.gap ? `${insight.evidence.gap > 0 ? '+' : ''}${insight.evidence.gap}` : 'N/A']);
+          csvRows.push(['Statistically Significant', insight.evidence.isSignificant ? 'Yes' : 'No']);
+          csvRows.push([]);
+        }
+
+        // Recommendations
+        if (insight.recommendations && insight.recommendations.length > 0) {
+          csvRows.push(['RECOMMENDATIONS']);
+          csvRows.push([]);
+
+          insight.recommendations.forEach((rec, recIndex) => {
+            csvRows.push([`Recommendation ${recIndex + 1}`, rec.title]);
+            csvRows.push(['Description', rec.description.replace(/<[^>]*>/g, '')]); // Strip HTML
+            csvRows.push(['Rationale', rec.rationale]);
+            csvRows.push(['Action Type', rec.actionType]);
+            csvRows.push(['Priority', rec.priority || 'N/A']);
+
+            if (rec.targetMetric) {
+              csvRows.push(['Target Metric', rec.targetMetric.metric]);
+              csvRows.push(['Current Value', rec.targetMetric.currentValue]);
+              csvRows.push(['Target Value', rec.targetMetric.targetValue]);
+              csvRows.push(['Timeframe', rec.targetMetric.timeframe]);
+            }
+
+            if (rec.peerExample) {
+              csvRows.push(['Peer Example - School', rec.peerExample.cohortName]);
+              csvRows.push(['Peer Example - Strategy', rec.peerExample.strategy]);
+              csvRows.push(['Peer Example - Evidence', rec.peerExample.evidenceOfSuccess]);
+            }
+
+            if (rec.dashboardActions && rec.dashboardActions.length > 0) {
+              csvRows.push(['Available Actions', rec.dashboardActions.map(a => a.label).join('; ')]);
+            }
+
+            csvRows.push([]);
+          });
+        }
+
+        csvRows.push(['═══════════════════════════════════════════════════════════════']);
+        csvRows.push([]);
+      });
+
+      // Key information
+      csvRows.push(['KEY INFORMATION']);
+      csvRows.push(['- Priority: 1 = Highest urgency, 5 = Lower urgency']);
+      csvRows.push(['- Severity: critical = immediate action needed, attention = monitor closely, positive = celebrate success']);
+      csvRows.push(['- Type: skill_gap = specific skill deficit, peer_learning = learn from high performers, trend = performance over time']);
+      csvRows.push(['- Action Types: intervention = implement teaching strategy, investigate = gather more data, focus_group = group students, drill_down = view detail']);
+
+      // Convert to CSV
+      const csvContent = csvRows.map(row => {
+        if (typeof row === 'string') return row;
+        return row.map(cell => {
+          const cellStr = String(cell || '');
+          // Escape quotes and wrap in quotes if contains comma, newline, or quote
+          if (cellStr.includes(',') || cellStr.includes('\n') || cellStr.includes('"')) {
+            return `"${cellStr.replace(/"/g, '""')}"`;
+          }
+          return cellStr;
+        }).join(',');
+      }).join('\n');
+
+      // Download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      const filename = `${schoolName.replace(/\s+/g, '_')}_AI_Insights_${new Date().toISOString().split('T')[0]}.csv`;
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
 
     function filterYear(year) {

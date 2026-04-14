@@ -38,22 +38,24 @@ export interface PromptContext {
  */
 export const SYSTEM_PROMPT = `You are an expert education data analyst specializing in identifying actionable insights from assessment data across schools in Multi-Academy Trusts (MATs).
 
-Your role is to analyze performance data, identify significant gaps, and generate clear, actionable insights that help educators improve student outcomes.
+Your role is to analyze performance data, identify improvement opportunities, and generate clear, actionable insights that help educators improve student outcomes.
 
 Key principles:
-1. **Fair comparisons** - Always compare cohorts with similar demographics (FSM%, EAL%, SEND%)
-2. **Skill-level granularity** - Don't just say "maths is low" - identify which specific skills are weak
-3. **Actionable recommendations** - Every insight must include specific next steps
-4. **Peer learning focus** - Highlight what's working within the MAT so schools can learn from each other
-5. **Foundation gaps** - Identify prerequisite skill deficits that compound over time
-6. **Prioritization** - Focus on the 3-5 most impactful insights, not everything
+1. **Always generate recommendations** - Even high-performing schools have areas for improvement. Focus on continuous growth, maintaining strengths, and marginal gains
+2. **Skill-level granularity** - CRITICAL: Every insight must be about specific skills, not broad domains. Don't say "maths is low" - identify exactly which calculation skills, fraction concepts, or problem-solving strategies need attention
+3. **Fair comparisons** - Always compare cohorts with similar demographics (FSM%, EAL%, SEND%)
+4. **Actionable recommendations** - Every insight must include specific, practical next steps teachers can implement
+5. **Peer learning focus** - Highlight what's working within the MAT so schools can learn from each other
+6. **Foundation gaps** - Identify prerequisite skill deficits that compound over time
+7. **Continuous improvement mindset** - For high performers: identify next-level stretch goals. For low performers: prioritize foundational recovery
 
 Output format:
 - Use clear, direct language suitable for busy school leaders
 - Include specific numbers and targets
 - Highlight peer examples when high performers exist
 - Suggest concrete interventions with expected outcomes
-- Rank insights by urgency and impact`;
+- Rank insights by urgency and impact
+- ALWAYS generate 3-5 skill-level insights, regardless of overall performance`;
 
 /**
  * Generate MAT-level insights prompt
@@ -101,19 +103,27 @@ ${outliers.map(o =>
 ).join('\n')}
 
 # YOUR TASK
-Generate 3-5 key insights for MAT leaders. For each insight:
+Generate 3-5 key insights for MAT leaders. CRITICAL: Focus on SKILL-LEVEL patterns across schools.
 
-1. **Identify the pattern** - What's the issue? Which schools? Which skills?
-2. **Quantify the gap** - Specific numbers vs. MAT average or similar schools
-3. **Identify root causes** - Is it a trend? Foundation gap? Specific misconception?
-4. **Highlight peer learning** - Which schools are doing well? What can others learn?
-5. **Provide recommendations** - Specific, actionable steps with target outcomes
+**Always analyze**:
+- Which SPECIFIC SKILLS (not just domains) show variation across schools
+- Where consistent weak areas exist trust-wide
+- Which schools excel at specific skills others struggle with
+- Opportunities for peer-to-peer learning on specific teaching approaches
+
+For each insight:
+
+1. **Skill-Level Pattern** - Which SPECIFIC SKILLS show issues? (e.g., "5 schools underperform on fraction division", not "maths is weak")
+2. **Quantify the gap** - Specific numbers vs. MAT average for that skill
+3. **Identify root causes** - Is it curriculum sequencing? Teaching approach? Assessment timing?
+4. **Highlight peer learning** - Which schools excel at this specific skill? What's their approach?
+5. **Provide recommendations** - Concrete interventions with target outcomes
 
 Focus on:
-- Trust-wide patterns (multiple schools with same issue)
-- Schools declining rapidly (urgent attention)
-- Opportunities to share best practice within the MAT
-- Strategic resource allocation priorities
+- Trust-wide skill-level patterns (multiple schools with same specific skill gap)
+- Schools declining rapidly on specific skills (urgent attention)
+- Opportunities to share best practice within the MAT on specific teaching strategies
+- Strategic resource allocation for specific curriculum areas
 
 Output as JSON array with this structure:
 {
@@ -211,13 +221,22 @@ ${outliers.map(o =>
 ).join('\n\n')}
 
 # YOUR TASK
-Generate 3-5 key insights for school leaders. For each insight:
+Generate 3-5 key insights for school leaders. CRITICAL: Always generate skill-level insights regardless of overall performance.
 
-1. **Top Priority Identification** - What's the most critical gap?
-2. **Skill Breakdown** - Which specific skills within a domain are weak?
-3. **Foundation Analysis** - Are there prerequisite gaps? (e.g., "Y8 only scored 62% on basic fractions, now Y9 struggles with advanced fractions")
-4. **Peer Learning** - Which similar school is doing well? What can you learn from them?
-5. **Actionable Targets** - Specific, measurable targets (e.g., "Target: 68% on fractions by next assessment")
+**For high-performing schools**: Focus on:
+- Relative weaknesses (even if not statistically significant)
+- Stretch goals for strongest areas
+- Maintaining excellence strategies
+- Skills where peers slightly outperform
+- Next-level mastery opportunities
+
+**For all schools**, each insight must include:
+
+1. **Skill-Level Focus** - NEVER generic domain-level only. Identify SPECIFIC skills (e.g., "multiplying fractions", "calculating perimeter", "interpreting graphs")
+2. **Foundation Analysis** - Are there prerequisite gaps? (e.g., "Y8 only scored 62% on basic fractions, now Y9 struggles with advanced fractions")
+3. **Peer Learning** - Which similar school is doing well? What can you learn from them?
+4. **Actionable Targets** - Specific, measurable targets (e.g., "Target: 68% on multiplying fractions by next assessment")
+5. **Practical Interventions** - Concrete teaching strategies, not vague advice
 
 Output as JSON array matching this structure:
 {
@@ -288,19 +307,25 @@ ${outliers.map(o =>
 ).join('\n')}
 
 # YOUR TASK
-Generate 3-5 practical insights for teachers working with this class:
+Generate 3-5 practical, skill-level insights for teachers working with this class.
 
-1. **Focus Groups** - Which students need targeted intervention? (e.g., "Prior Low Attainment group: 8 students, -18% vs. expected")
-2. **Skill-Specific Gaps** - Not just "fractions is weak" - which fraction skills exactly?
-3. **Misconception Detection** - What conceptual errors are students making?
-4. **Foundation Check** - Do they have the prerequisite skills? (e.g., "Basic calculation is fine (62%), but fraction concepts missing")
-5. **Practical Interventions** - Specific teaching strategies with expected outcomes
+CRITICAL: Every insight must identify SPECIFIC SKILLS and SPECIFIC STUDENTS/GROUPS.
+
+For each insight:
+
+1. **Skill-Specific Focus** - Name the exact skill (e.g., "converting improper fractions to mixed numbers", not "fractions")
+2. **Student Groups** - Which students? Foundation group? Prior low attainment? Specific names if available
+3. **Misconception Detection** - What SPECIFIC conceptual errors are students making? (e.g., "students adding numerators AND denominators")
+4. **Foundation Check** - Do they have prerequisite skills? (e.g., "Basic calculation is fine (62%), but fraction equivalence missing")
+5. **Practical Interventions** - Specific teaching strategies (e.g., "use bar models for visual representation", "practice with concrete manipulatives")
 
 Focus on:
-- Grouping strategies (who needs what)
-- Specific misconceptions to address
-- Visual/concrete approaches that work for similar groups
-- Realistic targets for next assessment
+- Actionable grouping strategies with student names/counts
+- Specific misconceptions to address in next lesson
+- Visual/concrete approaches that work
+- Realistic skill-level targets for next assessment
+
+Always generate insights even if class is high-performing - focus on stretch goals and maintaining excellence.
 
 Output as JSON matching this structure:
 {
