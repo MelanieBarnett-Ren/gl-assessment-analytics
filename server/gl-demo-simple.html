@@ -32,7 +32,7 @@
       color: var(--color-text-default);
     }
     .header {
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-link) 100%);
       color: white;
       padding: 30px 40px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -44,7 +44,7 @@
     .gl-logo {
       display: inline-block;
       background: white;
-      color: #1e3a8a;
+      color: var(--color-primary);
       padding: 8px 16px;
       border-radius: 6px;
       font-weight: 700;
@@ -72,7 +72,7 @@
     .school-card.good { border-left: 6px solid #10b981; }
     .school-header h2 {
       font-size: 24px;
-      color: #1f2937;
+      color: var(--color-10);
       margin-bottom: 12px;
     }
     .verdict {
@@ -107,14 +107,14 @@
     .score-card .value {
       font-size: 32px;
       font-weight: 700;
-      color: #1f2937;
+      color: var(--color-10);
     }
     .value-added {
       background: #eff6ff;
       padding: 20px;
       border-radius: 12px;
       margin: 24px 0;
-      border-left: 4px solid #3b82f6;
+      border-left: 4px solid var(--color-link);
     }
     .value-added.negative {
       background: #fef2f2;
@@ -175,7 +175,7 @@
       color: #6b7280;
     }
     .drill-down-btn {
-      background: #3b82f6;
+      background: var(--color-link);
       color: white;
       border: none;
       padding: 10px 20px;
@@ -215,27 +215,27 @@
       border-radius: 6px;
       text-align: center;
       text-decoration: none;
-      color: #1f2937;
+      color: var(--color-10);
       font-size: 13px;
       font-weight: 500;
       transition: all 0.2s;
     }
     .class-link:hover {
-      background: #3b82f6;
+      background: var(--color-link);
       color: white;
-      border-color: #3b82f6;
+      border-color: var(--color-link);
     }
     /* Tooltips */
     .tooltip {
       position: relative;
       display: inline-block;
-      border-bottom: 1px dotted #3b82f6;
+      border-bottom: 1px dotted var(--color-link);
       cursor: help;
     }
     .tooltip .tooltiptext {
       visibility: hidden;
       width: 320px;
-      background-color: #1f2937;
+      background-color: var(--color-10);
       color: #fff;
       text-align: left;
       border-radius: 8px;
@@ -259,7 +259,7 @@
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;
-      border-color: #1f2937 transparent transparent transparent;
+      border-color: var(--color-10) transparent transparent transparent;
     }
     .tooltip:hover .tooltiptext {
       visibility: visible;
@@ -354,7 +354,7 @@
               html += '      </ul>';
               html += '    </div>';
               html += '    <div style="background: #dbeafe; padding: 12px; border-radius: 6px;">';
-              html += '      <strong style="color: #1e3a8a;">Recommendation:</strong> ' + insight.recommendation;
+              html += '      <strong style="color: var(--color-primary);">Recommendation:</strong> ' + insight.recommendation;
               html += '    </div>';
               html += '  </div>';
             });
@@ -394,7 +394,7 @@
           html += '  <a href="/school/' + school.schoolId + '/skills" style="display: block; background: #10b981; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 16px;">🎯 View Detailed Skills Analysis</a>';
 
           // Dashboard Link
-          html += '  <a href="/dashboard" style="display: block; background: #3b82f6; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 12px;">📊 Visual Analytics Dashboard</a>';
+          html += '  <a href="/dashboard" style="display: block; background: var(--color-link); color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 12px;">📊 Visual Analytics Dashboard</a>';
 
           // Classes drill-down
           var schoolPrefix = school.schoolId === 'school6' ? 'class6' : 'class8';

@@ -34,7 +34,7 @@
 
     /* Header */
     .header {
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-link) 100%);
       color: white;
       padding: 20px 40px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -67,7 +67,7 @@
       display: flex;
       gap: 8px;
       margin-bottom: 30px;
-      border-bottom: 2px solid #e5e7eb;
+      border-bottom: 2px solid var(--color-table-border);
     }
     .tab {
       padding: 12px 24px;
@@ -77,15 +77,15 @@
       cursor: pointer;
       font-size: 14px;
       font-weight: 600;
-      color: #6b7280;
+      color: var(--color-50);
       transition: all 0.2s;
     }
     .tab.active {
-      background: #3b82f6;
+      background: var(--color-link);
       color: white;
     }
     .tab:hover:not(.active) {
-      background: #f3f4f6;
+      background: var(--color-90);
     }
 
     /* Content Sections */
@@ -112,17 +112,17 @@
     .domain-card h3 {
       font-size: 18px;
       margin-bottom: 16px;
-      color: #1f2937;
+      color: var(--color-10);
     }
     .domain-score {
       font-size: 48px;
       font-weight: 700;
       margin-bottom: 8px;
     }
-    .domain-score.low { color: #dc2626; }
-    .domain-score.medium { color: #f59e0b; }
-    .domain-score.good { color: #3b82f6; }
-    .domain-score.high { color: #10b981; }
+    .domain-score.low { color: var(--color-error); }
+    .domain-score.medium { color: var(--color-warning); }
+    .domain-score.good { color: var(--color-link); }
+    .domain-score.high { color: var(--color-tertiary); }
 
     /* Skill Breakdown */
     .skills-list {
@@ -133,20 +133,20 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 0;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--color-table-border);
     }
     .skill-item:last-child {
       border-bottom: none;
     }
     .skill-name {
       font-size: 14px;
-      color: #374151;
+      color: var(--color-copy-primary);
     }
     .skill-bar-container {
       flex: 1;
       max-width: 200px;
       height: 8px;
-      background: #e5e7eb;
+      background: var(--color-table-border);
       border-radius: 4px;
       margin: 0 16px;
       position: relative;
@@ -156,10 +156,10 @@
       border-radius: 4px;
       transition: width 0.3s;
     }
-    .skill-bar.low { background: #dc2626; }
-    .skill-bar.medium { background: #f59e0b; }
-    .skill-bar.good { background: #3b82f6; }
-    .skill-bar.high { background: #10b981; }
+    .skill-bar.low { background: var(--color-error); }
+    .skill-bar.medium { background: var(--color-warning); }
+    .skill-bar.good { background: var(--color-link); }
+    .skill-bar.high { background: var(--color-tertiary); }
     .skill-score {
       font-weight: 600;
       font-size: 14px;
@@ -181,18 +181,18 @@
       font-size: 13px;
     }
     .heatmap-table th {
-      background: #f3f4f6;
+      background: var(--color-90);
       padding: 12px 8px;
       text-align: center;
       font-weight: 600;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--color-table-border);
       position: sticky;
       top: 0;
     }
     .heatmap-table td {
       padding: 12px 8px;
       text-align: center;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--color-table-border);
       font-weight: 600;
     }
     .heatmap-table td.skill-name-cell {
@@ -221,46 +221,46 @@
       border-radius: 8px;
       padding: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 4px solid #e5e7eb;
+      border-left: 4px solid var(--color-table-border);
     }
-    .item-card.critical { border-left-color: #dc2626; }
-    .item-card.needs-work { border-left-color: #f59e0b; }
-    .item-card.good { border-left-color: #10b981; }
+    .item-card.critical { border-left-color: var(--color-error); }
+    .item-card.needs-work { border-left-color: var(--color-warning); }
+    .item-card.good { border-left-color: var(--color-tertiary); }
     .item-id {
       font-size: 12px;
-      color: #6b7280;
+      color: var(--color-50);
       margin-bottom: 8px;
     }
     .item-skill {
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 8px;
-      color: #1f2937;
+      color: var(--color-10);
     }
     .success-rate {
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 4px;
     }
-    .success-rate.critical { color: #dc2626; }
-    .success-rate.needs-work { color: #f59e0b; }
-    .success-rate.good { color: #10b981; }
+    .success-rate.critical { color: var(--color-error); }
+    .success-rate.needs-work { color: var(--color-warning); }
+    .success-rate.good { color: var(--color-tertiary); }
     .national-comparison {
       font-size: 12px;
-      color: #6b7280;
+      color: var(--color-50);
     }
 
     /* Tooltips */
     .tooltip {
       position: relative;
       display: inline-block;
-      border-bottom: 1px dotted #3b82f6;
+      border-bottom: 1px dotted var(--color-link);
       cursor: help;
     }
     .tooltip .tooltiptext {
       visibility: hidden;
       width: 300px;
-      background-color: #1f2937;
+      background-color: var(--color-10);
       color: #fff;
       text-align: left;
       border-radius: 8px;
@@ -284,7 +284,7 @@
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;
-      border-color: #1f2937 transparent transparent transparent;
+      border-color: var(--color-10) transparent transparent transparent;
     }
     .tooltip:hover .tooltiptext {
       visibility: visible;
@@ -303,7 +303,7 @@
       transition: all 0.2s;
     }
     .strand-link:hover {
-      background: #3b82f6;
+      background: var(--color-link);
       color: white;
       transform: translateX(4px);
     }
@@ -312,7 +312,7 @@
       text-align: center;
       padding: 60px;
       font-size: 18px;
-      color: #6b7280;
+      color: var(--color-50);
     }
 
     /* ============================================
@@ -324,7 +324,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
@@ -410,7 +410,7 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      color: #6b7280;
+      color: var(--color-50);
       padding: 0 24px 8px;
       letter-spacing: 0.5px;
     }
@@ -420,7 +420,7 @@
       align-items: center;
       gap: 12px;
       padding: 12px 24px;
-      color: #1f2937;
+      color: var(--color-10);
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
@@ -428,13 +428,13 @@
     }
 
     .nav-link:hover {
-      background: #f3f4f6;
+      background: var(--color-90);
     }
 
     .nav-link.active {
       background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      color: var(--color-secondary);
+      border-right: 3px solid var(--color-secondary);
     }
 
     .nav-icon {
@@ -627,7 +627,7 @@
       } catch (error) {
         console.error(error);
         document.getElementById('domainsContent').innerHTML =
-          '<div class="loading" style="color: #dc2626;">Error: ' + error.message + '</div>';
+          '<div class="loading" style="color: var(--color-error);">Error: ' + error.message + '</div>';
       }
     }
 
@@ -641,7 +641,7 @@
       html += '<div class="domain-card">';
       html += '  <h3><span class="tooltip">Overall NGMT<span class="tooltiptext">Overall mathematics attainment score across all domains</span></span></h3>';
       html += '  <div class="domain-score ' + getScoreClass(ngmt.overall.sas) + '">' + ngmt.overall.sas + '</div>';
-      html += '  <div style="font-size: 14px; color: #6b7280;">SAS (Stanine ' + ngmt.overall.stanine + ')</div>';
+      html += '  <div style="font-size: 14px; color: var(--color-50);">SAS (Stanine ' + ngmt.overall.stanine + ')</div>';
       html += '</div>';
 
       // Each domain with strand links
@@ -673,7 +673,7 @@
           html += '<div class="domain-card">';
           html += '  <h3><span class="tooltip">' + domain.name + '<span class="tooltiptext">' + domain.tooltip + '</span></span></h3>';
           html += '  <div class="domain-score ' + getScoreClass(domainData.score.sas) + '">' + domainData.score.sas + '</div>';
-          html += '  <div style="font-size: 14px; color: #6b7280;">SAS (Stanine ' + domainData.score.stanine + ')</div>';
+          html += '  <div style="font-size: 14px; color: var(--color-50);">SAS (Stanine ' + domainData.score.stanine + ')</div>';
 
           // Skills breakdown
           html += '  <div class="skills-list">';
@@ -694,8 +694,8 @@
 
           // Strand drill-down links
           if (domain.strands && domain.strands.length > 0) {
-            html += '  <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb;">';
-            html += '    <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px; font-weight: 600;">DRILL DOWN TO STRANDS:</div>';
+            html += '  <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-table-border);">';
+            html += '    <div style="font-size: 12px; color: var(--color-50); margin-bottom: 8px; font-weight: 600;">DRILL DOWN TO STRANDS:</div>';
             domain.strands.forEach(function(strand) {
               html += '    <a href="/school/' + schoolId + '/strand/' + strand.id + '" class="strand-link">';
               html += '      🎯 ' + strand.name + ' →';
@@ -717,31 +717,31 @@
 
       let html = '<div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">';
       html += '<h2 style="margin-bottom: 20px; font-size: 20px;">Top Skills Needing Attention</h2>';
-      html += '<p style="color: #6b7280; margin-bottom: 24px;">Based on PTM item-level data compared to national averages</p>';
+      html += '<p style="color: var(--color-50); margin-bottom: 24px;">Based on PTM item-level data compared to national averages</p>';
 
       html += '<div class="skills-list">';
       schoolData.skillGaps.forEach(function(gap) {
         const gapClass = gap.severity === 'critical' ? 'low' : 'medium';
 
-        html += '<div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ' + (gap.severity === 'critical' ? '#dc2626' : '#f59e0b') + ';">';
+        html += '<div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + ';">';
         html += '  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">';
         html += '    <div style="flex: 1;">';
         html += '      <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">' + gap.skill + '</div>';
-        html += '      <div style="font-size: 14px; color: #6b7280;">Gap: <strong>' + gap.gap + '%</strong> below national</div>';
+        html += '      <div style="font-size: 14px; color: var(--color-50);">Gap: <strong>' + gap.gap + '%</strong> below national</div>';
         html += '    </div>';
         html += '    <div style="text-align: right;">';
-        html += '      <div style="font-size: 24px; font-weight: 700; color: ' + (gap.severity === 'critical' ? '#dc2626' : '#f59e0b') + ';">' + gap.yourScore + '%</div>';
-        html += '      <div style="font-size: 12px; color: #6b7280;">vs ' + gap.nationalAverage + '% national</div>';
+        html += '      <div style="font-size: 24px; font-weight: 700; color: ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + ';">' + gap.yourScore + '%</div>';
+        html += '      <div style="font-size: 12px; color: var(--color-50);">vs ' + gap.nationalAverage + '% national</div>';
         html += '    </div>';
         html += '  </div>';
 
         // Progress bar
         html += '  <div style="display: flex; gap: 8px; align-items: center;">';
-        html += '    <div style="flex: 1; height: 12px; background: #e5e7eb; border-radius: 6px; position: relative; overflow: hidden;">';
-        html += '      <div style="position: absolute; height: 100%; background: ' + (gap.severity === 'critical' ? '#dc2626' : '#f59e0b') + '; width: ' + gap.yourScore + '%; border-radius: 6px;"></div>';
-        html += '      <div style="position: absolute; left: ' + gap.nationalAverage + '%; top: -8px; width: 2px; height: 28px; background: #10b981;"></div>';
+        html += '    <div style="flex: 1; height: 12px; background: var(--color-table-border); border-radius: 6px; position: relative; overflow: hidden;">';
+        html += '      <div style="position: absolute; height: 100%; background: ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + '; width: ' + gap.yourScore + '%; border-radius: 6px;"></div>';
+        html += '      <div style="position: absolute; left: ' + gap.nationalAverage + '%; top: -8px; width: 2px; height: 28px; background: var(--color-tertiary);"></div>';
         html += '    </div>';
-        html += '    <div style="font-size: 11px; color: #10b981; white-space: nowrap;">← National</div>';
+        html += '    <div style="font-size: 11px; color: var(--color-tertiary); white-space: nowrap;">← National</div>';
         html += '  </div>';
         html += '</div>';
       });
@@ -766,7 +766,7 @@
 
       let html = '<div class="heatmap-container">';
       html += '<h2 style="margin-bottom: 16px; font-size: 20px;">Skills Mastery Heatmap (All Classes)</h2>';
-      html += '<p style="color: #6b7280; margin-bottom: 24px;">Percentage of students who answered correctly</p>';
+      html += '<p style="color: var(--color-50); margin-bottom: 24px;">Percentage of students who answered correctly</p>';
       html += '<table class="heatmap-table">';
       html += '  <thead>';
       html += '    <tr>';
@@ -854,7 +854,7 @@
 
       let html = '<div>';
       html += '<h2 style="margin-bottom: 16px; font-size: 20px;">Item-Level Analysis</h2>';
-      html += '<p style="color: #6b7280; margin-bottom: 24px;">PTM questions sorted by difficulty (lowest success rate first)</p>';
+      html += '<p style="color: var(--color-50); margin-bottom: 24px;">PTM questions sorted by difficulty (lowest success rate first)</p>';
       html += '<div class="items-grid">';
 
       items.forEach(function(item) {

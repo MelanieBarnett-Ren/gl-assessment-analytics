@@ -45,7 +45,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
@@ -154,8 +154,8 @@
 
     .nav-link.active {
       background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      color: var(--color-secondary);
+      border-right: 3px solid var(--color-secondary);
     }
 
     .nav-icon {
@@ -228,14 +228,14 @@
     }
 
     .pill:hover {
-      border-color: #d946ef;
-      color: #d946ef;
+      border-color: var(--color-secondary);
+      color: var(--color-secondary);
     }
 
     .pill.active {
-      background: #d946ef;
+      background: var(--color-secondary);
       color: white;
-      border-color: #d946ef;
+      border-color: var(--color-secondary);
     }
 
     select.pill-select {
@@ -251,8 +251,8 @@
     }
 
     select.pill-select:focus {
-      border-color: #d946ef;
-      color: #d946ef;
+      border-color: var(--color-secondary);
+      color: var(--color-secondary);
     }
 
     /* School Cards */
@@ -328,7 +328,7 @@
     .metric-compact-value {
       font-size: 24px;
       font-weight: 700;
-      color: #d946ef;
+      color: var(--color-secondary);
     }
 
     .metric-compact-change {
@@ -441,7 +441,7 @@
 
     .class-link:hover {
       background: #eff6ff;
-      color: #d946ef;
+      color: var(--color-secondary);
     }
 
     .class-icon {
@@ -516,7 +516,7 @@
     .group-stat-value {
       font-size: 24px;
       font-weight: 700;
-      color: #d946ef;
+      color: var(--color-secondary);
     }
 
     .group-stat-count {

@@ -44,7 +44,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
@@ -153,8 +153,8 @@
 
     .nav-link.active {
       background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      color: var(--color-secondary);
+      border-right: 3px solid var(--color-secondary);
     }
 
     .nav-icon {
@@ -204,7 +204,7 @@
     }
 
     .tree-select:hover {
-      border-color: #d946ef;
+      border-color: var(--color-secondary);
     }
 
     .tree-arrow {
@@ -403,7 +403,7 @@
     }
 
     .action-card:hover {
-      border-color: #d946ef;
+      border-color: var(--color-secondary);
       box-shadow: 0 4px 12px rgba(217, 70, 239, 0.1);
       transform: translateY(-2px);
     }
@@ -478,8 +478,8 @@
     .insight-action {
       padding: 6px 12px;
       background: white;
-      border: 1px solid #d946ef;
-      color: #d946ef;
+      border: 1px solid var(--color-secondary);
+      color: var(--color-secondary);
       border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
@@ -489,7 +489,7 @@
     }
 
     .insight-action:hover {
-      background: #d946ef;
+      background: var(--color-secondary);
       color: white;
     }
 
@@ -872,7 +872,7 @@
         series: [{
           name: 'Your Group',
           data: data.distribution.group,
-          color: '#d946ef'
+          color: 'var(--color-secondary)'
         }, {
           name: 'National Average',
           data: data.distribution.national,
@@ -916,7 +916,7 @@
         series: [{
           name: 'Your Group',
           data: data.curriculum.group,
-          color: '#d946ef'
+          color: 'var(--color-secondary)'
         }, {
           name: 'National Average',
           data: data.curriculum.national,
@@ -960,7 +960,7 @@
         series: [{
           name: 'Your Group',
           data: data.process.group,
-          color: '#d946ef'
+          color: 'var(--color-secondary)'
         }, {
           name: 'National Average',
           data: data.process.national,

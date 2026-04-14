@@ -45,7 +45,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
@@ -131,7 +131,7 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      color: #6b7280;
+      color: var(--color-50);
       padding: 0 24px 8px;
       letter-spacing: 0.5px;
     }
@@ -141,7 +141,7 @@
       align-items: center;
       gap: 12px;
       padding: 12px 24px;
-      color: #1f2937;
+      color: var(--color-10);
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
@@ -149,13 +149,13 @@
     }
 
     .nav-link:hover {
-      background: #f3f4f6;
+      background: var(--color-90);
     }
 
     .nav-link.active {
       background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      color: var(--color-secondary);
+      border-right: 3px solid var(--color-secondary);
     }
 
     .nav-icon {
@@ -180,12 +180,12 @@
     /* Breadcrumb */
     .breadcrumb {
       font-size: 13px;
-      color: #6b7280;
+      color: var(--color-50);
       margin-bottom: 16px;
     }
 
     .breadcrumb a {
-      color: #d946ef;
+      color: var(--color-secondary);
       text-decoration: none;
       font-weight: 500;
     }
@@ -206,13 +206,13 @@
     .page-header h1 {
       font-size: 24px;
       font-weight: 600;
-      color: #1f2937;
+      color: var(--color-10);
       margin-bottom: 8px;
     }
 
     .page-header .subtitle {
       font-size: 14px;
-      color: #6b7280;
+      color: var(--color-50);
     }
 
     /* Stats Grid */
@@ -235,7 +235,7 @@
       font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
-      color: #6b7280;
+      color: var(--color-50);
       margin-bottom: 8px;
     }
 
@@ -245,10 +245,10 @@
       margin-bottom: 4px;
     }
 
-    .stat-value.mastered { color: #10b981; }
-    .stat-value.developing { color: #3b82f6; }
-    .stat-value.emerging { color: #f59e0b; }
-    .stat-value.concern { color: #dc2626; }
+    .stat-value.mastered { color: var(--color-tertiary); }
+    .stat-value.developing { color: var(--color-link); }
+    .stat-value.emerging { color: var(--color-warning); }
+    .stat-value.concern { color: var(--color-error); }
 
     .stat-detail {
       font-size: 13px;
@@ -277,13 +277,13 @@
     .chart-title {
       font-size: 16px;
       font-weight: 600;
-      color: #1f2937;
+      color: var(--color-10);
       margin-bottom: 16px;
     }
 
     .chart-subtitle {
       font-size: 13px;
-      color: #6b7280;
+      color: var(--color-50);
       margin-bottom: 16px;
     }
 
@@ -313,27 +313,27 @@
 
     .objective-compact.mastered {
       background: #f0fdf4;
-      border-left-color: #10b981;
+      border-left-color: var(--color-tertiary);
     }
 
     .objective-compact.developing {
       background: #eff6ff;
-      border-left-color: #3b82f6;
+      border-left-color: var(--color-link);
     }
 
     .objective-compact.emerging {
       background: #fffbeb;
-      border-left-color: #f59e0b;
+      border-left-color: var(--color-warning);
     }
 
     .objective-compact.concern {
       background: #fef2f2;
-      border-left-color: #dc2626;
+      border-left-color: var(--color-error);
     }
 
     .objective-code {
       font-weight: 700;
-      color: #1f2937;
+      color: var(--color-10);
       margin-right: 8px;
     }
 
@@ -347,27 +347,27 @@
     }
 
     .objective-badge.mastered {
-      background: #10b981;
+      background: var(--color-tertiary);
       color: white;
     }
 
     .objective-badge.developing {
-      background: #3b82f6;
+      background: var(--color-link);
       color: white;
     }
 
     .objective-badge.emerging {
-      background: #f59e0b;
+      background: var(--color-warning);
       color: white;
     }
 
     .objective-badge.concern {
-      background: #dc2626;
+      background: var(--color-error);
       color: white;
     }
 
     .focus-skill-badge {
-      background: #d946ef;
+      background: var(--color-secondary);
       color: white;
       padding: 2px 8px;
       border-radius: 10px;
@@ -379,20 +379,20 @@
     /* Focus Skills Explainer */
     .focus-skills-box {
       background: #faf5ff;
-      border-left: 4px solid #d946ef;
+      border-left: 4px solid var(--color-secondary);
       padding: 16px 20px;
       margin-bottom: 24px;
       border-radius: 8px;
     }
 
     .focus-skills-box h3 {
-      color: #a855f7;
+      color: var(--color-primary);
       font-size: 16px;
       margin-bottom: 8px;
     }
 
     .focus-skills-box p {
-      color: #6b7280;
+      color: var(--color-50);
       font-size: 14px;
       line-height: 1.6;
       margin: 0;
@@ -415,7 +415,7 @@
     }
 
     .export-card {
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--color-table-border);
       border-radius: 10px;
       padding: 16px;
       display: flex;
@@ -430,11 +430,11 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .export-card.concern { border-left: 4px solid #dc2626; }
-    .export-card.emerging { border-left: 4px solid #f59e0b; }
-    .export-card.developing { border-left: 4px solid #3b82f6; }
-    .export-card.mastered { border-left: 4px solid #10b981; }
-    .export-card.all { border-left: 4px solid #d946ef; }
+    .export-card.concern { border-left: 4px solid var(--color-error); }
+    .export-card.emerging { border-left: 4px solid var(--color-warning); }
+    .export-card.developing { border-left: 4px solid var(--color-link); }
+    .export-card.mastered { border-left: 4px solid var(--color-tertiary); }
+    .export-card.all { border-left: 4px solid var(--color-secondary); }
 
     .export-info {
       flex: 1;
@@ -443,17 +443,17 @@
     .export-level {
       font-size: 14px;
       font-weight: 600;
-      color: #1f2937;
+      color: var(--color-10);
       margin-bottom: 4px;
     }
 
     .export-count {
       font-size: 12px;
-      color: #6b7280;
+      color: var(--color-50);
     }
 
     .export-btn {
-      background: #d946ef;
+      background: var(--color-secondary);
       color: white;
       border: none;
       padding: 8px 16px;
@@ -482,8 +482,8 @@
       flex: 1;
       min-width: 200px;
       background: white;
-      border: 2px solid #d946ef;
-      color: #d946ef;
+      border: 2px solid var(--color-secondary);
+      color: var(--color-secondary);
       padding: 12px 20px;
       border-radius: 8px;
       font-size: 14px;
@@ -497,12 +497,12 @@
     }
 
     .report-btn:hover {
-      background: #d946ef;
+      background: var(--color-secondary);
       color: white;
     }
 
     .report-btn.primary {
-      background: #d946ef;
+      background: var(--color-secondary);
       color: white;
     }
 
@@ -632,15 +632,15 @@
       <div class="chart-title">📥 Export Student Lists & Reports</div>
       <p class="chart-subtitle">Download actionable student lists grouped by performance level (% correct) for targeted interventions</p>
 
-      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; margin: 12px 0; border-radius: 6px; font-size: 13px;">
+      <div style="background: #eff6ff; border-left: 4px solid var(--color-link); padding: 12px 16px; margin: 12px 0; border-radius: 6px; font-size: 13px;">
         <strong style="color: #1e40af;">💡 Understanding % Correct:</strong>
-        <span style="color: #6b7280;">These percentages represent questions answered correctly per objective. They do not account for:</span>
-        <ul style="margin: 6px 0 0 20px; color: #6b7280; line-height: 1.6;">
+        <span style="color: var(--color-50);">These percentages represent questions answered correctly per objective. They do not account for:</span>
+        <ul style="margin: 6px 0 0 20px; color: var(--color-50); line-height: 1.6;">
           <li>Question weighting within the assessment</li>
           <li>Difficulty levels of individual questions</li>
           <li>Number of questions per objective (which may vary)</li>
         </ul>
-        <span style="color: #6b7280; font-style: italic; display: block; margin-top: 6px;">For weighted scores and detailed question-level analysis, refer to the full PTM assessment report.</span>
+        <span style="color: var(--color-50); font-style: italic; display: block; margin-top: 6px;">For weighted scores and detailed question-level analysis, refer to the full PTM assessment report.</span>
       </div>
 
       <div class="export-grid">
@@ -702,21 +702,21 @@
       <div class="chart-title">🚨 Students Requiring Urgent Support (Concern Level)</div>
       <p class="chart-subtitle">Students with average % correct below 50% across objectives in this strand</p>
 
-      <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; margin: 16px 0; border-radius: 6px; font-size: 13px;">
+      <div style="background: #fffbeb; border-left: 4px solid var(--color-warning); padding: 12px 16px; margin: 16px 0; border-radius: 6px; font-size: 13px;">
         <strong style="color: #d97706;">⚠️ Note on % Correct:</strong>
-        <span style="color: #6b7280;">This metric shows the percentage of questions answered correctly but does not reflect question weighting or difficulty. Some objectives may have more questions or weighted items in the actual assessment.</span>
+        <span style="color: var(--color-50);">This metric shows the percentage of questions answered correctly but does not reflect question weighting or difficulty. Some objectives may have more questions or weighted items in the actual assessment.</span>
       </div>
 
       <div style="overflow-x: auto; margin-top: 16px;">
         <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
           <thead>
-            <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+            <tr style="background: #f9fafb; border-bottom: 2px solid var(--color-table-border);">
               <th style="padding: 12px; text-align: left; font-weight: 600;">Student ID</th>
               <th style="padding: 12px; text-align: left; font-weight: 600;">Student Name</th>
               <th style="padding: 12px; text-align: center; font-weight: 600;">
                 <div style="position: relative; display: inline-block;">
                   Avg % Correct
-                  <span style="cursor: help; color: #6b7280; font-size: 11px; margin-left: 4px;">ⓘ</span>
+                  <span style="cursor: help; color: var(--color-50); font-size: 11px; margin-left: 4px;">ⓘ</span>
                 </div>
               </th>
               <th style="padding: 12px; text-align: left; font-weight: 600;">Weakest Objectives</th>
@@ -729,9 +729,9 @@
         </table>
       </div>
 
-      <div style="margin-top: 16px; padding: 16px; background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 8px;">
-        <strong style="color: #dc2626;">⚠️ Recommended Actions:</strong>
-        <ul style="margin: 8px 0 0 20px; color: #6b7280; line-height: 1.8;">
+      <div style="margin-top: 16px; padding: 16px; background: #fef2f2; border-left: 4px solid var(--color-error); border-radius: 8px;">
+        <strong style="color: var(--color-error);">⚠️ Recommended Actions:</strong>
+        <ul style="margin: 8px 0 0 20px; color: var(--color-50); line-height: 1.8;">
           <li>Prioritize small-group interventions targeting Focus Skills (⭐) in concern areas</li>
           <li>Review student progress weekly using PTM assessments</li>
           <li>Consider 1-on-1 support for students below 40% correct</li>
@@ -910,7 +910,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-label">⭐ Focus Skills</div>
-          <div class="stat-value" style="color: #d946ef;">${focusSkills}</div>
+          <div class="stat-value" style="color: var(--color-secondary);">${focusSkills}</div>
           <div class="stat-detail">essential 23%</div>
         </div>
       `;
@@ -927,9 +927,9 @@
         x: idx,
         y: student.averageMastery,
         name: student.studentName,
-        color: student.averageMastery >= 85 ? '#10b981' :
-               student.averageMastery >= 70 ? '#3b82f6' :
-               student.averageMastery >= 50 ? '#f59e0b' : '#dc2626'
+        color: student.averageMastery >= 85 ? 'var(--color-tertiary)' :
+               student.averageMastery >= 70 ? 'var(--color-link)' :
+               student.averageMastery >= 50 ? 'var(--color-warning)' : 'var(--color-error)'
       }));
 
       Highcharts.chart('scatterChart', {
@@ -961,7 +961,7 @@
             label: {
               text: 'Concern',
               style: {
-                color: '#dc2626'
+                color: 'var(--color-error)'
               }
             }
           }, {
@@ -971,7 +971,7 @@
             label: {
               text: 'Emerging',
               style: {
-                color: '#f59e0b'
+                color: 'var(--color-warning)'
               }
             }
           }, {
@@ -981,7 +981,7 @@
             label: {
               text: 'Developing',
               style: {
-                color: '#3b82f6'
+                color: 'var(--color-link)'
               }
             }
           }, {
@@ -991,7 +991,7 @@
             label: {
               text: 'Mastered',
               style: {
-                color: '#10b981'
+                color: 'var(--color-tertiary)'
               }
             }
           }]
@@ -1074,9 +1074,9 @@
           name: '% Correct',
           data: sorted.map(o => ({
             y: o.masteryPercent,
-            color: o.level === 'mastered' ? '#10b981' :
-                   o.level === 'developing' ? '#3b82f6' :
-                   o.level === 'emerging' ? '#f59e0b' : '#dc2626'
+            color: o.level === 'mastered' ? 'var(--color-tertiary)' :
+                   o.level === 'developing' ? 'var(--color-link)' :
+                   o.level === 'emerging' ? 'var(--color-warning)' : 'var(--color-error)'
           }))
         }],
         credits: {
@@ -1114,10 +1114,10 @@
         series: [{
           name: 'Students',
           data: [
-            { name: 'Mastered', y: mastered, color: '#10b981' },
-            { name: 'Developing', y: developing, color: '#3b82f6' },
-            { name: 'Emerging', y: emerging, color: '#f59e0b' },
-            { name: 'Concern', y: concern, color: '#dc2626' }
+            { name: 'Mastered', y: mastered, color: 'var(--color-tertiary)' },
+            { name: 'Developing', y: developing, color: 'var(--color-link)' },
+            { name: 'Emerging', y: emerging, color: 'var(--color-warning)' },
+            { name: 'Concern', y: concern, color: 'var(--color-error)' }
           ]
         }],
         credits: {
@@ -1146,7 +1146,7 @@
             <span class="objective-code">${obj.code}</span>
             ${obj.focusSkill ? `<span class="focus-skill-badge">⭐ ${obj.focusSkill}</span>` : ''}
             <br>
-            <span style="font-size: 12px; color: #6b7280;">${obj.text}</span>
+            <span style="font-size: 12px; color: var(--color-50);">${obj.text}</span>
           </div>
           <div>
             <span class="objective-badge ${obj.level}">${obj.masteryPercent}%</span>
@@ -1202,21 +1202,21 @@
         const weakestText = weakest.map(w => `${w.objective.code} (${w.score}%)`).join(', ');
 
         return `
-          <tr style="border-bottom: 1px solid #e5e7eb;">
-            <td style="padding: 12px; font-family: monospace; color: #6b7280;">${student.studentId}</td>
+          <tr style="border-bottom: 1px solid var(--color-table-border);">
+            <td style="padding: 12px; font-family: monospace; color: var(--color-50);">${student.studentId}</td>
             <td style="padding: 12px; font-weight: 600;">${student.studentName}</td>
             <td style="padding: 12px; text-align: center;">
-              <span style="background: #fef2f2; color: #dc2626; padding: 4px 12px; border-radius: 12px; font-weight: 700;">
+              <span style="background: #fef2f2; color: var(--color-error); padding: 4px 12px; border-radius: 12px; font-weight: 700;">
                 ${student.averageMastery}%
               </span>
             </td>
-            <td style="padding: 12px; font-size: 12px; color: #6b7280;">${weakestText}</td>
+            <td style="padding: 12px; font-size: 12px; color: var(--color-50);">${weakestText}</td>
             <td style="padding: 12px; text-align: center;">
               <button
                 onclick="viewStudentDetail('${student.studentId}')"
-                style="background: #d946ef; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;"
+                style="background: var(--color-secondary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;"
                 onmouseover="this.style.background='#c026d3'"
-                onmouseout="this.style.background='#d946ef'">
+                onmouseout="this.style.background='var(--color-secondary)'">
                 View Details
               </button>
             </td>

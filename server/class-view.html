@@ -34,7 +34,7 @@
 
     /* Header */
     .header {
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       color: white;
       padding: 20px 40px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -74,22 +74,22 @@
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 4px solid #3b82f6;
+      border-left: 4px solid var(--color-primary);
     }
     .summary-card h3 {
       font-size: 12px;
-      color: #6b7280;
+      color: var(--color-50);
       text-transform: uppercase;
       margin-bottom: 8px;
     }
     .summary-card .value {
       font-size: 28px;
       font-weight: 700;
-      color: #1f2937;
+      color: var(--color-10);
     }
     .summary-card .sublabel {
       font-size: 12px;
-      color: #9ca3af;
+      color: var(--color-70);
       margin-top: 4px;
     }
 
@@ -101,15 +101,15 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       margin-bottom: 30px;
     }
-    .value-added-section.positive { border-left: 4px solid #10b981; }
-    .value-added-section.negative { border-left: 4px solid #dc2626; }
+    .value-added-section.positive { border-left: 4px solid var(--color-tertiary); }
+    .value-added-section.negative { border-left: 4px solid var(--color-error); }
     .va-score {
       font-size: 36px;
       font-weight: 700;
       margin: 12px 0;
     }
-    .va-score.positive { color: #10b981; }
-    .va-score.negative { color: #dc2626; }
+    .va-score.positive { color: var(--color-tertiary); }
+    .va-score.negative { color: var(--color-error); }
 
     /* Focus Groups */
     .focus-groups {
@@ -122,7 +122,7 @@
     .focus-groups h2 {
       font-size: 20px;
       margin-bottom: 16px;
-      color: #1f2937;
+      color: var(--color-10);
     }
     .focus-grid {
       display: grid;
@@ -166,27 +166,27 @@
     .students-section h2 {
       font-size: 20px;
       margin-bottom: 16px;
-      color: #1f2937;
+      color: var(--color-10);
     }
     .students-table {
       width: 100%;
       border-collapse: collapse;
     }
     .students-table th {
-      background: #f3f4f6;
+      background: var(--color-90);
       padding: 12px;
       text-align: left;
       font-weight: 600;
       font-size: 13px;
-      border-bottom: 2px solid #e5e7eb;
+      border-bottom: 2px solid var(--color-table-border);
     }
     .students-table td {
       padding: 12px;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--color-table-border);
       font-size: 14px;
     }
     .students-table tr:hover {
-      background: #f9fafb;
+      background: var(--color-white);
     }
     .focus-badge {
       display: inline-block;
@@ -197,36 +197,36 @@
       text-transform: uppercase;
     }
     .focus-badge.foundation {
-      background: #fee2e2;
-      color: #991b1b;
+      background: var(--color-error-container);
+      color: var(--color-error-focus);
     }
     .focus-badge.consolidation {
-      background: #dbeafe;
-      color: #1e40af;
+      background: var(--color-primary-50);
+      color: var(--color-primary-focus);
     }
     .focus-badge.extension {
-      background: #d1fae5;
-      color: #065f46;
+      background: var(--color-tertiary-container);
+      color: var(--color-tertiary);
     }
     .score-cell {
       font-weight: 600;
     }
-    .score-cell.low { color: #dc2626; }
-    .score-cell.average { color: #3b82f6; }
-    .score-cell.high { color: #10b981; }
+    .score-cell.low { color: var(--color-error); }
+    .score-cell.average { color: var(--color-link); }
+    .score-cell.high { color: var(--color-tertiary); }
 
     /* Tooltips */
     .tooltip {
       position: relative;
       display: inline-block;
-      border-bottom: 1px dotted #3b82f6;
+      border-bottom: 1px dotted var(--color-link);
       cursor: help;
     }
     .tooltip .tooltiptext {
       visibility: hidden;
       width: 300px;
-      background-color: #1f2937;
-      color: #fff;
+      background-color: var(--color-10);
+      color: var(--color-W);
       text-align: left;
       border-radius: 8px;
       padding: 12px;
@@ -249,7 +249,7 @@
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;
-      border-color: #1f2937 transparent transparent transparent;
+      border-color: var(--color-10) transparent transparent transparent;
     }
     .tooltip:hover .tooltiptext {
       visibility: visible;
@@ -260,7 +260,7 @@
       text-align: center;
       padding: 60px;
       font-size: 18px;
-      color: #6b7280;
+      color: var(--color-50);
     }
 
     /* ============================================
@@ -272,7 +272,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
@@ -358,7 +358,7 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      color: #6b7280;
+      color: var(--color-50);
       padding: 0 24px 8px;
       letter-spacing: 0.5px;
     }
@@ -368,7 +368,7 @@
       align-items: center;
       gap: 12px;
       padding: 12px 24px;
-      color: #1f2937;
+      color: var(--color-10);
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
@@ -376,13 +376,13 @@
     }
 
     .nav-link:hover {
-      background: #f3f4f6;
+      background: var(--color-90);
     }
 
     .nav-link.active {
-      background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+      border-right: 3px solid var(--color-primary);
     }
 
     .nav-icon {
@@ -499,12 +499,12 @@
           renderClassView(data.data);
         } else {
           document.getElementById('content').innerHTML =
-            '<div class="loading" style="color: #dc2626;">Error: ' + (data.error?.message || 'Failed to load') + '</div>';
+            '<div class="loading" style="color: var(--color-error);">Error: ' + (data.error?.message || 'Failed to load') + '</div>';
         }
       } catch (error) {
         console.error(error);
         document.getElementById('content').innerHTML =
-          '<div class="loading" style="color: #dc2626;">Error: ' + error.message + '</div>';
+          '<div class="loading" style="color: var(--color-error);">Error: ' + error.message + '</div>';
       }
     }
 

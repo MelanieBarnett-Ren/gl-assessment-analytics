@@ -36,7 +36,7 @@
   <style>
     body {
       font-family: var(--font-family-base) !important;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       min-height: 100vh;
       padding: 20px;
     }
@@ -55,19 +55,19 @@
     }
 
     .header h1 {
-      color: #1e3a8a;
+      color: var(--color-primary);
       font-size: 28px;
       margin-bottom: 8px;
     }
 
     .breadcrumb {
-      color: #6b7280;
+      color: var(--color-50);
       font-size: 14px;
       margin-bottom: 16px;
     }
 
     .breadcrumb a {
-      color: #3b82f6;
+      color: var(--color-link);
       text-decoration: none;
     }
 
@@ -83,10 +83,10 @@
 
     .school-btn {
       padding: 10px 20px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--color-table-border);
       background: white;
-      color: #374151;
-      border-radius: 8px;
+      color: var(--color-copy-primary);
+      border-radius: var(--radius-button);
       cursor: pointer;
       font-size: 14px;
       font-weight: 600;
@@ -94,14 +94,14 @@
     }
 
     .school-btn:hover {
-      border-color: #3b82f6;
-      background: #eff6ff;
-      color: #1d4ed8;
+      border-color: var(--color-primary);
+      background: var(--color-primary-50);
+      color: var(--color-primary);
     }
 
     .school-btn.active {
-      border-color: #3b82f6;
-      background: #3b82f6;
+      border-color: var(--color-primary);
+      background: var(--color-primary);
       color: white;
     }
 
@@ -126,7 +126,7 @@
     .chart-title {
       font-size: 18px;
       font-weight: 600;
-      color: #1f2937;
+      color: var(--color-10);
       margin-bottom: 16px;
     }
 
@@ -148,18 +148,18 @@
     .summary-card .value {
       font-size: 32px;
       font-weight: 700;
-      color: #1e3a8a;
+      color: var(--color-primary);
       margin-bottom: 4px;
     }
 
     .summary-card .label {
       font-size: 14px;
-      color: #6b7280;
+      color: var(--color-50);
     }
 
-    .summary-card.red .value { color: #dc2626; }
-    .summary-card.green .value { color: #10b981; }
-    .summary-card.blue .value { color: #3b82f6; }
+    .summary-card.red .value { color: var(--color-error); }
+    .summary-card.green .value { color: var(--color-tertiary); }
+    .summary-card.blue .value { color: var(--color-link); }
 
     .drill-down-links {
       background: white;
@@ -171,7 +171,7 @@
 
     .drill-down-links h3 {
       font-size: 16px;
-      color: #1f2937;
+      color: var(--color-10);
       margin-bottom: 12px;
     }
 
@@ -183,20 +183,20 @@
 
     .drill-link {
       padding: 12px 16px;
-      background: #f3f4f6;
-      border: 2px solid #e5e7eb;
-      border-radius: 8px;
+      background: var(--color-90);
+      border: 2px solid var(--color-table-border);
+      border-radius: var(--radius-button);
       text-decoration: none;
-      color: #374151;
+      color: var(--color-copy-primary);
       font-weight: 600;
       transition: all 0.2s;
       text-align: center;
     }
 
     .drill-link:hover {
-      border-color: #3b82f6;
-      background: #eff6ff;
-      color: #1d4ed8;
+      border-color: var(--color-primary);
+      background: var(--color-primary-50);
+      color: var(--color-primary);
     }
 
     @media (max-width: 1024px) {
@@ -222,7 +222,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
@@ -308,7 +308,7 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      color: #6b7280;
+      color: var(--color-50);
       padding: 0 24px 8px;
       letter-spacing: 0.5px;
     }
@@ -318,7 +318,7 @@
       align-items: center;
       gap: 12px;
       padding: 12px 24px;
-      color: #1f2937;
+      color: var(--color-10);
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
@@ -326,13 +326,13 @@
     }
 
     .nav-link:hover {
-      background: #f3f4f6;
+      background: var(--color-90);
     }
 
     .nav-link.active {
-      background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+      border-right: 3px solid var(--color-primary);
     }
 
     .nav-icon {
@@ -619,9 +619,17 @@
       'Identify 3D shapes'
     ];
 
-    // Apply Highcharts theme
+    // Apply Highcharts theme - using CSS variables via getComputedStyle
+    const rootStyles = getComputedStyle(document.documentElement);
     Highcharts.setOptions({
-      colors: ['#3b82f6', '#10b981', '#f59e0b', '#dc2626', '#8b5cf6', '#06b6d4'],
+      colors: [
+        rootStyles.getPropertyValue('--color-link').trim() || '#3062d4',
+        rootStyles.getPropertyValue('--color-tertiary').trim() || '#00b46d',
+        rootStyles.getPropertyValue('--color-warning').trim() || '#e8ae66',
+        rootStyles.getPropertyValue('--color-error').trim() || '#ea4f46',
+        rootStyles.getPropertyValue('--color-secondary').trim() || '#6f1ed8',
+        rootStyles.getPropertyValue('--color-primary').trim() || '#ba119b'
+      ],
       chart: {
         backgroundColor: '#ffffff',
         style: {
@@ -630,7 +638,7 @@
       },
       title: {
         style: {
-          color: '#1f2937',
+          color: rootStyles.getPropertyValue('--color-10').trim() || '#1d1b20',
           fontSize: '16px',
           fontWeight: '600'
         }
@@ -678,7 +686,7 @@
           },
           plotLines: [{
             value: 100,
-            color: '#10b981',
+            color: rootStyles.getPropertyValue('--color-tertiary').trim(),
             dashStyle: 'dash',
             width: 2,
             label: {
@@ -690,14 +698,14 @@
         series: [{
           name: 'Average SAS',
           data: data.avgSAS,
-          color: '#3b82f6',
+          color: rootStyles.getPropertyValue('--color-link').trim(),
           marker: {
             radius: 5
           }
         }, {
           name: 'CAT4 (Potential)',
           data: data.cat4,
-          color: '#10b981',
+          color: rootStyles.getPropertyValue('--color-tertiary').trim(),
           dashStyle: 'dash',
           marker: {
             radius: 4
@@ -705,7 +713,7 @@
         }, {
           name: 'NGMT (Attainment)',
           data: data.ngmt,
-          color: data.ngmt[3] < 100 ? '#dc2626' : '#10b981',
+          color: data.ngmt[3] < 100 ? rootStyles.getPropertyValue('--color-error').trim() : rootStyles.getPropertyValue('--color-tertiary').trim(),
           marker: {
             radius: 4
           }
@@ -745,10 +753,10 @@
           min: 70,
           max: 130,
           stops: [
-            [0.1, '#dc2626'],
-            [0.4, '#f59e0b'],
-            [0.6, '#3b82f6'],
-            [0.9, '#10b981']
+            [0.1, rootStyles.getPropertyValue('--color-error').trim()],
+            [0.4, rootStyles.getPropertyValue('--color-warning').trim()],
+            [0.6, rootStyles.getPropertyValue('--color-link').trim()],
+            [0.9, rootStyles.getPropertyValue('--color-tertiary').trim()]
           ],
           lineWidth: 0,
           tickWidth: 0,
@@ -835,7 +843,7 @@
           name: schoolName,
           data: data.schoolScores,
           pointPlacement: 'on',
-          color: currentSchool === 'school8' ? '#10b981' : (currentSchool === 'school7' ? '#f59e0b' : '#dc2626'),
+          color: currentSchool === 'school8' ? rootStyles.getPropertyValue('--color-tertiary').trim() : (currentSchool === 'school7' ? rootStyles.getPropertyValue('--color-warning').trim() : rootStyles.getPropertyValue('--color-error').trim()),
           lineWidth: 3,
           marker: {
             enabled: true,
@@ -845,7 +853,7 @@
           name: 'National Average',
           data: data.nationalScores,
           pointPlacement: 'on',
-          color: '#3b82f6',
+          color: rootStyles.getPropertyValue('--color-link').trim(),
           lineWidth: 2,
           dashStyle: 'Dash',
           marker: {
@@ -889,7 +897,7 @@
           },
           plotLines: [{
             value: 100,
-            color: '#6b7280',
+            color: rootStyles.getPropertyValue('--color-50').trim(),
             width: 1,
             dashStyle: 'dash'
           }]
@@ -900,20 +908,20 @@
           },
           plotLines: [{
             value: 100,
-            color: '#6b7280',
+            color: rootStyles.getPropertyValue('--color-50').trim(),
             width: 1,
             dashStyle: 'dash'
           }]
         },
         series: [{
           name: 'Students',
-          color: '#3b82f6',
+          color: rootStyles.getPropertyValue('--color-link').trim(),
           data: data
         }, {
           type: 'line',
           name: 'Expected (no value added)',
           data: [[70, 70], [130, 130]],
-          color: '#10b981',
+          color: rootStyles.getPropertyValue('--color-tertiary').trim(),
           dashStyle: 'dash',
           marker: {
             enabled: false
@@ -961,10 +969,10 @@
           min: 0,
           max: 100,
           stops: [
-            [0, '#dc2626'],
-            [0.5, '#f59e0b'],
-            [0.7, '#3b82f6'],
-            [1, '#10b981']
+            [0, rootStyles.getPropertyValue('--color-error').trim()],
+            [0.5, rootStyles.getPropertyValue('--color-warning').trim()],
+            [0.7, rootStyles.getPropertyValue('--color-link').trim()],
+            [1, rootStyles.getPropertyValue('--color-tertiary').trim()]
           ]
         },
         series: [{
