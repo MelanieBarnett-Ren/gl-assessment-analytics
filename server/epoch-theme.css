@@ -1,0 +1,646 @@
+/**
+ * Epoch UI - GL Assessment Theme
+ * Based on Testwise brand & style guidelines
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ============================================ */
+
+:root {
+  /* ============================================
+     PRIMARY PALETTE (Magenta)
+     ============================================ */
+  --color-primary: #ba119b;
+  --color-primary-50: #f8e5f2;
+  --color-primary-100: #ecbee0;
+  --color-primary-200: #e092cc;
+  --color-primary-300: #d265b8;
+  --color-primary-400: #c73fa9;
+  --color-primary-600: #ad0a96;
+  --color-primary-700: #9b008f;
+  --color-primary-800: #8b0088;
+  --color-primary-900: #6f007c;
+  --color-primary-container: #f8e5f2;
+  --color-primary-focus: #610350;
+
+  /* ============================================
+     SECONDARY PALETTE (Deep Purple)
+     ============================================ */
+  --color-secondary: #6f1ed8;
+  --color-secondary-50: #efe6fa;
+  --color-secondary-100: #d5c1f3;
+  --color-secondary-200: #ba97ec;
+  --color-secondary-300: #9d6be5;
+  --color-secondary-400: #8748df;
+  --color-secondary-600: #6419d2;
+  --color-secondary-700: #540cca;
+  --color-secondary-800: #4401c4;
+  --color-secondary-900: #2100bb;
+  --color-secondary-container: #efe6fa;
+
+  /* ============================================
+     SEMANTIC COLORS
+     ============================================ */
+  --color-tertiary: #00b46d;
+  --color-tertiary-container: #f2fff6;
+  --color-success: #66b990;
+  --color-warning: #e8ae66;
+  --color-warning-border: #f59739;
+  --color-warning-background: #fff9f2;
+  --color-error: #ea4f46;
+  --color-error-focus: #690c07;
+  --color-error-container: #ffdede;
+  --color-link: #3062d4;
+
+  /* ============================================
+     NEUTRAL PALETTE (Greyscale)
+     ============================================ */
+  --color-B: #000000;
+  --color-10: #1d1b20;
+  --color-20: #48464c;
+  --color-30: #48464c;
+  --color-40: #605d64;
+  --color-50: #79767d;
+  --color-60: #938f96;
+  --color-70: #aea9b1;
+  --color-80: #cac5cd;
+  --color-90: #f3f4f6;
+  --color-white: #f9fafb;
+  --color-W: #ffffff;
+
+  /* Named neutrals for easier use */
+  --color-grey-dark: #1d1b20;
+  --color-grey-normal: #79767d;
+  --color-grey-light: #cac5cd;
+
+  /* ============================================
+     TEXT / COPY COLORS
+     ============================================ */
+  --color-copy-primary: #292929;
+  --color-copy-secondary: #990af1;
+  --color-copy-tertiary: #aea9b1;
+  --color-copy-placeholder: #cac5cd;
+
+  /* ============================================
+     SURFACE COLORS
+     ============================================ */
+  --color-surface-dim: #ded8e1;
+  --color-surface: #ffedfc;
+  --color-surface-bright: #fdf8fe;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f7f2fa;
+  --color-surface-container: #f3edf7;
+  --color-surface-container-high: #ece6f0;
+  --color-surface-container-highest: #e6e0e9;
+
+  /* ============================================
+     TABLE COLORS
+     ============================================ */
+  --color-table-header-row: #f0f0f0;
+  --color-table-stripe-odd-row: #f0f0f0;
+  --color-table-stripe-even-row: #fff;
+  --color-table-border: #e5e7eb;
+
+  /* ============================================
+     BACKGROUND COLORS
+     ============================================ */
+  --color-page-background: #ffffff;
+  --color-card-background: #ffffff;
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+
+  /* Font Family */
+  --font-family-base: 'Inter', 'Noto Sans', 'Noto Sans Arabic', Arial, sans-serif;
+  --font-family-mono: 'Monaco', 'Consolas', 'Courier New', monospace;
+
+  /* Font Sizes (using em for scalability) */
+  --font-size-5xlarge: 3em;
+  --font-size-4xlarge: 2.5em;
+  --font-size-3xlarge: 2em;
+  --font-size-2xlarge: 1.75em;
+  --font-size-xlarge: 1.5em;
+  --font-size-large: 1.25em;
+  --font-size-normal: 1em;
+  --font-size-small: 0.875em;
+  --font-size-xsmall: 0.75em;
+
+  /* Legacy aliases for compatibility */
+  --font-size-xs: 0.75em;
+  --font-size-sm: 0.875em;
+  --font-size-base: 1em;
+  --font-size-lg: 1.25em;
+  --font-size-xl: 1.5em;
+  --font-size-2xl: 1.75em;
+  --font-size-3xl: 2em;
+  --font-size-4xl: 2.5em;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+
+  /* Letter Spacing */
+  --font-spacing-tight: 0.01em;
+  --font-spacing-near: 0.025em;
+  --font-spacing-far: 0.04em;
+  --font-spacing-loose: 0.06em;
+
+  /* ============================================
+     SPACING SCALE
+     ============================================ */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+
+  /* ============================================
+     SHADOWS & ELEVATION
+     ============================================ */
+  --drop-shadow: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
+  --shadow-card-hover: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-tooltip: 3px 3px 3px rgb(0 0 0 / 0.15);
+  --shadow-slider-thumb: 0 0 0 3px rgba(0, 0, 0, 0.05);
+
+  /* Material-style shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  --radius-button: 0.2rem;      /* ~3px - Buttons */
+  --radius-sm: 0.25rem;          /* 4px - Small components */
+  --radius-base: 0.5rem;         /* 8px - Default */
+  --radius-lg: 0.75rem;          /* 12px - Cards */
+  --radius-xl: 1rem;             /* 16px - Large cards */
+  --radius-tooltip: 10px;        /* Tooltips */
+  --radius-full: 50%;            /* Circular */
+  --radius-pill: 100px;          /* Pill-shaped */
+
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-base: 0.2s ease-in-out;
+  --transition-slow: 0.3s ease-in-out;
+  --transition-card-flip: 0.5s ease-in;
+
+  /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+  --z-index-base: 0;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-fixed: 300;
+  --z-index-modal-backdrop: 400;
+  --z-index-modal: 500;
+  --z-index-popover: 600;
+  --z-index-tooltip: 700;
+  --z-index-toast: 800;
+  --z-index-max: 9999;
+
+  /* ============================================
+     FOCUS RING (Accessibility)
+     ============================================ */
+  --focus-ring-primary: 0 0 0 0.19rem var(--color-W), 0 0 0 0.38rem var(--color-primary-focus);
+  --focus-ring-error: 0 0 0 0.19rem var(--color-W), 0 0 0 0.38rem var(--color-error-focus);
+  --focus-ring-simple: 0 0 0 3px var(--color-primary-focus);
+}
+
+/* ============================================
+   RESPONSIVE ROOT FONT SIZES
+   ============================================ */
+
+/* Mobile default */
+html {
+  font-size: 12px;
+}
+
+/* Tablet and up */
+@media (min-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Laptop and up */
+@media (min-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* ============================================
+   GLOBAL RESETS & DEFAULTS
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-copy-primary);
+  background-color: var(--color-page-background);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   TYPOGRAPHY DEFAULTS
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin: 0;
+  color: var(--color-10);
+}
+
+h1 { font-size: var(--font-size-4xlarge); }
+h2 { font-size: var(--font-size-3xlarge); color: var(--color-10); }
+h3 { font-size: var(--font-size-xlarge); }
+h4 { font-size: var(--font-size-large); }
+h5 { font-size: var(--font-size-normal); }
+h6 { font-size: var(--font-size-small); }
+
+p {
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+b, strong {
+  font-weight: var(--font-weight-semibold);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR (Epoch UI Style)
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 0.25rem;
+  height: 0.25rem;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-90);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-50);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-40);
+}
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+
+.layout {
+  height: 100vh;
+  margin: 0;
+  background: var(--color-W);
+  font-size: 1em;
+}
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
+}
+
+/* ============================================
+   FORM DEFAULTS (Epoch UI Style)
+   ============================================ */
+
+form,
+.form {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 1rem;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 0.25rem;
+  color: var(--color-10);
+  font-size: var(--font-size-small);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--color-table-border);
+  border-radius: var(--radius-sm);
+  padding: 0.625rem 0.75rem;
+  font-size: var(--font-size-normal);
+  font-family: var(--font-family-base);
+  color: var(--color-copy-primary);
+  background: var(--color-W);
+  transition: border-color var(--transition-base);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring-simple);
+}
+
+input::placeholder {
+  color: var(--color-copy-placeholder);
+}
+
+/* ============================================
+   BUTTON STYLES (Epoch UI)
+   ============================================ */
+
+.btn,
+button:not(.pdf-fab):not(.pdf-menu-close):not(.pdf-modal-close):not(.menu-toggle) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.5rem;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--font-spacing-loose);
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  min-height: 44px;
+}
+
+.btn:disabled,
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary Button (Filled) */
+.btn-primary,
+button.primary {
+  background-color: var(--color-primary);
+  color: var(--color-W);
+}
+
+.btn-primary:hover:not(:disabled),
+button.primary:hover:not(:disabled) {
+  background-color: var(--color-primary-600);
+  transform: translateY(-1px);
+}
+
+.btn-primary:focus,
+button.primary:focus {
+  box-shadow: var(--focus-ring-primary);
+}
+
+/* Secondary Button (Outlined) */
+.btn-secondary,
+button.secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn-secondary:hover:not(:disabled),
+button.secondary:hover:not(:disabled) {
+  background-color: var(--color-primary-50);
+  transform: translateY(-1px);
+}
+
+/* Warning/Destructive Button */
+.btn-warning,
+button.warning {
+  background-color: var(--color-error);
+  color: var(--color-W);
+}
+
+.btn-warning:hover:not(:disabled),
+button.warning:hover:not(:disabled) {
+  background-color: #d44440;
+  transform: translateY(-1px);
+}
+
+.btn-warning:focus,
+button.warning:focus {
+  box-shadow: var(--focus-ring-error);
+}
+
+/* ============================================
+   CARD STYLES (Epoch UI)
+   ============================================ */
+
+.card {
+  background-color: var(--color-card-background);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-base);
+  padding: var(--spacing-6);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ============================================
+   TABLE STYLES (Epoch UI)
+   ============================================ */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid var(--color-table-border);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+}
+
+thead {
+  background: var(--color-table-header-row);
+}
+
+th {
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid var(--color-table-border);
+  color: var(--color-10);
+  font-size: var(--font-size-small);
+  letter-spacing: var(--font-spacing-near);
+  height: 56px;
+}
+
+td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-table-border);
+  color: var(--color-copy-primary);
+  height: 48px;
+}
+
+/* Striped rows */
+tbody tr:nth-child(odd) {
+  background: var(--color-table-stripe-odd-row);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-table-stripe-even-row);
+}
+
+/* Rounded corners on table */
+thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius-base);
+}
+
+thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius-base);
+}
+
+tbody tr:last-child td:first-child {
+  border-bottom-left-radius: var(--radius-base);
+}
+
+tbody tr:last-child td:last-child {
+  border-bottom-right-radius: var(--radius-base);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Text Colors */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-tertiary { color: var(--color-tertiary); }
+.text-error { color: var(--color-error); }
+.text-warning { color: var(--color-warning); }
+.text-link { color: var(--color-link); }
+.text-muted { color: var(--color-copy-tertiary); }
+
+/* Background Colors */
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary-container { background-color: var(--color-primary-container); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-secondary-container { background-color: var(--color-secondary-container); }
+.bg-success { background-color: var(--color-tertiary-container); }
+.bg-error { background-color: var(--color-error-container); }
+.bg-warning { background-color: var(--color-warning-background); }
+.bg-surface { background-color: var(--color-surface); }
+
+/* Visually Hidden (Screen Reader Only) */
+.visually-hidden,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================
+   FOCUS STYLES (Epoch UI Accessibility)
+   ============================================ */
+
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--color-primary-focus);
+  outline-offset: 2px;
+}
+
+/* Enhanced focus for interactive elements */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: var(--focus-ring-primary);
+}
+
+/* ============================================
+   ANIMATION & TRANSITIONS
+   ============================================ */
+
+/* Hover lift effect */
+.hover-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

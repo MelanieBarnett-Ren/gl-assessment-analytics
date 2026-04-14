@@ -4,16 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Curriculum Gaps Dashboard | GL Assessment Analytics</title>
+  <meta name="description" content="Multi-academy trust analytics dashboard combining GL Assessment data with Focus Skills for curriculum gap analysis">
 
   <!-- Preconnect to Google Fonts for faster loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- Inter Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+  <!-- Epoch UI Theme (GL Assessment Brand) -->
+  <link rel="stylesheet" href="epoch-theme.css">
 
   <!-- Global Stylesheet -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Accessibility -->
+  <link rel="stylesheet" href="accessibility.css">
 
   <!-- PDF Export -->
   <link rel="stylesheet" href="pdf-export.css">
@@ -22,7 +29,7 @@
     body {
       font-family: var(--font-family-base) !important;
       background: var(--color-page-background);
-      color: var(--color-text-default);
+      color: var(--color-copy-primary);
     }
 
     /* ============================================
@@ -34,8 +41,8 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: var(--color-primary);
+      box-shadow: var(--shadow-base);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -142,9 +149,9 @@
     }
 
     .nav-link.active {
-      background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      background: var(--color-primary-50);
+      color: var(--color-primary);
+      border-right: 3px solid var(--color-primary);
     }
 
     .nav-icon {
@@ -210,7 +217,7 @@
     .stat-value {
       font-size: 32px;
       font-weight: 700;
-      color: #a855f7;
+      color: var(--color-primary);
       margin-bottom: 4px;
     }
 
@@ -246,8 +253,8 @@
 
     .nav-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
-      border-color: #d946ef;
+      box-shadow: var(--shadow-card-hover);
+      border-color: var(--color-primary);
     }
 
     .nav-card-header {
@@ -264,8 +271,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
-      border-radius: 10px;
+      background: var(--color-primary);
+      border-radius: var(--radius-tooltip);
       color: white;
     }
 
@@ -349,18 +356,24 @@
   </style>
 </head>
 <body>
+  <!-- Skip Links -->
+  <nav class="skip-links" aria-label="Skip links">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#navigation" class="skip-link">Skip to navigation</a>
+  </nav>
+
   <!-- HAMBURGER MENU -->
-  <div class="hamburger-menu">
+  <header class="hamburger-menu" role="banner">
     <h1>
       <span>📊</span>
       GL Assessment Analytics
     </h1>
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-  </div>
+    <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">☰</button>
+  </header>
 
   <!-- SIDEBAR -->
-  <div class="sidebar" id="sidebar">
-    <nav>
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <nav id="navigation" role="navigation" aria-label="Primary">
       <div class="nav-section">
         <div class="nav-section-title">Overview</div>
         <a href="/" class="nav-link active">
@@ -421,25 +434,26 @@
         </a>
       </div>
     </nav>
-  </div>
+  </aside>
 
   <!-- OVERLAY -->
-  <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+  <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()" aria-hidden="true"></div>
 
   <!-- MAIN CONTENT -->
-  <div class="content">
+  <main id="main-content" class="content" role="main">
     <!-- HERO -->
-    <div class="hero">
-      <h2>Curriculum Gaps Analysis Dashboard</h2>
+    <section class="hero" aria-labelledby="hero-title" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);">
+      <h2 id="hero-title">Curriculum Gaps Analysis Dashboard</h2>
       <p>
         Multi-academy trust analytics combining GL Assessment data (NGMT, CAT4, PTM)
         with Renaissance Maths <span class="tooltip" data-tooltip="Essential 23% of mathematics skills (305 out of 1,304 total) identified as critical building blocks">Focus Skills™</span>.
         Surface gaps, compare schools, and take action.
       </p>
-    </div>
+    </section>
 
     <!-- QUICK STATS -->
-    <div class="quick-stats">
+    <section class="quick-stats" aria-labelledby="stats-title">
+      <h2 id="stats-title" class="sr-only">Quick Statistics</h2>
       <div class="stat-card">
         <div class="stat-label">MAT Average</div>
         <div class="stat-value">
@@ -472,11 +486,12 @@
         </div>
         <div class="stat-detail">Essential 23% to prioritize</div>
       </div>
-    </div>
+    </section>
 
     <!-- NAVIGATION CARDS -->
-    <h3 class="section-title">Quick Access</h3>
-    <div class="nav-cards">
+    <section aria-labelledby="quick-access-title">
+      <h2 id="quick-access-title" class="section-title">Quick Access</h2>
+      <div class="nav-cards">
       <!-- MAT OVERVIEW -->
       <a href="/mat" class="nav-card">
         <div class="nav-card-header">
@@ -581,26 +596,33 @@
         </div>
         <span class="nav-card-badge">AI powered</span>
       </a>
-    </div>
+      </div>
+    </section>
 
     <!-- FOOTER -->
-    <div class="footer">
+    <footer class="footer" role="contentinfo">
       <p>
         GL Assessment Analytics Dashboard •
         Data: Autumn 2024 NGMT Assessment •
         Renaissance Maths <span class="tooltip" data-tooltip="Essential 23% of mathematics skills that drive overall performance">Focus Skills™</span> integrated
       </p>
-    </div>
-  </div>
+    </footer>
+  </main>
 
   <!-- SCRIPTS -->
   <script>
     function toggleMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('overlay');
+      const menuToggle = document.querySelector('.menu-toggle');
+      const isOpen = sidebar.classList.contains('open');
 
       sidebar.classList.toggle('open');
       overlay.classList.toggle('visible');
+
+      // Update ARIA attributes
+      menuToggle.setAttribute('aria-expanded', !isOpen);
+      overlay.setAttribute('aria-hidden', isOpen);
     }
 
     // Close sidebar when clicking a link (on mobile)

@@ -1,0 +1,591 @@
+/**
+ * WCAG 2.2 Level AA Accessibility Styles
+ * Ensures compliance with Web Content Accessibility Guidelines 2.2
+ */
+
+/* ============================================
+   FOCUS INDICATORS (WCAG 2.4.7, 2.4.11)
+   ============================================ */
+
+/* Global focus indicator (Epoch UI Style) */
+*:focus {
+  outline: none;
+}
+
+/* Focus visible for keyboard navigation only */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--color-primary-focus, #610350);
+  outline-offset: 2px;
+  transition: outline-offset 0.2s ease;
+}
+
+/* Enhanced focus for interactive elements (Epoch UI double-ring pattern) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring-primary, 0 0 0 0.19rem var(--color-W), 0 0 0 0.38rem var(--color-primary-focus));
+}
+
+/* Focus within for container elements */
+.nav-link:focus-within,
+.card:focus-within,
+.chart-card:focus-within {
+  outline: 2px solid var(--color-primary-focus, #610350);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   SKIP LINKS (WCAG 2.4.1)
+   ============================================ */
+
+.skip-links {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  width: 100%;
+  z-index: 10001;
+  background: #1f2937;
+  padding: 0;
+}
+
+.skip-links a {
+  position: absolute;
+  top: -100px;
+  left: 10px;
+  padding: 12px 20px;
+  background: #1f2937;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 0 0 8px 8px;
+  z-index: 10001;
+  transition: top 0.2s ease;
+}
+
+.skip-links a:focus {
+  top: 0;
+  box-shadow: var(--focus-ring-primary, 0 0 0 0.19rem var(--color-W), 0 0 0 0.38rem var(--color-primary-focus));
+}
+
+/* ============================================
+   SCREEN READER ONLY CONTENT (WCAG 1.3.1)
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================
+   COLOR CONTRAST IMPROVEMENTS (WCAG 1.4.3, 1.4.11)
+   ============================================ */
+
+/* Ensure sufficient contrast for text */
+.text-muted,
+.nav-section-title,
+.stat-detail,
+.pdf-menu-item-desc {
+  color: #4b5563 !important; /* Darker gray for better contrast */
+}
+
+/* Link color adjustments for contrast (Epoch UI) */
+a {
+  color: var(--color-link, #3062d4);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  color: var(--color-primary, #ba119b);
+  text-decoration: underline;
+}
+
+/* Button contrast improvements */
+.btn,
+.pdf-btn,
+.school-btn {
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.btn:focus,
+.pdf-btn:focus,
+.school-btn:focus {
+  border-color: #1f2937;
+}
+
+/* Chart and data visualization labels */
+.chart-title,
+.stat-label,
+.nav-card-title {
+  color: #111827 !important; /* Ensure dark enough for contrast */
+}
+
+/* ============================================
+   TOUCH TARGETS (WCAG 2.5.5, 2.5.8)
+   ============================================ */
+
+/* Minimum 24x24px touch target for Level AA */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.nav-link,
+.pdf-menu-item,
+.school-btn {
+  min-height: 24px;
+  min-width: 24px;
+  padding: 12px 16px;
+}
+
+/* Ensure adequate spacing between touch targets */
+.nav-link + .nav-link,
+.pdf-menu-item + .pdf-menu-item,
+.school-btn + .school-btn {
+  margin-top: 4px;
+}
+
+/* ============================================
+   KEYBOARD NAVIGATION IMPROVEMENTS (WCAG 2.1.1, 2.1.2)
+   ============================================ */
+
+/* Ensure all interactive elements are keyboard accessible */
+[role="button"],
+[onclick],
+.clickable {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+[role="button"]:focus,
+[onclick]:focus,
+.clickable:focus {
+  box-shadow: var(--focus-ring-primary, 0 0 0 0.19rem var(--color-W), 0 0 0 0.38rem var(--color-primary-focus));
+}
+
+/* Visible focus for dropdown menus */
+.pdf-menu {
+  border: 2px solid transparent;
+}
+
+.pdf-menu:focus-within {
+  border-color: var(--color-primary, #ba119b);
+}
+
+/* ============================================
+   FORM ACCESSIBILITY (WCAG 1.3.1, 3.3.1, 3.3.2)
+   ============================================ */
+
+/* Ensure form labels are associated */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+input,
+select,
+textarea {
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary, #ba119b);
+  outline: none;
+  box-shadow: var(--focus-ring-simple, 0 0 0 3px var(--color-primary-focus));
+}
+
+input:invalid,
+select:invalid,
+textarea:invalid {
+  border-color: var(--color-error, #ea4f46);
+}
+
+/* Error messages */
+.error-message,
+.form-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin-top: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.error-message::before,
+.form-error::before {
+  content: "⚠";
+  font-weight: bold;
+}
+
+/* Required field indicator */
+.required::after {
+  content: " *";
+  color: #dc2626;
+  font-weight: bold;
+}
+
+/* ============================================
+   TABLE ACCESSIBILITY (WCAG 1.3.1)
+   ============================================ */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+  background: #f3f4f6;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+}
+
+td {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Striped rows for better readability */
+tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Focus on table rows */
+tr:focus-within {
+  outline: 2px solid var(--color-primary, #ba119b);
+  outline-offset: -2px;
+}
+
+/* ============================================
+   MODAL ACCESSIBILITY (WCAG 2.4.3)
+   ============================================ */
+
+/* Ensure modal has proper focus trap */
+.pdf-modal[aria-hidden="true"] {
+  display: none;
+}
+
+.pdf-modal[aria-hidden="false"] {
+  display: flex;
+}
+
+/* Focus trap indicator */
+.pdf-modal-content:focus {
+  outline: none;
+}
+
+/* First and last focusable elements in modal */
+.pdf-modal-content:focus-within {
+  box-shadow: 0 0 0 3px rgba(186, 17, 155, 0.2);
+}
+
+/* ============================================
+   RESPONSIVE TEXT SIZING (WCAG 1.4.4, 1.4.12)
+   ============================================ */
+
+/* Allow text to scale up to 200% */
+html {
+  font-size: 100%;
+}
+
+body {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Ensure text doesn't break layout when scaled */
+* {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* Minimum line height for readability */
+p,
+li,
+td,
+th {
+  line-height: 1.5;
+}
+
+/* ============================================
+   MOTION REDUCTION (WCAG 2.3.3)
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE SUPPORT (WCAG 1.4.1)
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    border: 2px solid currentColor !important;
+  }
+
+  .btn,
+  .pdf-btn,
+  .pdf-fab {
+    border: 3px solid currentColor !important;
+  }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (WCAG 1.4.1)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #111827;
+    color: #f9fafb;
+  }
+
+  .card,
+  .chart-card,
+  .nav-card,
+  .pdf-menu {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  a {
+    color: #60a5fa;
+  }
+
+  input,
+  select,
+  textarea {
+    background: #1f2937;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+}
+
+/* ============================================
+   LOADING STATES (WCAG 2.2.1)
+   ============================================ */
+
+.loading,
+[aria-busy="true"] {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.loading::after,
+[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   LANGUAGE SUPPORT (WCAG 3.1.1, 3.1.2)
+   ============================================ */
+
+[lang] {
+  quotes: auto;
+}
+
+/* Right-to-left language support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* ============================================
+   STATUS MESSAGES (WCAG 4.1.3)
+   ============================================ */
+
+[role="status"],
+[role="alert"],
+[aria-live] {
+  position: relative;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border-left: 4px solid;
+}
+
+[role="status"],
+[aria-live="polite"] {
+  background: var(--color-secondary-container, #efe6fa);
+  border-color: var(--color-secondary, #6f1ed8);
+  color: var(--color-secondary-900, #2100bb);
+}
+
+[role="alert"],
+[aria-live="assertive"] {
+  background: var(--color-error-container, #ffdede);
+  border-color: var(--color-error, #ea4f46);
+  color: var(--color-error-focus, #690c07);
+}
+
+.success-message {
+  background: var(--color-tertiary-container, #f2fff6);
+  border-color: var(--color-tertiary, #00b46d);
+  color: var(--color-10, #1d1b20);
+}
+
+/* ============================================
+   PRINT ACCESSIBILITY (WCAG 1.4.13)
+   ============================================ */
+
+@media print {
+  /* Ensure sufficient contrast */
+  * {
+    color: black !important;
+    background: white !important;
+  }
+
+  /* Show link URLs */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+
+  /* Maintain focus indicators */
+  *:focus {
+    outline: 2px solid black !important;
+  }
+}
+
+/* ============================================
+   CUSTOM INTERACTIVE ELEMENTS (WCAG 4.1.2)
+   ============================================ */
+
+/* Ensure custom elements have proper roles */
+[role="button"][tabindex] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+[role="button"][tabindex]:hover {
+  cursor: pointer;
+}
+
+/* Disabled state */
+[aria-disabled="true"],
+:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ============================================
+   VISUAL HIERARCHY (WCAG 1.3.1)
+   ============================================ */
+
+/* Ensure headings have proper styling */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+/* ============================================
+   TOOLTIPS AND HELP TEXT (WCAG 1.4.13)
+   ============================================ */
+
+[title],
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dotted currentColor;
+}
+
+/* Accessible tooltip on focus/hover */
+[title]:hover::after,
+[title]:focus::after,
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 8px;
+}
