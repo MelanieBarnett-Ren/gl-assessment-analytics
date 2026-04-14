@@ -8,7 +8,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { getMockData } from './mock-data';
-import { AIService } from '../engine/ai-service';
+import { AIService, createAIService } from '../engine/ai-service';
 import { findSimilarCohorts } from '../engine/similarity-matcher';
 import { detectOutliers } from '../engine/outlier-detector';
 import { InsightPanel, ViewLevel } from '../models/insights';
@@ -34,13 +34,17 @@ const cache = new Map<string, { data: InsightPanel; expiresAt: Date }>();
 
 // Initialize AI Service
 let aiService: AIService | null = null;
-if (process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'your_api_key_here') {
-  aiService = new AIService({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-  });
-  console.log('✅ Claude API initialized');
-} else {
-  console.log('⚠️  No Claude API key found - using mock insights');
+try {
+  // Check if AWS Bedrock or direct API is configured
+  if (process.env.AWS_REGION || (process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'your_api_key_here')) {
+    aiService = createAIService();
+    console.log('✅ Claude API initialized');
+  } else {
+    console.log('⚠️  No Claude API key or AWS region found - using mock insights');
+  }
+} catch (error) {
+  console.log('⚠️  Failed to initialize AI service - using mock insights');
+  console.error(error);
 }
 
 // ============================================================================

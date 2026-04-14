@@ -3,6 +3,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { AnthropicBedrock } from '@anthropic-ai/bedrock-sdk';
 import {
   SYSTEM_PROMPT,
   generateMATInsightsPrompt,
@@ -14,7 +15,11 @@ import {
 import { Insight, ViewLevel, MisconductionPattern } from '../models/insights';
 
 export interface AIServiceConfig {
-  apiKey: string;
+  apiKey?: string;               // For direct Anthropic API
+  awsRegion?: string;            // For AWS Bedrock (e.g., 'us-east-1')
+  awsAccessKeyId?: string;       // AWS credentials
+  awsSecretAccessKey?: string;   // AWS credentials
+  awsSessionToken?: string;      // Optional: for temporary credentials
   model?: string;                // Default: claude-sonnet-4-6
   maxTokens?: number;            // Default: 4096
   temperature?: number;          // Default: 1.0
@@ -22,16 +27,34 @@ export interface AIServiceConfig {
 }
 
 export class AIService {
-  private client: Anthropic;
-  private config: Required<AIServiceConfig>;
+  private client: Anthropic | AnthropicBedrock;
+  private config: Required<Omit<AIServiceConfig, 'apiKey' | 'awsAccessKeyId' | 'awsSecretAccessKey' | 'awsSessionToken'>> &
+    Pick<AIServiceConfig, 'apiKey' | 'awsRegion' | 'awsAccessKeyId' | 'awsSecretAccessKey' | 'awsSessionToken'>;
 
   constructor(config: AIServiceConfig) {
-    this.client = new Anthropic({
-      apiKey: config.apiKey,
-    });
+    // Determine if using AWS Bedrock or direct API
+    if (config.awsRegion) {
+      // AWS Bedrock configuration - uses AWS credentials from environment or AWS CLI
+      this.client = new AnthropicBedrock({
+        awsRegion: config.awsRegion,
+        // AWS SDK will automatically use credentials from:
+        // 1. Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+        // 2. AWS credentials file (~/.aws/credentials)
+        // 3. IAM role (if running on EC2/ECS/Lambda)
+      });
+    } else {
+      // Direct Anthropic API
+      this.client = new Anthropic({
+        apiKey: config.apiKey || '',
+      });
+    }
 
     this.config = {
       apiKey: config.apiKey,
+      awsRegion: config.awsRegion,
+      awsAccessKeyId: config.awsAccessKeyId,
+      awsSecretAccessKey: config.awsSecretAccessKey,
+      awsSessionToken: config.awsSessionToken,
       model: config.model || 'claude-sonnet-4-6',
       maxTokens: config.maxTokens || 4096,
       temperature: config.temperature || 1.0,
@@ -280,11 +303,28 @@ export class AIService {
  * Utility: Create AI service instance from environment
  */
 export function createAIService(): AIService {
+  const awsRegion = process.env.AWS_REGION;
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY environment variable is required');
+
+  // Check if using AWS Bedrock
+  if (awsRegion) {
+    console.log(`✓ Using AWS Bedrock in region: ${awsRegion}`);
+    return new AIService({
+      awsRegion,
+      awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      awsSessionToken: process.env.AWS_SESSION_TOKEN,
+      model: process.env.ANTHROPIC_MODEL || 'anthropic.claude-sonnet-4-20250514-v1:0',
+      cacheSystemPrompt: true,
+    });
   }
 
+  // Otherwise use direct Anthropic API
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY or AWS_REGION environment variable is required');
+  }
+
+  console.log('✓ Using direct Anthropic API');
   return new AIService({
     apiKey,
     model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6',

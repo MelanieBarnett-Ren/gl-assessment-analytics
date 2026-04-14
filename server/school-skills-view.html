@@ -76,6 +76,46 @@
       text-decoration: underline !important;
     }
 
+    /* School Selector */
+    body .school-selector {
+      margin-top: 12px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
+
+    body .school-selector label {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      opacity: 0.9 !important;
+      color: white !important;
+    }
+
+    body .school-selector select {
+      padding: 8px 16px !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      border: 2px solid rgba(255, 255, 255, 0.3) !important;
+      border-radius: 8px !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      color: #1f2937 !important;
+      cursor: pointer !important;
+      transition: all 0.2s !important;
+      min-width: 250px !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    body .school-selector select:hover {
+      background: white !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    body .school-selector select:focus {
+      outline: none !important;
+      border-color: white !important;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+    }
+
     body .container {
       max-width: 1600px !important;
       margin: 0 auto !important;
@@ -661,6 +701,14 @@
       <a href="/gl">← Back to Schools</a>
     </div>
     <h1 id="pageTitle">Loading...</h1>
+    <div class="school-selector">
+      <label for="schoolSelect">🏫 School:</label>
+      <select id="schoolSelect" onchange="changeSchool(this.value)">
+        <option value="school6">School A - Oakwood Primary</option>
+        <option value="school7">School B - Riverside Academy</option>
+        <option value="school8">School C - Hillside Primary</option>
+      </select>
+    </div>
   </div>
 
   <div class="container">
@@ -698,10 +746,39 @@
 
     // Get schoolId from URL
     const pathParts = window.location.pathname.split('/');
-    const schoolId = pathParts[pathParts.length - 2]; // /school/school6/skills
+    let schoolId = pathParts[pathParts.length - 2]; // /school/school6/skills
 
     let schoolData = null;
     let classesData = null;
+
+    // Set the dropdown to match the current school
+    function initSchoolSelector() {
+      const dropdown = document.getElementById('schoolSelect');
+      if (dropdown && schoolId) {
+        dropdown.value = schoolId;
+      }
+    }
+
+    // Change school and reload data
+    function changeSchool(newSchoolId) {
+      schoolId = newSchoolId;
+
+      // Update page title
+      document.getElementById('pageTitle').textContent = 'Loading...';
+
+      // Show loading states
+      document.getElementById('domainsContent').innerHTML = '<div class="loading">Loading domain data...</div>';
+      document.getElementById('skillsContent').innerHTML = '<div class="loading">Loading skills data...</div>';
+      document.getElementById('heatmapContent').innerHTML = '<div class="loading">Loading heatmap...</div>';
+      document.getElementById('itemsContent').innerHTML = '<div class="loading">Loading item analysis...</div>';
+
+      // Update URL without page reload
+      const newUrl = `/school/${schoolId}/skills`;
+      window.history.pushState({}, '', newUrl);
+
+      // Reload data
+      loadData();
+    }
 
     function switchTab(tabName) {
       // Update tab buttons
@@ -1007,6 +1084,8 @@
       document.getElementById('itemsContent').innerHTML = html;
     }
 
+    // Initialize on page load
+    initSchoolSelector();
     loadData();
 
     // Hamburger menu toggle
