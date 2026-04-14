@@ -1009,6 +1009,7 @@
         'number-fractions': {
           name: 'Number - Fractions, Decimals & Percentages',
           schoolName: 'School A - Oakwood Primary',
+          studentCount: 114,
           objectives: [
             { code: 'Y5.N.FDP.2', text: 'Recognise mixed numbers and improper fractions', level: 'emerging', focusSkill: '522', masteryPercent: 62, studentCount: 114 },
             { code: 'Y5.N.FDP.3', text: 'Add and subtract fractions with the same denominator', level: 'concern', focusSkill: '524, 526', masteryPercent: 34, studentCount: 114 },
@@ -1024,6 +1025,7 @@
         'number-fractions': {
           name: 'Number - Fractions, Decimals & Percentages',
           schoolName: 'School B - Riverside Academy',
+          studentCount: 110,
           objectives: [
             { code: 'Y5.N.FDP.2', text: 'Recognise mixed numbers and improper fractions', level: 'developing', focusSkill: '522', masteryPercent: 78, studentCount: 110 },
             { code: 'Y5.N.FDP.3', text: 'Add and subtract fractions with the same denominator', level: 'emerging', focusSkill: '524, 526', masteryPercent: 62, studentCount: 110 },
@@ -1039,6 +1041,7 @@
         'number-fractions': {
           name: 'Number - Fractions, Decimals & Percentages',
           schoolName: 'School C - Hillside Primary',
+          studentCount: 110,
           objectives: [
             { code: 'Y5.N.FDP.2', text: 'Recognise mixed numbers and improper fractions', level: 'mastered', focusSkill: '522', masteryPercent: 92, studentCount: 110 },
             { code: 'Y5.N.FDP.3', text: 'Add and subtract fractions with the same denominator', level: 'developing', focusSkill: '524, 526', masteryPercent: 78, studentCount: 110 },
@@ -1315,11 +1318,11 @@
     }
 
     function renderDonutChart(data) {
-      const studentCount = data.studentCount;
-      const mastered = Math.round(data.objectives.filter(o => o.level === 'mastered').length / data.objectives.length * studentCount);
-      const developing = Math.round(data.objectives.filter(o => o.level === 'developing').length / data.objectives.length * studentCount);
-      const emerging = Math.round(data.objectives.filter(o => o.level === 'emerging').length / data.objectives.length * studentCount);
-      const concern = studentCount - mastered - developing - emerging;
+      // Count students by their actual performance level (averageMastery)
+      const mastered = data.students.filter(s => s.averageMastery >= 85).length;
+      const developing = data.students.filter(s => s.averageMastery >= 70 && s.averageMastery < 85).length;
+      const emerging = data.students.filter(s => s.averageMastery >= 50 && s.averageMastery < 70).length;
+      const concern = data.students.filter(s => s.averageMastery < 50).length;
 
       Highcharts.chart('donutChart', {
         chart: {
@@ -1327,6 +1330,16 @@
         },
         title: {
           text: null
+        },
+        legend: {
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
         },
         plotOptions: {
           pie: {
@@ -1336,6 +1349,14 @@
               format: '<b>{point.name}</b><br>{point.y} students<br>({point.percentage:.1f}%)',
               style: {
                 fontSize: '12px'
+              }
+            }
+          },
+          series: {
+            cursor: 'pointer',
+            events: {
+              legendItemClick: function() {
+                return true;
               }
             }
           }
