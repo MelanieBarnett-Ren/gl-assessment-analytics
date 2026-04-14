@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
     body {
@@ -268,6 +269,96 @@
       font-weight: 600;
       color: #1f2937;
     }
+
+    .btn-export {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-export:hover {
+      background: #2563eb;
+    }
+
+    /* PDF Export Styles */
+    #pdfContent {
+      display: none;
+      padding: 40px;
+      background: white;
+      font-family: 'Inter', sans-serif;
+    }
+
+    #pdfContent h1 {
+      color: #ba119b;
+      font-size: 28px;
+      margin-bottom: 8px;
+      border-bottom: 3px solid #ba119b;
+      padding-bottom: 8px;
+    }
+
+    #pdfContent h2 {
+      color: #1f2937;
+      font-size: 20px;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 6px;
+    }
+
+    #pdfContent h3 {
+      color: #374151;
+      font-size: 16px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    #pdfContent .pdf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    #pdfContent .pdf-field {
+      margin-bottom: 16px;
+    }
+
+    #pdfContent .pdf-label {
+      font-weight: 600;
+      color: #374151;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    #pdfContent .pdf-value {
+      color: #1f2937;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    #pdfContent .pdf-students {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    #pdfContent .pdf-student-chip {
+      background: #f3f4f6;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #374151;
+    }
+
+    #pdfContent .pdf-footer {
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 11px;
+      color: #9ca3af;
+    }
   </style>
 </head>
 <body>
@@ -393,6 +484,7 @@
 
           <div class="action-buttons">
             <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+            <button type="button" class="btn btn-export" onclick="exportToPDF()">📄 Export as PDF</button>
             <button type="submit" form="interventionForm" class="btn btn-primary">Save Intervention</button>
           </div>
         </div>
@@ -410,6 +502,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Hidden PDF Content -->
+  <div id="pdfContent"></div>
 
   <script>
     // Get URL parameters
@@ -496,6 +591,173 @@
 
     // Initialize sessions
     updateSessions();
+
+    // Export to PDF function
+    function exportToPDF() {
+      // Get form values
+      const interventionName = document.getElementById('interventionName').value || 'Untitled Intervention';
+      const objective = document.getElementById('objective').value || 'Not specified';
+      const approach = document.getElementById('approach').value || 'Not specified';
+      const activities = document.getElementById('activities').value || 'Not specified';
+      const duration = document.getElementById('duration').value || '30';
+      const frequency = document.getElementById('frequency').value || 'Not specified';
+      const startDate = document.getElementById('startDate').value || 'Not specified';
+      const endDate = document.getElementById('endDate').value || 'Not specified';
+      const successCriteria = document.getElementById('successCriteria').value || 'Not specified';
+      const notes = document.getElementById('notes').value || 'None';
+      const totalSessions = document.getElementById('totalSessions').textContent || '-';
+
+      // Get selected resources
+      const selectedResources = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+        .map(cb => {
+          const label = document.querySelector(`label[for="${cb.id}"]`);
+          return label ? label.textContent.split('-')[0].trim() : cb.value;
+        });
+
+      // Format dates
+      const formatDate = (dateStr) => {
+        if (dateStr === 'Not specified') return dateStr;
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      };
+
+      // Get frequency label
+      const frequencyLabels = {
+        'daily': 'Daily',
+        '3x-week': '3 times per week',
+        '2x-week': '2 times per week',
+        'weekly': 'Weekly'
+      };
+
+      // Get approach label
+      const approachLabels = {
+        'direct': 'Direct Instruction',
+        'guided': 'Guided Practice',
+        'collaborative': 'Collaborative Learning',
+        'manipulatives': 'Concrete Manipulatives',
+        'technology': 'Technology-Enhanced',
+        'differentiated': 'Differentiated Activities'
+      };
+
+      // Build PDF HTML
+      const pdfHtml = `
+        <div class="pdf-header">
+          <div>
+            <h1>Intervention Plan</h1>
+            <div style="font-size: 14px; color: #6b7280; margin-top: 4px;">GL Assessment Analytics</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 12px; color: #9ca3af;">Generated</div>
+            <div style="font-size: 14px; color: #374151; font-weight: 600;">${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          </div>
+        </div>
+
+        <h2>Overview</h2>
+        <div class="pdf-field">
+          <div class="pdf-label">Intervention Name</div>
+          <div class="pdf-value">${interventionName}</div>
+        </div>
+        <div class="pdf-field">
+          <div class="pdf-label">Target Skill</div>
+          <div class="pdf-value">${skill || 'Not specified'}</div>
+        </div>
+        <div class="pdf-field">
+          <div class="pdf-label">Class</div>
+          <div class="pdf-value">${classId || 'Not specified'}</div>
+        </div>
+        <div class="pdf-field">
+          <div class="pdf-label">Number of Students</div>
+          <div class="pdf-value">${students.length} student${students.length !== 1 ? 's' : ''}</div>
+        </div>
+
+        <h2>Learning Objective</h2>
+        <div class="pdf-field">
+          <div class="pdf-value">${objective.replace(/\n/g, '<br>')}</div>
+        </div>
+
+        <h2>Teaching Details</h2>
+        <div class="pdf-field">
+          <div class="pdf-label">Approach</div>
+          <div class="pdf-value">${approachLabels[approach] || approach}</div>
+        </div>
+        <div class="pdf-field">
+          <div class="pdf-label">Activities & Tasks</div>
+          <div class="pdf-value">${activities.replace(/\n/g, '<br>')}</div>
+        </div>
+
+        <h2>Schedule</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="pdf-field">
+            <div class="pdf-label">Duration</div>
+            <div class="pdf-value">${duration} minutes per session</div>
+          </div>
+          <div class="pdf-field">
+            <div class="pdf-label">Frequency</div>
+            <div class="pdf-value">${frequencyLabels[frequency] || frequency}</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="pdf-field">
+            <div class="pdf-label">Start Date</div>
+            <div class="pdf-value">${formatDate(startDate)}</div>
+          </div>
+          <div class="pdf-field">
+            <div class="pdf-label">End Date</div>
+            <div class="pdf-value">${formatDate(endDate)}</div>
+          </div>
+        </div>
+        <div class="pdf-field">
+          <div class="pdf-label">Total Sessions</div>
+          <div class="pdf-value">${totalSessions}</div>
+        </div>
+
+        <h2>Success Criteria</h2>
+        <div class="pdf-field">
+          <div class="pdf-value">${successCriteria.replace(/\n/g, '<br>')}</div>
+        </div>
+
+        ${selectedResources.length > 0 ? `
+          <h2>Resources</h2>
+          <div class="pdf-field">
+            <ul style="margin: 0; padding-left: 20px; color: #1f2937;">
+              ${selectedResources.map(r => `<li style="margin-bottom: 4px;">${r}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+
+        ${notes !== 'None' ? `
+          <h2>Additional Notes</h2>
+          <div class="pdf-field">
+            <div class="pdf-value">${notes.replace(/\n/g, '<br>')}</div>
+          </div>
+        ` : ''}
+
+        <h2>Students Included</h2>
+        <div class="pdf-students">
+          ${students.map(s => `<span class="pdf-student-chip">${s.name}</span>`).join('')}
+        </div>
+
+        <div class="pdf-footer">
+          <div>Generated by GL Assessment Analytics - Intervention Planning Tool</div>
+          <div style="margin-top: 4px;">This document was generated on ${new Date().toLocaleString('en-GB')}.</div>
+        </div>
+      `;
+
+      // Populate hidden container
+      const pdfContent = document.getElementById('pdfContent');
+      pdfContent.innerHTML = pdfHtml;
+
+      // Generate PDF
+      const opt = {
+        margin: 15,
+        filename: `intervention-plan-${interventionName.replace(/\s+/g, '-').toLowerCase()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(pdfContent).save();
+    }
 
     // Handle form submission
     document.getElementById('interventionForm').addEventListener('submit', function(e) {
