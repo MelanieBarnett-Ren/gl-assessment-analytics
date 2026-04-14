@@ -230,6 +230,52 @@ export const NGMT_DATA: NGMTAssessment[] = [
     },
   },
 
+  // SCHOOL B - Around national average, some variability across domains
+  {
+    assessmentId: 'ngmt_2024_autumn',
+    schoolId: 'school7',
+    yearGroup: 5,
+    assessmentDate: new Date('2024-10-15'),
+    studentCount: 142,
+    overall: { sas: 100, stanine: 5, percentile: 50 },
+    domains: {
+      number: {
+        score: { sas: 98, stanine: 5, percentile: 45 },
+        skills: {
+          placeValue: 72,
+          fourOperations: 68,
+          fractionsDecimalsPercentages: 58,  // Room for improvement
+          ratio: 62,
+        },
+      },
+      algebra: {
+        score: { sas: 101, stanine: 5, percentile: 53 },
+        skills: {
+          sequences: 76,
+          expressions: 64,
+          equations: 60,
+        },
+      },
+      shapeSpaceMeasures: {
+        score: { sas: 102, stanine: 5, percentile: 55 },
+        skills: {
+          properties2D3D: 78,
+          positionDirection: 74,
+          measurement: 68,
+          perimeter: 72,
+        },
+      },
+      handlingData: {
+        score: { sas: 99, stanine: 5, percentile: 47 },
+        skills: {
+          dataRepresentation: 74,
+          interpretation: 66,
+          probability: 62,
+        },
+      },
+    },
+  },
+
   // SCHOOL C - Above average, strong across board (peer learning opportunity)
   {
     assessmentId: 'ngmt_2024_autumn',
@@ -323,6 +369,56 @@ export const PTM_DATA: PTMAssessment[] = [
         itemLevelData: [
           { itemId: 'D1', skill: 'Read bar chart', percentCorrect: 64, nationalAverage: 82 },
           { itemId: 'D2', skill: 'Interpret pie chart', percentCorrect: 52, nationalAverage: 70 },
+        ],
+      },
+    },
+  },
+
+  // SCHOOL B - Making expected progress, steady improvement
+  {
+    assessmentId: 'ptm_2024_autumn',
+    schoolId: 'school7',
+    yearGroup: 5,
+    term: 'autumn',
+    assessmentDate: new Date('2024-10-20'),
+    studentCount: 142,
+    overall: { sas: 100, stanine: 5, percentile: 50 },
+    progress: {
+      expectedProgress: 3,    // Expected +3 SAS
+      actualProgress: 3,      // Met expected progress
+      progressIndicator: 'expected',
+    },
+    domains: {
+      number: {
+        score: { sas: 99, stanine: 5, percentile: 47 },
+        itemLevelData: [
+          { itemId: 'N1', skill: 'Multiply 2-digit by 1-digit', percentCorrect: 70, nationalAverage: 78 },
+          { itemId: 'N2', skill: 'Divide with remainders', percentCorrect: 66, nationalAverage: 72 },
+          { itemId: 'N3', skill: 'Convert fractions to decimals', percentCorrect: 60, nationalAverage: 68 },
+          { itemId: 'N4', skill: 'Equivalent fractions', percentCorrect: 68, nationalAverage: 75 },
+          { itemId: 'N5', skill: 'Add fractions same denominator', percentCorrect: 76, nationalAverage: 82 },
+        ],
+      },
+      algebra: {
+        score: { sas: 101, stanine: 5, percentile: 53 },
+        itemLevelData: [
+          { itemId: 'A1', skill: 'Continue sequence +3', percentCorrect: 78, nationalAverage: 84 },
+          { itemId: 'A2', skill: 'Simple expressions', percentCorrect: 68, nationalAverage: 76 },
+        ],
+      },
+      shapeSpaceMeasures: {
+        score: { sas: 102, stanine: 5, percentile: 55 },
+        itemLevelData: [
+          { itemId: 'S1', skill: 'Identify 3D shapes', percentCorrect: 82, nationalAverage: 86 },
+          { itemId: 'S2', skill: 'Measure length mm', percentCorrect: 70, nationalAverage: 74 },
+          { itemId: 'S3', skill: 'Calculate perimeter', percentCorrect: 74, nationalAverage: 78 },
+        ],
+      },
+      handlingData: {
+        score: { sas: 99, stanine: 5, percentile: 47 },
+        itemLevelData: [
+          { itemId: 'D1', skill: 'Read bar chart', percentCorrect: 78, nationalAverage: 82 },
+          { itemId: 'D2', skill: 'Interpret pie chart', percentCorrect: 66, nationalAverage: 70 },
         ],
       },
     },
@@ -422,6 +518,51 @@ export const CAT4_DATA: CAT4Assessment[] = [
       gcseEnglish: '3-5',
       gcseMaths: '3-5',
       gcseScience: '4-5',
+    },
+  },
+
+  // SCHOOL B - Average cognitive baseline, aligned with attainment
+  {
+    assessmentId: 'cat4_2024_baseline',
+    schoolId: 'school7',
+    yearGroup: 5,
+    assessmentDate: new Date('2024-09-10'),
+    studentCount: 142,
+    meanCAT4: { sas: 100, stanine: 5, percentile: 50 },
+    batteries: {
+      verbal: {
+        score: { sas: 99, stanine: 5, percentile: 47 },
+        subtests: {
+          verbalClassification: 66,
+          verbalAnalogies: 64,
+        },
+      },
+      quantitative: {
+        score: { sas: 100, stanine: 5, percentile: 50 },
+        subtests: {
+          numberAnalogies: 68,
+          numberSeries: 66,
+        },
+      },
+      nonVerbal: {
+        score: { sas: 101, stanine: 5, percentile: 53 },
+        subtests: {
+          figureClassification: 70,
+          figureMatrices: 68,
+        },
+      },
+      spatial: {
+        score: { sas: 100, stanine: 5, percentile: 50 },
+        subtests: {
+          figureAnalysis: 68,
+          figureRecognition: 66,
+        },
+      },
+    },
+    predictions: {
+      gcseEnglish: '4-6',
+      gcseMaths: '4-6',
+      gcseScience: '4-6',
     },
   },
 
