@@ -94,6 +94,10 @@
     .summary-card:hover {
       transform: translateY(-2px) !important;
       box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+      text-decoration: none !important;
+    }
+    .summary-card:hover * {
+      text-decoration: none !important;
     }
     .summary-card h3 {
       font-size: 11px;
@@ -172,18 +176,24 @@
       padding: 16px;
       border-radius: 8px;
       text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
     }
-    .focus-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    .focus-card.clickable {
+      cursor: pointer;
+    }
+    .focus-card.clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      text-decoration: none !important;
+    }
+    .focus-card.clickable:hover * {
+      text-decoration: none !important;
     }
     .focus-card.foundation {
       background: #fef2f2;
       border: 2px solid #fca5a5;
     }
-    .focus-card.foundation:hover {
+    .focus-card.foundation.clickable:hover {
       background: #fee2e2;
       border-color: #f87171;
     }
@@ -191,7 +201,7 @@
       background: #eff6ff;
       border: 2px solid #93c5fd;
     }
-    .focus-card.consolidation:hover {
+    .focus-card.consolidation.clickable:hover {
       background: #dbeafe;
       border-color: #60a5fa;
     }
@@ -199,7 +209,31 @@
       background: #f0fdf4;
       border: 2px solid #86efac;
     }
-    .focus-card.extension:hover {
+    .focus-card.extension.clickable:hover {
+      background: #dcfce7;
+      border-color: #4ade80;
+    }
+    .focus-card.rag-red {
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+    }
+    .focus-card.rag-red.clickable:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+    .focus-card.rag-amber {
+      background: #fefce8;
+      border: 2px solid #fde047;
+    }
+    .focus-card.rag-amber.clickable:hover {
+      background: #fef9c3;
+      border-color: #facc15;
+    }
+    .focus-card.rag-green {
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+    }
+    .focus-card.rag-green.clickable:hover {
       background: #dcfce7;
       border-color: #4ade80;
     }
@@ -521,22 +555,27 @@
     }
     .tooltip .tooltiptext {
       visibility: hidden;
-      width: 300px;
+      min-width: 200px;
+      max-width: 320px;
+      width: max-content;
       background-color: var(--color-10);
       color: var(--color-W);
       text-align: left;
       border-radius: 8px;
-      padding: 12px;
+      padding: 14px 16px;
       position: absolute;
-      z-index: 1000;
+      z-index: 10000;
       bottom: 125%;
       left: 50%;
-      margin-left: -150px;
+      transform: translateX(-50%);
       opacity: 0;
       transition: opacity 0.3s;
-      font-size: 13px;
-      line-height: 1.5;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-size: 14px;
+      line-height: 1.6;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      pointer-events: none;
+      white-space: normal;
+      word-wrap: break-word;
     }
     .tooltip .tooltiptext::after {
       content: "";
@@ -702,135 +741,6 @@
     .header {
       margin-top: 60px !important;
     }
-
-    /* Responsive Styles */
-    @media (max-width: 1024px) {
-      .focus-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 24px 20px;
-      }
-
-      .header {
-        padding: 16px 20px;
-      }
-
-      .header h1 {
-        font-size: 24px;
-      }
-
-      .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-      }
-
-      .focus-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .students-table {
-        font-size: 13px;
-      }
-
-      .students-table th,
-      .students-table td {
-        padding: 10px 8px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-card .value {
-        font-size: 28px;
-      }
-
-      .va-score {
-        font-size: 36px;
-      }
-
-      .focus-card .count {
-        font-size: 28px;
-      }
-
-      .students-table {
-        font-size: 12px;
-      }
-
-      .students-table th,
-      .students-table td {
-        padding: 8px 6px;
-      }
-    }
-
-    /* Print Styles for PDF Export */
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 1cm;
-      }
-
-      body {
-        background: white !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-
-      .hamburger-menu,
-      .sidebar,
-      .sidebar-overlay,
-      .menu-toggle,
-      .filter-bar,
-      #pdf-export-container {
-        display: none !important;
-      }
-
-      .header {
-        margin-top: 0 !important;
-        page-break-after: avoid !important;
-      }
-
-      .container {
-        max-width: 100% !important;
-        padding: 0.5cm !important;
-      }
-
-      .summary-grid {
-        page-break-after: avoid !important;
-      }
-
-      .students-section {
-        page-break-inside: avoid !important;
-      }
-
-      .students-table {
-        width: 100% !important;
-        font-size: 9pt !important;
-      }
-
-      .students-table th,
-      .students-table td {
-        padding: 6px 4px !important;
-      }
-
-      .rag-badge, .focus-badge, .demo-badge {
-        print-color-adjust: exact !important;
-        -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
-      }
-
-      * {
-        color-adjust: exact !important;
-        -webkit-print-color-adjust: exact !important;
-      }
-    }
   </style>
 </head>
 <body>
@@ -975,6 +885,16 @@
     const pathParts = window.location.pathname.split('/');
     const classId = pathParts[pathParts.length - 1];
 
+    // School name mapping
+    const SCHOOL_NAMES = {
+      'school6': 'School A',
+      'school7': 'School B',
+      'school8': 'School C'
+    };
+
+    // Store class data globally for modal access
+    let currentClassData = null;
+
     async function loadClassData() {
       try {
         const response = await fetch(`${API_BASE}/api/gl-assessment/class/${classId}`);
@@ -996,6 +916,7 @@
     // Global variables for filtering
     let allStudents = [];
     let filteredStudents = [];
+    let currentClassData = null;
     let currentFilters = {
       ragStatus: 'all',
       focusGroup: 'all',
@@ -1006,12 +927,8 @@
       const summary = classData.classSummary;
       const vaClass = summary.valueAdded >= 0 ? 'positive' : 'negative';
 
-      // Store students globally for filtering
-      allStudents = classData.students;
-      filteredStudents = [...allStudents];
-
       document.getElementById('pageTitle').textContent =
-        `Class ${classData.className} - ${classData.teacherName}`;
+        `${schoolName} - Class ${classData.className} - ${classData.teacherName}`;
 
       let html = '';
 
@@ -1061,21 +978,21 @@
 
       // Focus Groups
       html += '<div class="focus-groups">';
-      html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected)</span></span></h2>';
+      html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected). Click a card to see students and their skill needs.</span></span></h2>';
       html += '  <div class="focus-grid">';
-      html += '    <div class="focus-card foundation" onclick="showFocusGroupQuestions(\'' + classId + '\', \'foundation\')">';
+      html += '    <div class="focus-card foundation clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'foundation\')">';
       html += '      <h3>Foundation</h3>';
       html += '      <div class="count">' + summary.focusGroups.foundation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Need support</p>';
       html += '      <p class="focus-card-hint">Click for practice questions</p>';
       html += '    </div>';
-      html += '    <div class="focus-card consolidation" onclick="showFocusGroupQuestions(\'' + classId + '\', \'consolidation\')">';
+      html += '    <div class="focus-card consolidation clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'consolidation\')">';
       html += '      <h3>Consolidation</h3>';
       html += '      <div class="count">' + summary.focusGroups.consolidation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Core teaching</p>';
       html += '      <p class="focus-card-hint">Click for practice questions</p>';
       html += '    </div>';
-      html += '    <div class="focus-card extension" onclick="showFocusGroupQuestions(\'' + classId + '\', \'extension\')">';
+      html += '    <div class="focus-card extension clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'extension\')">';
       html += '      <h3>Extension</h3>';
       html += '      <div class="count">' + summary.focusGroups.extension + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Ready to stretch</p>';
@@ -1086,6 +1003,37 @@
 
       // Focus Group Questions Panel (hidden by default)
       html += '<div class="focus-questions-panel" id="focusQuestionsPanel">';
+      html += '</div>';
+
+      // RAG Status Summary
+      const ragCounts = {
+        red: classData.students.filter(s => s.ngmt.sas < 90).length,
+        amber: classData.students.filter(s => s.ngmt.sas >= 90 && s.ngmt.sas <= 110).length,
+        green: classData.students.filter(s => s.ngmt.sas > 110).length
+      };
+
+      html += '<div class="focus-groups">';
+      html += '  <h2><span class="tooltip">Performance Status (RAG)<span class="tooltiptext">Students grouped by SAS scores: Red (<90 = concern), Amber (90-110 = expected), Green (>110 = exceeding)</span></span></h2>';
+      html += '  <div class="focus-grid">';
+      html += '    <div class="focus-card rag-red clickable" onclick="filterByRAG(\'red\')" title="Click to view students needing support">';
+      html += '      <h3>🔴 Needing Support</h3>';
+      html += '      <div class="count">' + ragCounts.red + '</div>';
+      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS < 90</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '    </div>';
+      html += '    <div class="focus-card rag-amber clickable" onclick="filterByRAG(\'amber\')" title="Click to view students performing as expected">';
+      html += '      <h3>🟡 As Expected</h3>';
+      html += '      <div class="count">' + ragCounts.amber + '</div>';
+      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS 90-110</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '    </div>';
+      html += '    <div class="focus-card rag-green clickable" onclick="filterByRAG(\'green\')" title="Click to view high achievers">';
+      html += '      <h3>🟢 High Achievers</h3>';
+      html += '      <div class="count">' + ragCounts.green + '</div>';
+      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS > 110</p>';
+      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '    </div>';
+      html += '  </div>';
       html += '</div>';
 
       // Filter Bar
@@ -1177,140 +1125,9 @@
 
       html += '    </tbody>';
       html += '  </table>';
+      html += '</div>';
 
-      document.getElementById('studentsTableContainer').innerHTML = html;
-      document.getElementById('studentCountLabel').textContent =
-        (currentFilters.ragStatus !== 'all' || currentFilters.focusGroup !== 'all' || currentFilters.demographic !== 'all' ? 'Filtered ' : '') +
-        'Students (' + filteredStudents.length + ' of ' + allStudents.length + ')';
-    }
-
-    // Filter Functions
-    function filterByRAG(status) {
-      currentFilters.ragStatus = status;
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    function filterByFocus(group) {
-      currentFilters.focusGroup = group;
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    function filterByDemo(demo) {
-      currentFilters.demographic = demo;
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    function applyFilters() {
-      filteredStudents = allStudents.filter(student => {
-        // RAG filter
-        if (currentFilters.ragStatus !== 'all') {
-          const sas = student.ngmt.sas;
-          const ragClass = sas < 90 ? 'red' : sas > 110 ? 'green' : 'amber';
-          if (ragClass !== currentFilters.ragStatus) return false;
-        }
-
-        // Focus group filter
-        if (currentFilters.focusGroup !== 'all') {
-          if (student.focusGroup !== currentFilters.focusGroup) return false;
-        }
-
-        // Demographic filter
-        if (currentFilters.demographic !== 'all') {
-          if (!student.demographics[currentFilters.demographic]) return false;
-        }
-
-        return true;
-      });
-
-      renderStudentsTable();
-    }
-
-    function updateFilterButtons() {
-      // Update RAG buttons
-      document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-btn').forEach((btn, idx) => {
-        btn.classList.remove('active');
-      });
-      const ragStatuses = ['all', 'red', 'amber', 'green'];
-      const ragIdx = ragStatuses.indexOf(currentFilters.ragStatus);
-      document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-btn')[ragIdx].classList.add('active');
-
-      // Update Focus buttons
-      document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-btn').forEach((btn, idx) => {
-        btn.classList.remove('active');
-      });
-      const focusGroups = ['all', 'foundation', 'consolidation', 'extension'];
-      const focusIdx = focusGroups.indexOf(currentFilters.focusGroup);
-      document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-btn')[focusIdx].classList.add('active');
-
-      // Update Demo buttons
-      document.querySelectorAll('.filter-group')[2].querySelectorAll('.filter-btn').forEach((btn, idx) => {
-        btn.classList.remove('active');
-      });
-      const demos = ['all', 'fsm', 'eal', 'send'];
-      const demoIdx = demos.indexOf(currentFilters.demographic);
-      document.querySelectorAll('.filter-group')[2].querySelectorAll('.filter-btn')[demoIdx].classList.add('active');
-    }
-
-    function resetFilters() {
-      currentFilters = {
-        ragStatus: 'all',
-        focusGroup: 'all',
-        demographic: 'all'
-      };
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    // Export Functions
-    function exportFilteredCSV() {
-      const headers = ['Student Name', 'CAT4 SAS', 'CAT4 RAG', 'NGMT SAS', 'NGMT RAG', 'Value Added', 'PTM Progress', 'Focus Group', 'FSM', 'EAL', 'SEND'];
-      const rows = filteredStudents.map(student => {
-        const va = student.ngmt.sas - student.cat4.meanSAS;
-        const ngmtRAG = student.ngmt.sas < 90 ? 'Red' : student.ngmt.sas > 110 ? 'Green' : 'Amber';
-        const cat4RAG = student.cat4.meanSAS < 90 ? 'Red' : student.cat4.meanSAS > 110 ? 'Green' : 'Amber';
-
-        return [
-          student.studentName,
-          student.cat4.meanSAS,
-          cat4RAG,
-          student.ngmt.sas,
-          ngmtRAG,
-          (va > 0 ? '+' : '') + va,
-          (student.ptm.progress > 0 ? '+' : '') + student.ptm.progress,
-          student.focusGroup,
-          student.demographics.fsm ? 'Yes' : 'No',
-          student.demographics.eal ? 'Yes' : 'No',
-          student.demographics.send ? 'Yes' : 'No'
-        ];
-      });
-
-      const csvContent = [
-        ['Class Student Data Export'],
-        [`Exported: ${new Date().toLocaleString()}`],
-        [`Filters Applied: RAG=${currentFilters.ragStatus}, Focus=${currentFilters.focusGroup}, Demo=${currentFilters.demographic}`],
-        [`Total Students: ${filteredStudents.length}`],
-        [],
-        headers,
-        ...rows
-      ].map(row => row.join(',')).join('\n');
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `class_students_${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-
-    function exportFilteredPDF() {
-      window.print();
+      document.getElementById('content').innerHTML = html;
     }
 
     // Show focus group questions
@@ -1405,6 +1222,77 @@
     }
 
     loadClassData();
+
+    // Show focus group modal with students grouped by skills
+    function showFocusGroupModal(focusGroup) {
+      if (!currentClassData) return;
+
+      const modal = document.getElementById('focusGroupModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      // Filter students in this focus group
+      const students = currentClassData.students.filter(s => s.focusGroup === focusGroup);
+
+      // Group students by skills they got wrong
+      const skillGroups = {};
+      students.forEach(student => {
+        const wrongSkills = student.ptm.itemResponses.filter(item => !item.correct);
+        wrongSkills.forEach(item => {
+          if (!skillGroups[item.skill]) {
+            skillGroups[item.skill] = [];
+          }
+          skillGroups[item.skill].push(student.studentName);
+        });
+      });
+
+      // Sort by number of students (most common issues first)
+      const sortedSkills = Object.entries(skillGroups).sort((a, b) => b[1].length - a[1].length);
+
+      // Build modal content
+      const focusGroupTitles = {
+        foundation: 'Foundation Group',
+        consolidation: 'Consolidation Group',
+        extension: 'Extension Group'
+      };
+      modalTitle.textContent = focusGroupTitles[focusGroup] + ' - Skills Requiring Focus';
+
+      let bodyHtml = '<p style="color: #6b7280; margin-bottom: 20px;">';
+      bodyHtml += students.length + ' student' + (students.length === 1 ? '' : 's') + ' in this group, ';
+      bodyHtml += 'grouped by the skills they need help with:';
+      bodyHtml += '</p>';
+
+      if (sortedSkills.length === 0) {
+        bodyHtml += '<p style="text-align: center; color: #6b7280; padding: 40px;">No skill gaps identified for this group.</p>';
+      } else {
+        sortedSkills.forEach(([skill, studentNames]) => {
+          bodyHtml += '<div class="skill-group">';
+          bodyHtml += '  <h3>📚 ' + skill + ' <span style="color: #6b7280; font-size: 14px; font-weight: 400;">(' + studentNames.length + ' student' + (studentNames.length === 1 ? '' : 's') + ')</span></h3>';
+          bodyHtml += '  <div class="student-list">';
+          studentNames.forEach(name => {
+            bodyHtml += '<div class="student-chip">' + name + '</div>';
+          });
+          bodyHtml += '  </div>';
+          bodyHtml += '</div>';
+        });
+      }
+
+      modalBody.innerHTML = bodyHtml;
+      modal.classList.add('active');
+    }
+
+    function closeFocusGroupModal() {
+      const modal = document.getElementById('focusGroupModal');
+      modal.classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('focusGroupModal');
+      if (event.target === modal) {
+        closeFocusGroupModal();
+      }
+    };
 
     // Hamburger menu toggle
     function toggleMenu() {
