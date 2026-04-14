@@ -921,7 +921,7 @@
               <th style="padding: 12px; text-align: left; font-weight: 600; color: #1f2937;">Student Name</th>
               <th style="padding: 12px; text-align: center; font-weight: 600; color: #1f2937;">
                 <div style="position: relative; display: inline-block;">
-                  Avg % Correct
+                  SAS Score
                   <span style="cursor: help; color: #9ca3af; font-size: 11px; margin-left: 4px;">ⓘ</span>
                 </div>
               </th>
@@ -1066,6 +1066,7 @@
     function generateMockStudents(count, schoolId) {
       const students = [];
       const baseScore = schoolId === 'school6' ? 55 : (schoolId === 'school7' ? 75 : 85);
+      const baseSAS = schoolId === 'school6' ? 92 : (schoolId === 'school7' ? 100 : 108);
 
       for (let i = 0; i < count; i++) {
         const objectiveScores = [];
@@ -1076,10 +1077,15 @@
 
         const avgScore = Math.round(objectiveScores.reduce((a, b) => a + b, 0) / objectiveScores.length);
 
+        // Generate SAS score correlated with performance
+        const sasVariation = (Math.random() - 0.5) * 20;
+        const sas = Math.round(Math.max(70, Math.min(130, baseSAS + sasVariation + (avgScore - baseScore) * 0.3)));
+
         students.push({
           studentId: `STU${i.toString().padStart(4, '0')}`,
           studentName: `Student ${i + 1}`,
           averageMastery: avgScore,
+          sas: sas,
           objectiveScores: objectiveScores
         });
       }
@@ -1447,8 +1453,8 @@
 
       document.getElementById('concerningStudentsSection').style.display = 'block';
 
-      // Sort by mastery (lowest first)
-      concerningStudents.sort((a, b) => a.averageMastery - b.averageMastery);
+      // Sort by SAS score (lowest first)
+      concerningStudents.sort((a, b) => a.sas - b.sas);
 
       const html = concerningStudents.map(student => {
         // Find the two weakest objectives for this student
@@ -1460,16 +1466,20 @@
         const weakest = objectiveScoresWithIndex.slice(0, 2);
 
         const weakestText = weakest.map(w =>
-          `<div style="margin-bottom: 4px;"><strong>${w.objective.code}</strong>: ${w.objective.text} <span style="color: #dc2626; font-weight: 700;">(${w.score}%)</span></div>`
+          `<div style="margin-bottom: 4px;"><strong>${w.objective.code}</strong>: ${w.objective.text}</div>`
         ).join('');
+
+        // Determine SAS color based on value
+        const sasColor = student.sas < 90 ? '#dc2626' : student.sas < 100 ? '#f59e0b' : student.sas < 110 ? '#3b82f6' : '#10b981';
+        const sasBg = student.sas < 90 ? '#fef2f2' : student.sas < 100 ? '#fef3c7' : student.sas < 110 ? '#dbeafe' : '#d1fae5';
 
         return `
           <tr style="border-bottom: 1px solid #e5e7eb;">
             <td style="padding: 12px; font-family: monospace; color: #9ca3af;">${student.studentId}</td>
             <td style="padding: 12px; font-weight: 600; color: #1f2937;">${student.studentName}</td>
             <td style="padding: 12px; text-align: center;">
-              <span style="background: #fef2f2; color: #dc2626; padding: 4px 12px; border-radius: 12px; font-weight: 700;">
-                ${student.averageMastery}%
+              <span style="background: ${sasBg}; color: ${sasColor}; padding: 4px 12px; border-radius: 12px; font-weight: 700;">
+                ${student.sas}
               </span>
             </td>
             <td style="padding: 12px; font-size: 12px; color: #1f2937; line-height: 1.6;">${weakestText}</td>
