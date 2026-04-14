@@ -606,6 +606,48 @@
       color: var(--color-50);
     }
 
+    /* Tabs */
+    body .tabs {
+      display: flex !important;
+      gap: 8px !important;
+      margin-bottom: 32px !important;
+      border-bottom: 2px solid #e5e7eb !important;
+      padding-bottom: 2px !important;
+    }
+    body .tab {
+      padding: 14px 28px !important;
+      background: white !important;
+      border: none !important;
+      border-radius: 8px 8px 0 0 !important;
+      cursor: pointer !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      color: #6b7280 !important;
+      transition: all 0.2s !important;
+      border: 2px solid transparent !important;
+      border-bottom: none !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+    body .tab.active {
+      background: #ba119b !important;
+      color: white !important;
+      transform: translateY(2px) !important;
+    }
+    body .tab:hover:not(.active) {
+      background: #f9fafb !important;
+      color: #ba119b !important;
+      border-color: #e5e7eb !important;
+      border-bottom-color: transparent !important;
+    }
+
+    /* Content Sections */
+    body .tab-content {
+      display: none !important;
+    }
+    body .tab-content.active {
+      display: block !important;
+    }
+
     /* ============================================
        HAMBURGER MENU (Global Navigation)
        ============================================ */
@@ -1113,11 +1155,21 @@
     function switchTab(tabName) {
       // Update tab buttons
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      event.target.classList.add('active');
+
+      // Find the button that corresponds to this tab
+      const tabs = document.querySelectorAll('.tab');
+      const tabNames = ['focus', 'interventions', 'performance', 'students'];
+      const tabIndex = tabNames.indexOf(tabName);
+      if (tabIndex >= 0 && tabs[tabIndex]) {
+        tabs[tabIndex].classList.add('active');
+      }
 
       // Update content
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      document.getElementById(tabName + '-tab').classList.add('active');
+      const targetTab = document.getElementById(tabName + '-tab');
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
     }
 
     function renderInterventionGroups() {
