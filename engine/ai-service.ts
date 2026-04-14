@@ -56,7 +56,7 @@ export class AIService {
       awsSecretAccessKey: config.awsSecretAccessKey,
       awsSessionToken: config.awsSessionToken,
       model: config.model || 'claude-sonnet-4-6',
-      maxTokens: config.maxTokens || 4096,
+      maxTokens: config.maxTokens || 8192,
       temperature: config.temperature || 1.0,
       cacheSystemPrompt: config.cacheSystemPrompt ?? true,
     };
@@ -121,17 +121,22 @@ export class AIService {
           // Remove comments (// and /* */)
           .replace(/\/\/.*$/gm, '')
           .replace(/\/\*[\s\S]*?\*\//g, '')
+          // Fix unquoted property names
+          .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":')
           // Escape literal newlines and tabs in string values
           .replace(/:\s*"([^"]*[\n\r\t]+[^"]*)"(?=[,\}\]])/g, (match: string, str: string) => {
             return ': "' + str.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t') + '"';
-          });
+          })
+          // Fix missing commas between array elements
+          .replace(/"\s*\n\s*\{/g, '",\n{')
+          .replace(/\}\s*\n\s*\{/g, '},\n{');
 
         try {
           parsed = JSON.parse(cleanedJson);
           console.log('✅ Successfully parsed cleaned JSON');
         } catch (secondError) {
-          console.error('Claude response (first 500 chars):', textContent.text.substring(0, 500));
-          console.error('JSON extract (first 500 chars):', jsonMatch[0].substring(0, 500));
+          console.error('Claude response (first 1000 chars):', textContent.text.substring(0, 1000));
+          console.error('Cleaned JSON (first 1000 chars):', cleanedJson.substring(0, 1000));
           throw new Error(`Failed to parse JSON even after cleaning: ${secondError instanceof Error ? secondError.message : 'Unknown error'}`);
         }
       }
