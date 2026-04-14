@@ -1095,14 +1095,14 @@
 
       const ngmt = schoolData.ngmt;
 
-      // Overall NGMT summary at top - more compact
-      let html = '<div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between;">';
+      // Overall NGMT summary at top - compact version
+      let html = '<div style="background: white; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between;">';
       html += '  <div>';
       html += '    <div style="font-size: 14px; color: #6b7280; font-weight: 500; margin-bottom: 4px;">Overall Mathematics Performance</div>';
       html += '    <div style="font-size: 13px; color: #9ca3af;">School Average • Stanine ' + ngmt.overall.stanine + '</div>';
       html += '  </div>';
       html += '  <div style="text-align: right;">';
-      html += '    <div style="font-size: 36px; font-weight: 700; color: ' + (getScoreClass(ngmt.overall.sas) === 'high' ? '#10b981' : getScoreClass(ngmt.overall.sas) === 'good' ? '#059669' : getScoreClass(ngmt.overall.sas) === 'medium' ? '#f59e0b' : '#dc2626') + ';">' + ngmt.overall.sas + '</div>';
+      html += '    <div style="font-size: 32px; font-weight: 700; color: ' + (getScoreClass(ngmt.overall.sas) === 'high' ? '#10b981' : getScoreClass(ngmt.overall.sas) === 'good' ? '#059669' : getScoreClass(ngmt.overall.sas) === 'medium' ? '#f59e0b' : '#dc2626') + ';">' + ngmt.overall.sas + '</div>';
       html += '    <div style="font-size: 12px; color: #9ca3af;">SAS Score</div>';
       html += '  </div>';
       html += '</div>';
