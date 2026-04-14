@@ -466,7 +466,7 @@ app.get('/api/focus-group-questions/:classId/:group', async (req, res) => {
         studentCount: focusGroupStudents.length,
         students: focusGroupStudents.map((s: any) => ({
           id: s.id,
-          name: s.name,
+          name: s.studentName,
           cat4: s.cat4.meanSAS,
           ngmt: s.ngmt.sas,
           valueAdded: s.ngmt.sas - s.cat4.meanSAS,
