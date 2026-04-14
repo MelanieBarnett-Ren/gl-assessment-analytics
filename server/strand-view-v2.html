@@ -1068,7 +1068,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-label">⭐ Focus Skills</div>
-          <div class="stat-value" style="color: var(--color-secondary);">${focusSkills}</div>
+          <div class="stat-value" style="color: #d946ef;">${focusSkills}</div>
           <div class="stat-detail">essential 23%</div>
         </div>
       `;
@@ -1085,9 +1085,9 @@
         x: idx,
         y: student.averageMastery,
         name: student.studentName,
-        color: student.averageMastery >= 85 ? 'var(--color-tertiary)' :
-               student.averageMastery >= 70 ? 'var(--color-link)' :
-               student.averageMastery >= 50 ? 'var(--color-warning)' : 'var(--color-error)'
+        color: student.averageMastery >= 85 ? '#10b981' :
+               student.averageMastery >= 70 ? '#3b82f6' :
+               student.averageMastery >= 50 ? '#f59e0b' : '#dc2626'
       }));
 
       Highcharts.chart('scatterChart', {
@@ -1119,7 +1119,7 @@
             label: {
               text: 'Concern',
               style: {
-                color: 'var(--color-error)'
+                color: '#dc2626'
               }
             }
           }, {
@@ -1129,7 +1129,7 @@
             label: {
               text: 'Emerging',
               style: {
-                color: 'var(--color-warning)'
+                color: '#f59e0b'
               }
             }
           }, {
@@ -1139,7 +1139,7 @@
             label: {
               text: 'Developing',
               style: {
-                color: 'var(--color-link)'
+                color: '#3b82f6'
               }
             }
           }, {
@@ -1149,7 +1149,7 @@
             label: {
               text: 'Mastered',
               style: {
-                color: 'var(--color-tertiary)'
+                color: '#10b981'
               }
             }
           }]
@@ -1232,9 +1232,9 @@
           name: '% Correct',
           data: sorted.map(o => ({
             y: o.masteryPercent,
-            color: o.level === 'mastered' ? 'var(--color-tertiary)' :
-                   o.level === 'developing' ? 'var(--color-link)' :
-                   o.level === 'emerging' ? 'var(--color-warning)' : 'var(--color-error)'
+            color: o.level === 'mastered' ? '#10b981' :
+                   o.level === 'developing' ? '#3b82f6' :
+                   o.level === 'emerging' ? '#f59e0b' : '#dc2626'
           }))
         }],
         credits: {
@@ -1272,10 +1272,10 @@
         series: [{
           name: 'Students',
           data: [
-            { name: 'Mastered', y: mastered, color: 'var(--color-tertiary)' },
-            { name: 'Developing', y: developing, color: 'var(--color-link)' },
-            { name: 'Emerging', y: emerging, color: 'var(--color-warning)' },
-            { name: 'Concern', y: concern, color: 'var(--color-error)' }
+            { name: 'Mastered', y: mastered, color: '#10b981' },
+            { name: 'Developing', y: developing, color: '#3b82f6' },
+            { name: 'Emerging', y: emerging, color: '#f59e0b' },
+            { name: 'Concern', y: concern, color: '#dc2626' }
           ]
         }],
         credits: {
