@@ -11,10 +11,14 @@
   bottom: 24px;
   right: 24px;
   z-index: 9999;
+  max-width: calc(100vw - 48px);
 }
 
 .pdf-fab-wrapper {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .pdf-fab {
@@ -63,12 +67,15 @@
   position: absolute;
   bottom: 70px;
   right: 0;
-  width: 420px;
+  width: 320px;
+  min-width: 280px;
+  max-width: 90vw;
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   animation: slideUp 0.2s ease;
+  z-index: 10001;
 }
 
 @keyframes slideUp {
@@ -128,7 +135,8 @@
   align-items: flex-start;
   gap: 14px;
   width: 100%;
-  padding: 16px;
+  min-width: 0;
+  padding: 12px;
   background: white;
   border: 2px solid transparent;
   border-radius: 8px;
@@ -150,17 +158,28 @@
   color: var(--color-primary, #ba119b);
 }
 
+.pdf-menu-item > div {
+  flex: 1;
+  min-width: 0;
+}
+
 .pdf-menu-item-title {
   font-size: 15px;
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .pdf-menu-item-desc {
   font-size: 13px;
   color: #6b7280;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 /* ============================================
@@ -406,6 +425,18 @@
    ============================================ */
 
 @media print {
+  /* Set page size and margins for optimal PDF output */
+  @page {
+    size: A4 landscape;
+    margin: 1cm 1.5cm;
+  }
+
+  /* Alternative: Letter size for US */
+  /* @page {
+    size: letter landscape;
+    margin: 0.75in 1in;
+  } */
+
   /* Hide PDF export button when printing */
   #pdf-export-container,
   .pdf-fab-wrapper,
@@ -422,38 +453,315 @@
     display: none !important;
   }
 
-  /* Adjust body padding for print */
+  /* Optimize body layout for print */
   body {
     padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    background: white !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
   }
 
-  /* Ensure charts and visualizations are visible */
-  .chart-card,
+  /* Container adjustments */
+  .container,
   .dashboard-grid,
+  .schools-grid,
+  .stats-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Ensure full width for cards and sections */
+  .school-card,
+  .chart-card,
+  .stat-card,
+  .insight-card,
+  .tile,
+  .export-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Grid layouts for print */
+  .dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1cm !important;
+  }
+
+  .schools-grid,
+  .stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5cm !important;
+  }
+
+  /* Ensure charts and visualizations are visible and properly sized */
+  .chart-card,
   .summary-cards {
     break-inside: avoid;
   }
 
+  /* Chart containers should be full width */
+  .highcharts-container,
+  svg.highcharts-root {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
   /* Add page breaks before major sections */
-  .section-break {
+  .section-break,
+  .page-break {
     page-break-before: always;
   }
 
-  /* Optimize colors for print */
-  body {
-    background: white !important;
+  /* Table adjustments */
+  table {
+    width: 100% !important;
+    font-size: 10pt !important;
   }
 
-  /* Ensure links are visible */
+  /* Hide interactive elements */
+  button:not(.no-print-hide),
+  .drill-down-btn,
+  .export-btn,
+  .insight-action,
+  .report-btn {
+    display: none !important;
+  }
+
+  /* Optimize text for print */
+  body, p, li, td, th {
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+  }
+
+  h1 { font-size: 18pt !important; }
+  h2 { font-size: 16pt !important; }
+  h3 { font-size: 14pt !important; }
+  h4 { font-size: 12pt !important; }
+  h5, h6 { font-size: 11pt !important; }
+
+  /* Ensure proper color contrast for print */
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Remove link URLs (too cluttered) */
   a[href]:after {
-    content: " (" attr(href) ")";
-    font-size: 0.8em;
-    color: #6b7280;
+    content: "" !important;
   }
 
-  a[href^="/"]:after,
-  a[href^="#"]:after {
-    content: "";
+  /* Header and breadcrumb adjustments */
+  .header,
+  .page-header {
+    padding: 0.5cm !important;
+    margin-bottom: 0.5cm !important;
+  }
+
+  .breadcrumb {
+    font-size: 9pt !important;
+    margin-bottom: 0.3cm !important;
+  }
+
+  /* Avoid page breaks in the middle of important content */
+  .insight-card,
+  .school-card,
+  .stat-card,
+  .objective-compact {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Optimize shadows and borders for print */
+  .card,
+  .school-card,
+  .chart-card {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* Demo Dashboard Specific Styles */
+  .tree-nav,
+  .tree-select,
+  .tree-arrow {
+    display: none !important;
+  }
+
+  .dashboard-tiles {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5cm !important;
+    width: 100% !important;
+    margin-bottom: 0.5cm !important;
+  }
+
+  .tile {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    padding: 0.4cm !important;
+  }
+
+  .tile-label {
+    font-size: 10pt !important;
+  }
+
+  .tile-value {
+    font-size: 20pt !important;
+    font-weight: bold !important;
+  }
+
+  .tile-comparison {
+    font-size: 9pt !important;
+  }
+
+  .analysis-grid {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .chart-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0.8cm !important;
+    page-break-inside: avoid !important;
+  }
+
+  .chart-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 0.3cm !important;
+  }
+
+  .chart-title {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+  }
+
+  .chart-subtitle {
+    font-size: 10pt !important;
+    color: #6b7280 !important;
+  }
+
+  /* Insight cards for print */
+  .insights-list {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .insight-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0.5cm !important;
+    padding: 0.5cm !important;
+    page-break-inside: avoid !important;
+    border-left: 4px solid !important;
+  }
+
+  .insight-card.critical {
+    border-left-color: #dc2626 !important;
+  }
+
+  .insight-card.attention {
+    border-left-color: #f59e0b !important;
+  }
+
+  .insight-card.positive {
+    border-left-color: #10b981 !important;
+  }
+
+  .insight-title {
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    margin-bottom: 0.2cm !important;
+  }
+
+  .insight-desc {
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .insight-actions {
+    display: none !important;
+  }
+
+  .action-cards,
+  .action-card {
+    display: none !important;
+  }
+
+  /* Summary section */
+  .summary-section {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.4cm !important;
+    margin-bottom: 0.6cm !important;
+    width: 100% !important;
+  }
+
+  .summary-card {
+    page-break-inside: avoid !important;
+    padding: 0.3cm !important;
+  }
+
+  .summary-value {
+    font-size: 16pt !important;
+    font-weight: bold !important;
+  }
+
+  .summary-label {
+    font-size: 10pt !important;
+  }
+
+  .summary-detail {
+    font-size: 9pt !important;
+  }
+
+  /* Ensure charts render at good size */
+  #distributionChart,
+  #curriculumChart,
+  #processChart,
+  #schoolComparisonChart,
+  #strandHeatmap {
+    height: 400px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Page header for demo dashboard */
+  .page-header {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .page-header h1 {
+    font-size: 18pt !important;
+  }
+
+  .page-subtitle {
+    font-size: 10pt !important;
+  }
+
+  /* Force landscape and full width */
+  @page {
+    size: A4 landscape !important;
+    margin: 1cm !important;
+  }
+
+  html, body {
+    width: 297mm !important;
+    height: 210mm !important;
   }
 }
 
@@ -473,6 +781,8 @@
 
   .pdf-menu {
     width: calc(100vw - 48px);
+    min-width: 280px;
+    max-width: 400px;
     right: auto;
     left: 50%;
     transform: translateX(-50%);
@@ -492,5 +802,31 @@
   #pdf-export-container {
     bottom: 16px;
     right: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pdf-menu {
+    width: calc(100vw - 32px);
+    min-width: auto;
+    max-width: calc(100vw - 32px);
+  }
+
+  .pdf-menu-item {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .pdf-menu-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .pdf-menu-item-title {
+    font-size: 13px;
+  }
+
+  .pdf-menu-item-desc {
+    font-size: 11px;
   }
 }

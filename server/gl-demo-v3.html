@@ -36,6 +36,10 @@
       color: var(--color-text-default);
     }
 
+    * {
+      font-family: var(--font-family-base) !important;
+    }
+
     /* ============================================
        HAMBURGER MENU (Global Navigation)
        ============================================ */
@@ -45,7 +49,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: var(--color-primary);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 1000;
       display: flex;
@@ -154,8 +158,8 @@
 
     .nav-link.active {
       background: #eff6ff;
-      color: #d946ef;
-      border-right: 3px solid #d946ef;
+      color: var(--color-secondary);
+      border-right: 3px solid var(--color-secondary);
     }
 
     .nav-icon {
@@ -228,14 +232,14 @@
     }
 
     .pill:hover {
-      border-color: #d946ef;
-      color: #d946ef;
+      border-color: var(--color-secondary);
+      color: var(--color-secondary);
     }
 
     .pill.active {
-      background: #d946ef;
+      background: var(--color-secondary);
       color: white;
-      border-color: #d946ef;
+      border-color: var(--color-secondary);
     }
 
     select.pill-select {
@@ -251,8 +255,8 @@
     }
 
     select.pill-select:focus {
-      border-color: #d946ef;
-      color: #d946ef;
+      border-color: var(--color-secondary);
+      color: var(--color-secondary);
     }
 
     /* School Cards */
@@ -328,7 +332,7 @@
     .metric-compact-value {
       font-size: 24px;
       font-weight: 700;
-      color: #d946ef;
+      color: var(--color-secondary);
     }
 
     .metric-compact-change {
@@ -441,11 +445,154 @@
 
     .class-link:hover {
       background: #eff6ff;
-      color: #d946ef;
+      color: var(--color-secondary);
     }
 
     .class-icon {
       font-size: 16px;
+    }
+
+    /* AI Insights Button */
+    .ai-insights-button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .ai-insights-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+    }
+
+    .ai-insights-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* AI Insights Display */
+    .ai-insights {
+      margin-top: 16px;
+      padding: 16px;
+      background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 100%);
+      border-radius: 8px;
+      border-left: 4px solid #a855f7;
+      display: none;
+    }
+
+    .ai-insights.visible {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ai-insights-loading {
+      text-align: center;
+      padding: 20px;
+      color: #a855f7;
+      font-size: 14px;
+    }
+
+    .spinner {
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #a855f7;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .ai-insights-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #7c3aed;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ai-insights-content {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .ai-insight-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+    }
+
+    .ai-insight-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ai-insight-summary {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .ai-insight-detail {
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .ai-insight-recommendation {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #7c3aed;
+    }
+
+    .ai-action-btn {
+      padding: 6px 12px;
+      background: linear-gradient(135deg, #ba119b, #d946ef);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .ai-action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(186, 17, 155, 0.3);
+    }
+
+    .ai-action-btn:active {
+      transform: translateY(0);
     }
 
     /* Group Analysis Section */
@@ -516,7 +663,7 @@
     .group-stat-value {
       font-size: 24px;
       font-weight: 700;
-      color: #d946ef;
+      color: var(--color-secondary);
     }
 
     .group-stat-count {
@@ -930,6 +1077,11 @@
         const card = createSchoolCard(school, data, term);
         grid.appendChild(card);
       });
+
+      // Reapply current filter after updating cards
+      if (currentViewFilter !== 'all') {
+        filterView(currentViewFilter);
+      }
     }
 
     function createSchoolCard(school, data, term) {
@@ -1003,6 +1155,14 @@
               </a>
             `).join('')}
           </div>
+        </div>
+
+        <button class="ai-insights-button" onclick="generateInsights('${school.id}', '${school.name}')">
+          🤖 Generate AI Insights
+        </button>
+
+        <div class="ai-insights" id="insights-${school.id}">
+          <!-- AI insights will be populated here -->
         </div>
       `;
 
@@ -1081,24 +1241,280 @@
       overlay.classList.toggle('visible');
     }
 
+    async function generateInsights(schoolId, schoolName) {
+      const insightsContainer = document.getElementById(`insights-${schoolId}`);
+      const button = event.target;
+
+      // Show loading state
+      button.disabled = true;
+      button.textContent = '⏳ Generating Insights...';
+
+      insightsContainer.classList.add('visible');
+      insightsContainer.innerHTML = `
+        <div class="ai-insights-loading">
+          <div class="spinner"></div>
+          <div>AI analyzing assessment data for ${schoolName}...</div>
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`http://localhost:3001/api/insights/school/${schoolId}/assessment123`);
+        const data = await response.json();
+
+        if (data.success && data.data.insights && data.data.insights.length > 0) {
+          const insights = data.data.insights.slice(0, 3); // Show top 3 insights
+
+          let html = '<div class="ai-insights-title">🤖 AI-Generated Insights</div>';
+          html += '<div class="ai-insights-content">';
+
+          insights.forEach((insight, index) => {
+            html += `
+              <div class="ai-insight-item">
+                <div class="ai-insight-summary">${index + 1}. ${insight.title}</div>
+                <div class="ai-insight-detail">${insight.summary}</div>
+                ${insight.recommendations && insight.recommendations.length > 0 ? `
+                  <div class="ai-insight-recommendation">
+                    💡 <strong>Recommendation:</strong> ${insight.recommendations[0].title}
+                    <div style="margin-top: 8px; font-size: 13px;">${insight.recommendations[0].description}</div>
+                    ${insight.recommendations[0].dashboardActions && insight.recommendations[0].dashboardActions.length > 0 ? `
+                      <div class="ai-insight-actions" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                        ${insight.recommendations[0].dashboardActions.map(action => `
+                          <button class="ai-action-btn" onclick="${action.targetUrl ? `window.location.href='${action.targetUrl}'` : `alert('Action: ${action.label}')`}">
+                            ${action.label}
+                          </button>
+                        `).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          });
+
+          html += '</div>';
+
+          // Add export button
+          html += `
+            <div style="margin-top: 16px; text-align: center;">
+              <button class="ai-action-btn" onclick="exportInsights('${schoolId}', '${schoolName}', ${JSON.stringify(insights).replace(/"/g, '&quot;')})">
+                📥 Export Insights to CSV
+              </button>
+            </div>
+          `;
+
+          insightsContainer.innerHTML = html;
+
+          // Store insights globally for export
+          window.currentInsights = { schoolId, schoolName, insights, data: data.data };
+
+          // Reset button
+          button.disabled = false;
+          button.textContent = '✅ Insights Generated';
+          setTimeout(() => {
+            button.textContent = '🤖 Generate AI Insights';
+          }, 3000);
+
+        } else {
+          throw new Error('No insights generated');
+        }
+
+      } catch (error) {
+        console.error('Error generating insights:', error);
+        insightsContainer.innerHTML = `
+          <div class="ai-insights-title">⚠️ Error</div>
+          <div class="ai-insights-content">
+            Failed to generate insights. Please ensure the server is running and try again.
+          </div>
+        `;
+
+        // Reset button
+        button.disabled = false;
+        button.textContent = '🤖 Generate AI Insights';
+      }
+    }
+
+    function exportInsights(schoolId, schoolName, insights) {
+      if (!window.currentInsights) {
+        alert('No insights available to export. Please generate insights first.');
+        return;
+      }
+
+      const data = window.currentInsights;
+      const insightsData = data.data;
+
+      // Build comprehensive CSV
+      const csvRows = [];
+
+      // Header section
+      csvRows.push(['GL ASSESSMENT - AI INSIGHTS EXPORT']);
+      csvRows.push([]);
+      csvRows.push(['SCHOOL INFORMATION']);
+      csvRows.push(['School ID', schoolId]);
+      csvRows.push(['School Name', schoolName]);
+      csvRows.push(['Generated', new Date().toLocaleString()]);
+      csvRows.push([]);
+
+      // Summary section
+      if (insightsData.summary) {
+        csvRows.push(['SUMMARY STATISTICS']);
+        csvRows.push(['Total Comparisons', insightsData.summary.totalComparisons]);
+        csvRows.push(['Significant Gaps Found', insightsData.summary.significantGaps]);
+        csvRows.push(['Peer Learning Opportunities', insightsData.summary.peerLearningOpportunities]);
+        csvRows.push([]);
+      }
+
+      // Each insight
+      data.insights.forEach((insight, index) => {
+        csvRows.push([`INSIGHT ${index + 1}: ${insight.title.toUpperCase()}`]);
+        csvRows.push([]);
+        csvRows.push(['Priority', insight.priority || 'N/A']);
+        csvRows.push(['Severity', insight.severity]);
+        csvRows.push(['Type', insight.type]);
+        csvRows.push([]);
+        csvRows.push(['Summary']);
+        csvRows.push([insight.summary]);
+        csvRows.push([]);
+        csvRows.push(['Detailed Analysis']);
+        csvRows.push([insight.detailedAnalysis || 'N/A']);
+        csvRows.push([]);
+
+        // Evidence
+        if (insight.evidence) {
+          csvRows.push(['EVIDENCE']);
+          csvRows.push(['Current Performance', insight.evidence.currentPerformance || 'N/A']);
+          csvRows.push(['Comparison Performance', insight.evidence.comparisonPerformance || 'N/A']);
+          csvRows.push(['Gap', insight.evidence.gap ? `${insight.evidence.gap > 0 ? '+' : ''}${insight.evidence.gap}` : 'N/A']);
+          csvRows.push(['Statistically Significant', insight.evidence.isSignificant ? 'Yes' : 'No']);
+          csvRows.push([]);
+        }
+
+        // Recommendations
+        if (insight.recommendations && insight.recommendations.length > 0) {
+          csvRows.push(['RECOMMENDATIONS']);
+          csvRows.push([]);
+
+          insight.recommendations.forEach((rec, recIndex) => {
+            csvRows.push([`Recommendation ${recIndex + 1}`, rec.title]);
+            csvRows.push(['Description', rec.description.replace(/<[^>]*>/g, '')]); // Strip HTML
+            csvRows.push(['Rationale', rec.rationale]);
+            csvRows.push(['Action Type', rec.actionType]);
+            csvRows.push(['Priority', rec.priority || 'N/A']);
+
+            if (rec.targetMetric) {
+              csvRows.push(['Target Metric', rec.targetMetric.metric]);
+              csvRows.push(['Current Value', rec.targetMetric.currentValue]);
+              csvRows.push(['Target Value', rec.targetMetric.targetValue]);
+              csvRows.push(['Timeframe', rec.targetMetric.timeframe]);
+            }
+
+            if (rec.peerExample) {
+              csvRows.push(['Peer Example - School', rec.peerExample.cohortName]);
+              csvRows.push(['Peer Example - Strategy', rec.peerExample.strategy]);
+              csvRows.push(['Peer Example - Evidence', rec.peerExample.evidenceOfSuccess]);
+            }
+
+            if (rec.dashboardActions && rec.dashboardActions.length > 0) {
+              csvRows.push(['Available Actions', rec.dashboardActions.map(a => a.label).join('; ')]);
+            }
+
+            csvRows.push([]);
+          });
+        }
+
+        csvRows.push(['═══════════════════════════════════════════════════════════════']);
+        csvRows.push([]);
+      });
+
+      // Key information
+      csvRows.push(['KEY INFORMATION']);
+      csvRows.push(['- Priority: 1 = Highest urgency, 5 = Lower urgency']);
+      csvRows.push(['- Severity: critical = immediate action needed, attention = monitor closely, positive = celebrate success']);
+      csvRows.push(['- Type: skill_gap = specific skill deficit, peer_learning = learn from high performers, trend = performance over time']);
+      csvRows.push(['- Action Types: intervention = implement teaching strategy, investigate = gather more data, focus_group = group students, drill_down = view detail']);
+
+      // Convert to CSV
+      const csvContent = csvRows.map(row => {
+        if (typeof row === 'string') return row;
+        return row.map(cell => {
+          const cellStr = String(cell || '');
+          // Escape quotes and wrap in quotes if contains comma, newline, or quote
+          if (cellStr.includes(',') || cellStr.includes('\n') || cellStr.includes('"')) {
+            return `"${cellStr.replace(/"/g, '""')}"`;
+          }
+          return cellStr;
+        }).join(',');
+      }).join('\n');
+
+      // Download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      const filename = `${schoolName.replace(/\s+/g, '_')}_AI_Insights_${new Date().toISOString().split('T')[0]}.csv`;
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // Filter state
+    let currentViewFilter = 'all';
+    let currentYearFilter = 5;
+
     function filterYear(year) {
-      // Placeholder for year filtering
+      currentYearFilter = year;
+
+      // Update active pill
       document.querySelectorAll('.filter-pills .pill').forEach(p => {
         if (p.textContent.includes('Year')) {
           p.classList.remove('active');
+          if (p.textContent.includes(year.toString())) {
+            p.classList.add('active');
+          }
         }
       });
-      event.target.classList.add('active');
+
+      // Note: All current data is Year 5, Year 6 filtering is not yet implemented
+      // This is ready for when Year 6 data is added to the schools array
+      console.log('Year filter set to:', year, '(Year 6 data not yet available)');
     }
 
     function filterView(view) {
-      // Placeholder for view filtering
+      currentViewFilter = view;
+
+      // Update active pill
       document.querySelectorAll('.filter-pills .pill').forEach(p => {
         if (p.textContent.includes('All') || p.textContent.includes('Concern')) {
           p.classList.remove('active');
+          if ((view === 'all' && p.textContent.includes('All')) ||
+              (view === 'concern' && p.textContent.includes('Concern'))) {
+            p.classList.add('active');
+          }
         }
       });
-      event.target.classList.add('active');
+
+      // Apply filter to school cards
+      const term = document.getElementById('termSelect').value;
+      const schoolCards = document.querySelectorAll('.school-card');
+
+      schoolCards.forEach((card, index) => {
+        const school = schools[index];
+        const data = termData[term][school.id];
+
+        if (view === 'concern') {
+          // Show only schools with negative value added
+          if (data.valueAdded < 0) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        } else {
+          // Show all schools
+          card.style.display = 'block';
+        }
+      });
     }
 
     // Close sidebar when clicking a link (on mobile)

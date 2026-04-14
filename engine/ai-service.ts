@@ -3,6 +3,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { AnthropicBedrock } from '@anthropic-ai/bedrock-sdk';
 import {
   SYSTEM_PROMPT,
   generateMATInsightsPrompt,
@@ -14,7 +15,11 @@ import {
 import { Insight, ViewLevel, MisconductionPattern } from '../models/insights';
 
 export interface AIServiceConfig {
-  apiKey: string;
+  apiKey?: string;               // For direct Anthropic API
+  awsRegion?: string;            // For AWS Bedrock (e.g., 'us-east-1')
+  awsAccessKeyId?: string;       // AWS credentials
+  awsSecretAccessKey?: string;   // AWS credentials
+  awsSessionToken?: string;      // Optional: for temporary credentials
   model?: string;                // Default: claude-sonnet-4-6
   maxTokens?: number;            // Default: 4096
   temperature?: number;          // Default: 1.0
@@ -22,16 +27,34 @@ export interface AIServiceConfig {
 }
 
 export class AIService {
-  private client: Anthropic;
-  private config: Required<AIServiceConfig>;
+  private client: Anthropic | AnthropicBedrock;
+  private config: Required<Omit<AIServiceConfig, 'apiKey' | 'awsAccessKeyId' | 'awsSecretAccessKey' | 'awsSessionToken'>> &
+    Pick<AIServiceConfig, 'apiKey' | 'awsRegion' | 'awsAccessKeyId' | 'awsSecretAccessKey' | 'awsSessionToken'>;
 
   constructor(config: AIServiceConfig) {
-    this.client = new Anthropic({
-      apiKey: config.apiKey,
-    });
+    // Determine if using AWS Bedrock or direct API
+    if (config.awsRegion) {
+      // AWS Bedrock configuration - uses AWS credentials from environment or AWS CLI
+      this.client = new AnthropicBedrock({
+        awsRegion: config.awsRegion,
+        // AWS SDK will automatically use credentials from:
+        // 1. Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+        // 2. AWS credentials file (~/.aws/credentials)
+        // 3. IAM role (if running on EC2/ECS/Lambda)
+      });
+    } else {
+      // Direct Anthropic API
+      this.client = new Anthropic({
+        apiKey: config.apiKey || '',
+      });
+    }
 
     this.config = {
       apiKey: config.apiKey,
+      awsRegion: config.awsRegion || 'us-east-1',
+      awsAccessKeyId: config.awsAccessKeyId,
+      awsSecretAccessKey: config.awsSecretAccessKey,
+      awsSessionToken: config.awsSessionToken,
       model: config.model || 'claude-sonnet-4-6',
       maxTokens: config.maxTokens || 4096,
       temperature: config.temperature || 1.0,
@@ -48,7 +71,7 @@ export class AIService {
     const userPrompt = this.buildPromptForViewLevel(context);
 
     try {
-      const response = await this.client.messages.create({
+      const response = await (this.client as any).messages.create({
         model: this.config.model,
         max_tokens: this.config.maxTokens,
         temperature: this.config.temperature,
@@ -70,18 +93,49 @@ export class AIService {
       });
 
       // Extract text content
-      const textContent = response.content.find(c => c.type === 'text');
+      const textContent = response.content.find((c: any) => c.type === 'text');
       if (!textContent || textContent.type !== 'text') {
         throw new Error('No text content in Claude response');
       }
 
-      // Parse JSON response
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
+      // Parse JSON response with error handling
+      // First, strip markdown code fences if present
+      let jsonText = textContent.text;
+      jsonText = jsonText.replace(/^```(?:json)?\s*\n/gm, '').replace(/\n```\s*$/gm, '');
+
+      const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         throw new Error('Could not extract JSON from Claude response');
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
+      let parsed;
+      try {
+        // Try to parse the JSON directly
+        parsed = JSON.parse(jsonMatch[0]);
+      } catch (parseError) {
+        // If parsing fails, try to clean up common JSON issues
+        console.log('Initial JSON parse failed, attempting to clean JSON...');
+        let cleanedJson = jsonMatch[0]
+          // Remove trailing commas before closing braces/brackets
+          .replace(/,(\s*[}\]])/g, '$1')
+          // Remove comments (// and /* */)
+          .replace(/\/\/.*$/gm, '')
+          .replace(/\/\*[\s\S]*?\*\//g, '')
+          // Escape literal newlines and tabs in string values
+          .replace(/:\s*"([^"]*[\n\r\t]+[^"]*)"(?=[,\}\]])/g, (match, str) => {
+            return ': "' + str.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t') + '"';
+          });
+
+        try {
+          parsed = JSON.parse(cleanedJson);
+          console.log('✅ Successfully parsed cleaned JSON');
+        } catch (secondError) {
+          console.error('Claude response (first 500 chars):', textContent.text.substring(0, 500));
+          console.error('JSON extract (first 500 chars):', jsonMatch[0].substring(0, 500));
+          throw new Error(`Failed to parse JSON even after cleaning: ${secondError instanceof Error ? secondError.message : 'Unknown error'}`);
+        }
+      }
+
       const insights = this.normalizeInsights(parsed.insights, context);
 
       // Calculate token usage
@@ -109,7 +163,7 @@ export class AIService {
     const prompt = generateMisconceptionPrompt(skill, studentErrors, correctAnswer);
 
     try {
-      const response = await this.client.messages.create({
+      const response = await (this.client as any).messages.create({
         model: this.config.model,
         max_tokens: 2048,
         temperature: this.config.temperature,
@@ -122,7 +176,7 @@ export class AIService {
         ],
       });
 
-      const textContent = response.content.find(c => c.type === 'text');
+      const textContent = response.content.find((c: any) => c.type === 'text');
       if (!textContent || textContent.type !== 'text') {
         throw new Error('No text content in Claude response');
       }
@@ -132,7 +186,17 @@ export class AIService {
         throw new Error('Could not extract JSON from Claude response');
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
+      let parsed;
+      try {
+        parsed = JSON.parse(jsonMatch[0]);
+      } catch (parseError) {
+        // Clean up common JSON issues
+        let cleanedJson = jsonMatch[0]
+          .replace(/,(\s*[}\]])/g, '$1')
+          .replace(/\/\/.*$/gm, '')
+          .replace(/\/\*[\s\S]*?\*\//g, '');
+        parsed = JSON.parse(cleanedJson);
+      }
 
       return {
         skill,
@@ -261,6 +325,18 @@ export class AIService {
       });
     }
 
+    if (recommendation.actionType === 'intervention') {
+      actions.push({
+        label: 'Plan Intervention',
+        actionType: 'create_plan',
+        targetUrl: `/dashboard/${context.viewLevel}/${context.targetCohort.cohortId}/interventions`,
+        parameters: {
+          skill: recommendation.targetMetric?.metric || 'skill-based intervention',
+          targetValue: recommendation.targetMetric?.targetValue,
+        },
+      });
+    }
+
     if (recommendation.targetMetric) {
       actions.push({
         label: 'Track Progress',
@@ -280,11 +356,28 @@ export class AIService {
  * Utility: Create AI service instance from environment
  */
 export function createAIService(): AIService {
+  const awsRegion = process.env.AWS_REGION;
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY environment variable is required');
+
+  // Check if using AWS Bedrock
+  if (awsRegion) {
+    console.log(`✓ Using AWS Bedrock in region: ${awsRegion}`);
+    return new AIService({
+      awsRegion,
+      awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      awsSessionToken: process.env.AWS_SESSION_TOKEN,
+      model: process.env.ANTHROPIC_MODEL || 'anthropic.claude-sonnet-4-20250514-v1:0',
+      cacheSystemPrompt: true,
+    });
   }
 
+  // Otherwise use direct Anthropic API
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY or AWS_REGION environment variable is required');
+  }
+
+  console.log('✓ Using direct Anthropic API');
   return new AIService({
     apiKey,
     model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6',

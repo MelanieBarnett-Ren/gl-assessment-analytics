@@ -218,21 +218,108 @@ class PDFExporter {
   }
 
   exportCurrentPage() {
+    // Show instructions for better PDF output
+    const instructions =
+      '📄 PDF Export Instructions - IMPORTANT:\n\n' +
+      '1. Destination: Select "Save as PDF"\n' +
+      '2. Layout: Choose "Landscape" (NOT Portrait)\n' +
+      '3. Margins: Set to "None" or "Minimum"\n' +
+      '4. Scale: Set to "100%" or "Default" (NOT "Fit to page")\n' +
+      '5. Options: Enable "Background graphics" to show charts\n' +
+      '6. Paper size: A4 or Letter\n\n' +
+      '⚠️ CRITICAL: Use Landscape + Minimum Margins for full width!\n\n' +
+      'Click OK to open print dialog';
+
+    if (!confirm(instructions)) {
+      return;
+    }
+
     // Add print-specific class for styling
     document.body.classList.add('printing');
 
-    // Hide the PDF export button before printing
+    // Hide the PDF export button and other UI elements before printing
     const fabWrapper = document.querySelector('.pdf-fab-wrapper');
+    const sidebar = document.querySelector('.sidebar');
+    const hamburger = document.querySelector('.hamburger-menu');
+    const container = document.querySelector('.container');
+    const treeNav = document.querySelector('.tree-nav');
+
     if (fabWrapper) fabWrapper.style.display = 'none';
+    if (sidebar) sidebar.style.display = 'none';
+    if (hamburger) hamburger.style.display = 'none';
+    if (treeNav) treeNav.style.display = 'none';
 
-    // Use browser's native print dialog
-    window.print();
+    // Inject temporary print styles
+    const printStyleSheet = document.createElement('style');
+    printStyleSheet.id = 'temp-print-styles';
+    printStyleSheet.textContent = `
+      @media print {
+        html, body {
+          width: 297mm !important;
+          min-width: 297mm !important;
+          max-width: 297mm !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        .container {
+          width: 100% !important;
+          max-width: none !important;
+          margin: 0 !important;
+          padding: 1cm !important;
+        }
+        * {
+          max-width: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(printStyleSheet);
 
-    // Restore after print
+    // Force full width on body and container
+    const originalBodyStyle = document.body.style.cssText;
+    const originalContainerStyle = container ? container.style.cssText : '';
+
+    document.body.style.cssText += 'width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important;';
+    if (container) {
+      container.style.cssText += 'width: 100% !important; max-width: none !important; margin: 0 !important; padding: 1cm !important;';
+    }
+
+    // Hide all buttons
+    const buttons = document.querySelectorAll('button:not(.no-print)');
+    buttons.forEach(btn => {
+      if (!btn.classList.contains('no-print')) {
+        btn.style.display = 'none';
+      }
+    });
+
+    // Small delay to ensure styles are applied
     setTimeout(() => {
-      document.body.classList.remove('printing');
-      if (fabWrapper) fabWrapper.style.display = 'block';
-    }, 100);
+      // Use browser's native print dialog
+      window.print();
+
+      // Restore after print
+      setTimeout(() => {
+        document.body.classList.remove('printing');
+        if (fabWrapper) fabWrapper.style.display = 'block';
+        if (sidebar) sidebar.style.display = '';
+        if (hamburger) hamburger.style.display = '';
+        if (treeNav) treeNav.style.display = '';
+
+        // Restore original styles
+        document.body.style.cssText = originalBodyStyle;
+        if (container) container.style.cssText = originalContainerStyle;
+
+        // Remove temporary print stylesheet
+        const tempStyle = document.getElementById('temp-print-styles');
+        if (tempStyle) tempStyle.remove();
+
+        // Restore buttons
+        buttons.forEach(btn => {
+          if (!btn.classList.contains('no-print')) {
+            btn.style.display = '';
+          }
+        });
+      }, 100);
+    }, 200);
   }
 
   async exportAllPages() {

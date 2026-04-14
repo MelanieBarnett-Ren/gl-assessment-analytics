@@ -8,7 +8,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { getMockData } from './mock-data';
-import { AIService } from '../engine/ai-service';
+import { AIService, createAIService } from '../engine/ai-service';
 import { findSimilarCohorts } from '../engine/similarity-matcher';
 import { detectOutliers } from '../engine/outlier-detector';
 import { InsightPanel, ViewLevel } from '../models/insights';
@@ -34,13 +34,17 @@ const cache = new Map<string, { data: InsightPanel; expiresAt: Date }>();
 
 // Initialize AI Service
 let aiService: AIService | null = null;
-if (process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'your_api_key_here') {
-  aiService = new AIService({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-  });
-  console.log('✅ Claude API initialized');
-} else {
-  console.log('⚠️  No Claude API key found - using mock insights');
+try {
+  // Check if AWS Bedrock or direct API is configured
+  if (process.env.AWS_REGION || (process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'your_api_key_here')) {
+    aiService = createAIService();
+    console.log('✅ Claude API initialized');
+  } else {
+    console.log('⚠️  No Claude API key or AWS region found - using mock insights');
+  }
+} catch (error) {
+  console.log('⚠️  Failed to initialize AI service - using mock insights');
+  console.error(error);
 }
 
 // ============================================================================
@@ -102,14 +106,20 @@ app.get('/api/insights/:viewLevel/:cohortId/:assessmentId', async (req, res) => 
 
     console.log(`Found ${similarCohorts.length} similar cohorts`);
 
-    // Detect outliers
+    // Detect outliers with relaxed mode to ensure we always get skill-level insights
     const outliers = detectOutliers(
       targetCohort.assessment.skillDomainScores,
-      similarCohorts.map(c => ({ skills: c.assessment.skillDomainScores })),
-      { minEffectSize: 0.5 }
+      similarCohorts.map((c: any) => ({ skills: c.assessment.skillDomainScores })),
+      {
+        minEffectSize: 0.5,
+        minZScore: 1.5,
+        significanceLevel: 0.05,
+        relaxedMode: true,  // Always find relative weak areas, even for high performers
+        minResultsInRelaxedMode: 5  // Ensure at least 5 skill-level insights
+      }
     );
 
-    console.log(`Detected ${outliers.length} outliers`);
+    console.log(`Detected ${outliers.length} skill areas for analysis (including relative weak areas)`);
 
     // Generate insights
     let insightPanel: InsightPanel;
@@ -125,7 +135,7 @@ app.get('/api/insights/:viewLevel/:cohortId/:assessmentId', async (req, res) => 
           assessment: targetCohort.assessment,
           demographics: targetCohort.demographics,
         },
-        similarCohorts: similarCohorts.map(sc => ({
+        similarCohorts: similarCohorts.map((sc: any) => ({
           cohortId: sc.cohortId,
           cohortName: sc.cohortName,
           assessment: sc.assessment,
@@ -310,11 +320,11 @@ app.get('/api/gl-assessment/all', (req, res) => {
     const { getGLAssessmentData } = require('./gl-assessment-data');
     const { generateGLIntegratedInsights } = require('../engine/gl-assessment-analyzer');
 
-    const schools = ['school6', 'school8'];
+    const schools = ['school6', 'school7', 'school8'];
     const results = schools.map(schoolId => {
       const data = getGLAssessmentData(schoolId);
       if (data.ngmt && data.ptm && data.cat4) {
-        const schoolName = schoolId === 'school6' ? 'School A' : 'School C';
+        const schoolName = schoolId === 'school6' ? 'School A' : schoolId === 'school7' ? 'School B' : 'School C';
         return generateGLIntegratedInsights(schoolId, schoolName, data.ngmt, data.ptm, data.cat4);
       }
       return null;
@@ -328,7 +338,7 @@ app.get('/api/gl-assessment/all', (req, res) => {
     console.error('Error generating GL Assessment insights:', error);
     res.status(500).json({
       success: false,
-      error: { message: error.message },
+      error: { message: error instanceof Error ? error.message : 'Unknown error' },
     });
   }
 });
@@ -352,7 +362,7 @@ app.get('/api/gl-assessment/school/:schoolId/classes', (req, res) => {
     console.error('Error getting class data:', error);
     res.status(500).json({
       success: false,
-      error: { message: error.message },
+      error: { message: error instanceof Error ? error.message : 'Unknown error' },
     });
   }
 });
@@ -383,7 +393,7 @@ app.get('/api/gl-assessment/class/:classId', (req, res) => {
     console.error('Error getting class data:', error);
     res.status(500).json({
       success: false,
-      error: { message: error.message },
+      error: { message: error instanceof Error ? error.message : 'Unknown error' },
     });
   }
 });
@@ -643,14 +653,28 @@ function generateMockInsightPanel(
       severity: outlier.severity,
       type: 'skill_gap',
       priority: idx + 1,
-      title: `${outlier.contentDomain}: ${outlier.gap > 0 ? '+' : ''}${outlier.gap.toFixed(1)}% gap`,
-      summary: `Your cohort is ${Math.abs(outlier.gap).toFixed(1)}% ${outlier.gap > 0 ? 'above' : 'below'} similar cohorts on ${outlier.skill}`,
-      detailedAnalysis: `Analysis of ${outlier.contentDomain} - ${outlier.skill}:\n\n` +
-        `• Current Score: ${outlier.currentScore.toFixed(1)}%\n` +
-        `• Expected (similar cohorts): ${outlier.expectedScore.toFixed(1)}%\n` +
-        `• Gap: ${outlier.gap > 0 ? '+' : ''}${outlier.gap.toFixed(1)}%\n` +
-        `• Effect Size: ${outlier.effectSize.toFixed(2)} (${outlier.severity})\n\n` +
-        `This represents a ${outlier.severity} gap that requires attention.`,
+      title: `${outlier.skill === 'Overall' ? outlier.contentDomain : outlier.skill}: ${outlier.gap > 0 ? '+' : ''}${outlier.gap.toFixed(1)}% gap`,
+      summary: `${outlier.gap < 0 ? 'Focus area identified: ' : 'Strength area: '}${outlier.skill} ${outlier.gap < 0 ? 'needs improvement' : 'performing well'} (${outlier.gap > 0 ? '+' : ''}${outlier.gap.toFixed(1)}%)`,
+      detailedAnalysis: `Skill-Level Analysis - ${outlier.contentDomain} > ${outlier.skill}:\n\n` +
+        `**Performance Data:**\n` +
+        `• Your Score: ${outlier.currentScore.toFixed(1)}%\n` +
+        `• Similar Schools Average: ${outlier.expectedScore.toFixed(1)}%\n` +
+        `• Performance Gap: ${outlier.gap > 0 ? '+' : ''}${outlier.gap.toFixed(1)}%\n` +
+        `• Statistical Significance: ${outlier.isSignificant ? 'Significant' : 'Marginal'} (effect size: ${outlier.effectSize.toFixed(2)})\n\n` +
+        `**What This Means:**\n` +
+        (outlier.gap < 0
+          ? `This skill is ${Math.abs(outlier.gap) > 10 ? 'significantly' : 'relatively'} weaker than demographically similar schools. ${outlier.severity === 'critical' ? 'Urgent intervention recommended.' : 'Targeted support needed.'}\n\n` +
+            `**Recommended Actions:**\n` +
+            `1. Review teaching approach for this specific skill\n` +
+            `2. Identify students struggling with this concept\n` +
+            `3. Implement focused intervention (e.g., small group work, additional practice)\n` +
+            `4. Check prerequisite knowledge - students may have foundation gaps`
+          : `This skill is a relative strength${Math.abs(outlier.gap) > 5 ? ' - excellent performance!' : ''}. Consider:\n` +
+            `1. Maintaining current teaching approach\n` +
+            `2. Sharing strategies with other schools\n` +
+            `3. Setting stretch goals for highest achievers\n` +
+            `4. Using this skill as foundation for more advanced concepts`
+        ),
       evidence: {
         currentPerformance: outlier.currentScore,
         comparisonPerformance: outlier.expectedScore,
@@ -672,25 +696,55 @@ function generateMockInsightPanel(
       recommendations: [
         {
           recommendationId: `rec_${idx}`,
-          title: `Focus on ${outlier.skill}`,
-          description: `Target this specific skill with focused intervention. ${getStrandActionableLink(cohortId, outlier.contentDomain, outlier.skill)}`,
-          rationale: `Effect size of ${outlier.effectSize.toFixed(2)} indicates significant gap`,
-          actionType: 'investigate',
+          title: `Targeted Intervention: ${outlier.skill}`,
+          description: `Implement focused teaching for "${outlier.skill}" skill. ${outlier.gap < 0
+            ? `Students are ${Math.abs(outlier.gap).toFixed(0)}% below similar schools - prioritize this for intervention groups. Use concrete examples, visual aids, and regular practice.`
+            : `This is a strength area - use it to build advanced skills and support peer learning.`} ${getStrandActionableLink(cohortId, outlier.contentDomain, outlier.skill)}`,
+          rationale: `${outlier.gap < 0
+            ? `Gap of ${Math.abs(outlier.gap).toFixed(1)}% indicates students need additional support on this specific skill`
+            : `Strong performance (${outlier.gap.toFixed(1)}% above average) shows effective teaching approach`}`,
+          actionType: outlier.gap < 0 ? 'intervention' : 'maintain',
           priority: 1,
           targetMetric: {
-            metric: `${outlier.skill} score`,
+            metric: `${outlier.skill} mastery`,
             currentValue: outlier.currentScore,
-            targetValue: outlier.expectedScore,
-            timeframe: 'next assessment',
+            targetValue: outlier.gap < 0 ? outlier.expectedScore : Math.min(100, outlier.currentScore + 5),
+            timeframe: 'next assessment cycle',
           },
+          dashboardActions: [
+            {
+              label: 'View Details',
+              actionType: 'navigate',
+              targetUrl: `/school/${cohortId}/skills`,
+            },
+            {
+              label: 'Track Progress',
+              actionType: 'create_report',
+              parameters: { skill: outlier.skill },
+            }
+          ],
         },
         {
-          recommendationId: `rec_${idx}_class`,
-          title: `Class-Level Action`,
-          description: `Review strand objectives with all classes. Classes 5A, 5B, and 5C need targeted support on this strand. View detailed student mastery data to identify specific students for intervention groups.`,
-          rationale: `Strand-specific data available showing which National Curriculum objectives need attention`,
+          recommendationId: `rec_${idx}_drill`,
+          title: `Drill Down to Student Level`,
+          description: `<a href="/school/${cohortId}/skills" style="color: #d946ef; font-weight: 600; text-decoration: underline;">View student-by-student mastery data</a> for "${outlier.skill}" to identify exactly which students need support. ${outlier.gap < 0
+            ? `Target the Foundation group (likely 20-30% of students) who haven't mastered this skill.`
+            : `Identify highest achievers for extension activities and peer mentoring roles.`}`,
+          rationale: `Student-level data reveals which specific learners need intervention, enabling targeted grouping`,
           actionType: 'drill_down',
           priority: 2,
+          dashboardActions: [
+            {
+              label: 'View Student Data',
+              actionType: 'navigate',
+              targetUrl: `/school/${cohortId}/skills`,
+            },
+            {
+              label: 'View Strand Details',
+              actionType: 'navigate',
+              targetUrl: `/strand/${cohortId}/${encodeURIComponent(outlier.contentDomain)}`,
+            }
+          ],
         },
       ],
       generatedAt: new Date(),
@@ -756,6 +810,18 @@ function generateMockInsightPanel(
             targetValue: gap < 0 ? avgSimilarSAS : targetCohort.assessment.avgSAS + 3,
             timeframe: 'next assessment',
           },
+          dashboardActions: [
+            {
+              label: 'View Skills Analysis',
+              actionType: 'navigate',
+              targetUrl: `/school/${cohortId}/skills`,
+            },
+            {
+              label: 'Compare to Peers',
+              actionType: 'navigate',
+              targetUrl: `/mat/schools`,
+            }
+          ],
         },
         {
           recommendationId: `rec_overall_classes`,
@@ -764,6 +830,18 @@ function generateMockInsightPanel(
           rationale: `Class-level variation may reveal specific teaching quality or cohort composition issues`,
           actionType: 'drill_down',
           priority: 2,
+          dashboardActions: [
+            {
+              label: 'View Heatmap',
+              actionType: 'navigate',
+              targetUrl: `/school/${cohortId}/skills#heatmap`,
+            },
+            {
+              label: 'View All Classes',
+              actionType: 'navigate',
+              targetUrl: `/school/${cohortId}/classes`,
+            }
+          ],
         },
       ],
       generatedAt: new Date(),
@@ -863,7 +941,7 @@ function generateMockInsightPanel(
 
     // Skill domain analysis - find weakest domain
     const weakestDomain = targetCohort.assessment.skillDomainScores
-      .reduce((min, skill) => skill.score < min.score ? skill : min);
+      .reduce((min: any, skill: any) => skill.score < min.score ? skill : min);
 
     if (weakestDomain.score < 50) {
       mockInsights.push({
@@ -881,7 +959,7 @@ function generateMockInsightPanel(
           `• Score: ${weakestDomain.score}%\n` +
           `• Items Correct: ${weakestDomain.itemsCorrect}/${weakestDomain.itemsAttempted}\n\n` +
           `Skill Breakdown:\n` +
-          weakestDomain.skillBreakdown.map(sb => `• ${sb.skill}: ${sb.score}%`).join('\n'),
+          weakestDomain.skillBreakdown.map((sb: any) => `• ${sb.skill}: ${sb.score}%`).join('\n'),
         evidence: {
           currentPerformance: weakestDomain.score,
           isSignificant: true,

@@ -33,9 +33,13 @@
       color: var(--color-text-default);
     }
 
+    * {
+      font-family: var(--font-family-base) !important;
+    }
+
     /* Header */
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--color-primary);
       color: white;
       padding: 30px 40px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -131,7 +135,7 @@
 
     .school-card button {
       width: 100%;
-      background: #667eea;
+      background: var(--color-primary);
       color: white;
       border: none;
       padding: 12px;
@@ -151,7 +155,7 @@
       text-align: center;
       margin: 50px 0;
       padding: 40px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--color-primary);
       border-radius: 16px;
       box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
     }
@@ -167,7 +171,7 @@
     }
     .big-action button {
       background: white;
-      color: #667eea;
+      color: var(--color-primary);
       border: none;
       padding: 18px 40px;
       border-radius: 12px;
@@ -200,7 +204,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .results h2 {
-      color: #667eea;
+      color: var(--color-primary);
       font-size: 24px;
       margin-bottom: 24px;
       padding-bottom: 16px;
@@ -208,7 +212,7 @@
     }
     .insight {
       background: #faf9fb;
-      border-left: 6px solid #667eea;
+      border-left: 6px solid var(--color-primary);
       padding: 24px;
       margin-bottom: 24px;
       border-radius: 8px;
@@ -242,7 +246,7 @@
       width: 60px;
       height: 60px;
       border: 6px solid #e9d8fd;
-      border-top-color: #667eea;
+      border-top-color: var(--color-primary);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin: 0 auto 20px;
@@ -276,27 +280,32 @@
     .tooltip {
       position: relative;
       display: inline-block;
-      border-bottom: 1px dotted #667eea;
+      border-bottom: 1px dotted var(--color-primary);
       cursor: help;
     }
     .tooltip .tooltiptext {
       visibility: hidden;
-      width: 280px;
+      min-width: 200px;
+      max-width: 320px;
+      width: max-content;
       background-color: #1f2937;
       color: #fff;
       text-align: left;
       border-radius: 8px;
-      padding: 12px;
+      padding: 14px 16px;
       position: absolute;
-      z-index: 1000;
+      z-index: 10000;
       bottom: 125%;
       left: 50%;
-      margin-left: -140px;
+      transform: translateX(-50%);
       opacity: 0;
       transition: opacity 0.3s;
-      font-size: 13px;
-      line-height: 1.5;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-size: 14px;
+      line-height: 1.6;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      pointer-events: none;
+      white-space: normal;
+      word-wrap: break-word;
     }
     .tooltip .tooltiptext::after {
       content: "";
@@ -335,6 +344,54 @@
         compare to similar schools, identify skill-level gaps, and decide on actions.
         <strong>Our AI does this automatically in seconds.</strong>
       </p>
+    </div>
+
+    <!-- What's New Section -->
+    <div style="background: linear-gradient(135deg, #ba119b, #d946ef); color: white; padding: 32px; border-radius: 12px; margin-bottom: 40px; box-shadow: 0 8px 24px rgba(186, 17, 155, 0.3);">
+      <h2 style="margin: 0 0 20px 0; font-size: 24px; color: white;">✨ What's New: Enhanced Features</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+          <h3 style="font-size: 16px; margin: 0 0 8px 0; color: white;">🎯 Skill-Level Insights</h3>
+          <p style="font-size: 14px; margin: 0; opacity: 0.95; line-height: 1.6;">
+            AI now identifies specific skills (e.g., "multiplying fractions") not just broad domains. Works for ALL schools, even high performers!
+          </p>
+        </div>
+        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+          <h3 style="font-size: 16px; margin: 0 0 8px 0; color: white;">🔘 Clickable Drill-Downs</h3>
+          <p style="font-size: 14px; margin: 0; opacity: 0.95; line-height: 1.6;">
+            Click AI recommendations to jump directly to detailed data. Click focus groups (Foundation/Consolidation/Extension) to filter students instantly.
+          </p>
+        </div>
+        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+          <h3 style="font-size: 16px; margin: 0 0 8px 0; color: white;">📥 Enhanced Exports</h3>
+          <p style="font-size: 14px; margin: 0; opacity: 0.95; line-height: 1.6;">
+            Export CSVs with CAT4 breakdowns, NGMT domains, intervention priorities, and AI insights with full recommendations for documentation.
+          </p>
+        </div>
+        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+          <h3 style="font-size: 16px; margin: 0 0 8px 0; color: white;">🚦 RAG Filtering</h3>
+          <p style="font-size: 14px; margin: 0; opacity: 0.95; line-height: 1.6;">
+            Click Red/Amber/Green status cards to instantly filter students needing support, on track, or exceeding expectations.
+          </p>
+        </div>
+      </div>
+      <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.2);">
+        <h3 style="font-size: 18px; margin: 0 0 16px 0; color: white;">🔗 Try the Full Features:</h3>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="/gl" style="background: white; color: #ba119b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+            📊 GL Assessment Dashboard
+          </a>
+          <a href="/school/school6/skills" style="background: white; color: #ba119b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+            🎓 School Skills View
+          </a>
+          <a href="/class/class6a" style="background: white; color: #ba119b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+            👥 Class View with Drill-Downs
+          </a>
+          <a href="/strand/school6/Number%20-%20fractions" style="background: white; color: #ba119b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+            📐 Strand Analysis
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- School Cards -->
@@ -396,6 +453,97 @@
     <div class="results" id="results">
       <!-- Dynamically populated -->
     </div>
+
+    <!-- Feature Summary -->
+    <div style="margin-top: 60px; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+      <h2 style="text-align: center; margin-bottom: 32px; color: #1f2937;">📋 Complete Feature Set</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+
+        <div style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px;">
+          <h3 style="color: #ba119b; margin: 0 0 12px 0; font-size: 16px;">🎯 Smart AI Insights</h3>
+          <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px; color: #4b5563;">
+            <li>Skill-level analysis (not just broad domains)</li>
+            <li>Works for ALL schools (even high performers)</li>
+            <li>Identifies relative weak areas automatically</li>
+            <li>Compares to demographically similar schools</li>
+            <li>Generates 3-5 actionable insights per school</li>
+          </ul>
+        </div>
+
+        <div style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px;">
+          <h3 style="color: #ba119b; margin: 0 0 12px 0; font-size: 16px;">🔘 Interactive Drill-Downs</h3>
+          <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px; color: #4b5563;">
+            <li>Click AI recommendation → jump to detailed data</li>
+            <li>Click Focus Groups → filter students instantly</li>
+            <li>Click RAG status → view Red/Amber/Green students</li>
+            <li>Click strand objectives → see full curriculum text</li>
+            <li>Click student cards → modal with full assessment breakdown</li>
+          </ul>
+        </div>
+
+        <div style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px;">
+          <h3 style="color: #ba119b; margin: 0 0 12px 0; font-size: 16px;">📥 Enhanced Exports</h3>
+          <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px; color: #4b5563;">
+            <li>28-column class exports (CAT4, NGMT, demographics)</li>
+            <li>Intervention priorities & recommended actions</li>
+            <li>Strand exports with strengths/weaknesses per student</li>
+            <li>AI insights export with full recommendations</li>
+            <li>Comprehensive metadata for every export</li>
+          </ul>
+        </div>
+
+        <div style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px;">
+          <h3 style="color: #ba119b; margin: 0 0 12px 0; font-size: 16px;">📊 Multiple Views</h3>
+          <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px; color: #4b5563;">
+            <li>GL Assessment Dashboard (NGMT, PTM, CAT4)</li>
+            <li>School Skills View (heatmaps & comparisons)</li>
+            <li>Class View (student-by-student analysis)</li>
+            <li>Strand View (objective-level mastery)</li>
+            <li>MAT View (trust-wide patterns)</li>
+          </ul>
+        </div>
+
+        <div style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px;">
+          <h3 style="color: #ba119b; margin: 0 0 12px 0; font-size: 16px;">🎨 User Experience</h3>
+          <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px; color: #4b5563;">
+            <li>Epoch UI branding (GL Assessment purple theme)</li>
+            <li>WCAG 2.2 Level AA accessibility compliant</li>
+            <li>Inter font for consistent typography</li>
+            <li>Responsive design (mobile, tablet, desktop)</li>
+            <li>PDF export for all major views</li>
+          </ul>
+        </div>
+
+        <div style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px;">
+          <h3 style="color: #ba119b; margin: 0 0 12px 0; font-size: 16px;">⚡ Performance</h3>
+          <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px; color: #4b5563;">
+            <li>AI analysis in seconds (vs 20-30 min manual)</li>
+            <li>Relaxed outlier detection for all schools</li>
+            <li>Prompt caching for faster API calls</li>
+            <li>In-memory caching (15-min TTL)</li>
+            <li>AWS Bedrock & direct Anthropic API support</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb; text-align: center;">
+        <h3 style="color: #1f2937; margin: 0 0 16px 0;">🚀 Ready to Explore?</h3>
+        <p style="color: #6b7280; margin: 0 0 24px 0; font-size: 14px;">Try all features across different views to see the full power of the platform</p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a href="/gl" style="background: linear-gradient(135deg, #ba119b, #d946ef); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; transition: all 0.2s; box-shadow: 0 4px 12px rgba(186, 17, 155, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(186, 17, 155, 0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 12px rgba(186, 17, 155, 0.3)'">
+            📊 GL Dashboard
+          </a>
+          <a href="/school/school6/skills" style="background: white; color: #ba119b; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; transition: all 0.2s; border: 2px solid #ba119b;" onmouseover="this.style.background='#faf5ff'" onmouseout="this.style.background='white'">
+            🎓 School View
+          </a>
+          <a href="/class/class6a" style="background: white; color: #ba119b; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; transition: all 0.2s; border: 2px solid #ba119b;" onmouseover="this.style.background='#faf5ff'" onmouseout="this.style.background='white'">
+            👥 Class View
+          </a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -446,13 +594,40 @@
             const severityClass = insight.severity === 'critical' ? 'critical' :
                                  insight.severity === 'positive' ? 'positive' : '';
 
+            const rec = insight.recommendations[0];
+
             html += \`
               <div class="insight \${severityClass}">
                 <h3>\${school.name}: \${insight.title}</h3>
-                <p>\${insight.summary}</p>
-                <p>\${insight.detailedAnalysis.substring(0, 400)}...</p>
-                \${insight.recommendations.length > 0 ? \`
-                  <p><strong>💡 Recommendation:</strong> \${insight.recommendations[0].title} - \${insight.recommendations[0].description}</p>
+                <p><strong>Summary:</strong> \${insight.summary}</p>
+                <p style="font-size: 14px; line-height: 1.6;">\${insight.detailedAnalysis.substring(0, 400)}...</p>
+                \${rec ? \`
+                  <div style="background: rgba(168, 85, 247, 0.05); padding: 16px; border-radius: 8px; margin-top: 16px;">
+                    <p style="margin: 0 0 12px 0;"><strong>💡 Recommended Action:</strong> \${rec.title}</p>
+                    <p style="margin: 0 0 12px 0; font-size: 14px;">\${rec.description.replace(/<[^>]*>/g, '').substring(0, 200)}...</p>
+                    \${rec.dashboardActions && rec.dashboardActions.length > 0 ? \`
+                      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                        \${rec.dashboardActions.map(action => \`
+                          <button style="
+                            padding: 8px 16px;
+                            background: linear-gradient(135deg, #ba119b, #d946ef);
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 12px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-family: 'Inter', sans-serif;
+                          " onclick="\${action.targetUrl ? \`window.location.href='\${action.targetUrl}'\` : \`alert('Action: \${action.label}')\`}"
+                          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(186, 17, 155, 0.3)'"
+                          onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                            \${action.label}
+                          </button>
+                        \`).join('')}
+                      </div>
+                    \` : ''}
+                  </div>
                 \` : ''}
               </div>
             \`;
@@ -512,18 +687,43 @@
                 <p>\${insight.summary}</p>
                 <p style="white-space: pre-wrap; margin-top: 12px;">\${insight.detailedAnalysis}</p>
                 \${insight.recommendations.length > 0 ? \`
-                  <div style="background: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
-                    <strong>💡 Recommendations:</strong>
-                    <ul style="margin: 8px 0 0 20px;">
-                      \${insight.recommendations.map(rec => \`
-                        <li style="margin: 8px 0;">
-                          <strong>\${rec.title}:</strong> \${rec.description}
-                          \${rec.targetMetric ? \`
-                            <br><span class="highlight">Target: \${rec.targetMetric.metric} from \${rec.targetMetric.currentValue} to \${rec.targetMetric.targetValue} (\${rec.targetMetric.timeframe})</span>
-                          \` : ''}
-                        </li>
-                      \`).join('')}
-                    </ul>
+                  <div style="background: rgba(168, 85, 247, 0.05); padding: 16px; border-radius: 8px; margin-top: 16px;">
+                    <strong style="color: #7c3aed;">💡 Recommendations:</strong>
+                    \${insight.recommendations.map(rec => \`
+                      <div style="margin: 16px 0; padding: 12px; background: white; border-radius: 6px; border-left: 3px solid #d946ef;">
+                        <div style="margin-bottom: 8px;">
+                          <strong>\${rec.title}</strong>
+                        </div>
+                        <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">\${rec.description.replace(/<[^>]*>/g, '')}</p>
+                        \${rec.targetMetric ? \`
+                          <div style="font-size: 13px; color: #059669; margin: 8px 0;">
+                            📊 Target: \${rec.targetMetric.metric} from <strong>\${rec.targetMetric.currentValue}</strong> to <strong>\${rec.targetMetric.targetValue}</strong> (\${rec.targetMetric.timeframe})
+                          </div>
+                        \` : ''}
+                        \${rec.dashboardActions && rec.dashboardActions.length > 0 ? \`
+                          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                            \${rec.dashboardActions.map(action => \`
+                              <button style="
+                                padding: 8px 16px;
+                                background: linear-gradient(135deg, #ba119b, #d946ef);
+                                color: white;
+                                border: none;
+                                border-radius: 6px;
+                                font-size: 12px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                                font-family: 'Inter', sans-serif;
+                              " onclick="\${action.targetUrl ? \`window.location.href='\${action.targetUrl}'\` : \`alert('Action: \${action.label}')\`}"
+                              onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(186, 17, 155, 0.3)'"
+                              onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                                \${action.label}
+                              </button>
+                            \`).join('')}
+                          </div>
+                        \` : ''}
+                      </div>
+                    \`).join('')}
                   </div>
                 \` : ''}
               </div>
