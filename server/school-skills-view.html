@@ -1187,7 +1187,7 @@
       let html = '<h2 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #1f2937;">Curriculum Strands</h2>';
       html += '<p style="color: #6b7280; margin-bottom: 24px; font-size: 14px;">National Curriculum strands organized by domain - click to view detailed objectives</p>';
 
-      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">';
+      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">';
 
       const strandsData = [
         {
@@ -1247,7 +1247,7 @@
         const scoreColor = scoreClass === 'high' ? '#10b981' : scoreClass === 'good' ? '#059669' : scoreClass === 'medium' ? '#f59e0b' : '#dc2626';
 
         html += '<a href="/school/' + schoolId + '/strand/' + strand.id + '" style="text-decoration: none; display: block;">';
-        html += '  <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.2s ease; cursor: pointer; height: 100%; border-left: 4px solid ' + scoreColor + ';" onmouseover="this.style.boxShadow=\'0 4px 12px rgba(0,0,0,0.12)\';" onmouseout="this.style.boxShadow=\'0 1px 3px rgba(0,0,0,0.1)\';">';
+        html += '  <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s ease; cursor: pointer; height: 100%; border: 1px solid #e5e7eb; border-left: 4px solid ' + scoreColor + ';" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.15)\'; this.style.transform=\'translateY(-2px)\';" onmouseout="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.1)\'; this.style.transform=\'translateY(0)\';">';
 
         // Header with score
         html += '    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">';
