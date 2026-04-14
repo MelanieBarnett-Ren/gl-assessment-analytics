@@ -63,7 +63,7 @@
   position: absolute;
   bottom: 70px;
   right: 0;
-  width: 360px;
+  width: 420px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
@@ -120,21 +120,21 @@
 }
 
 .pdf-menu-content {
-  padding: 8px;
+  padding: 12px;
 }
 
 .pdf-menu-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  padding: 12px;
+  padding: 16px;
   background: white;
   border: 2px solid transparent;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   text-align: left;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -151,16 +151,16 @@
 }
 
 .pdf-menu-item-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #1f2937;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .pdf-menu-item-desc {
-  font-size: 12px;
+  font-size: 13px;
   color: #6b7280;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* ============================================
