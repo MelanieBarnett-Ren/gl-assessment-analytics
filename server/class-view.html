@@ -418,22 +418,27 @@
     }
     .tooltip .tooltiptext {
       visibility: hidden;
-      width: 300px;
+      min-width: 200px;
+      max-width: 320px;
+      width: max-content;
       background-color: var(--color-10);
       color: var(--color-W);
       text-align: left;
       border-radius: 8px;
-      padding: 12px;
+      padding: 14px 16px;
       position: absolute;
-      z-index: 1000;
+      z-index: 10000;
       bottom: 125%;
       left: 50%;
-      margin-left: -150px;
+      transform: translateX(-50%);
       opacity: 0;
       transition: opacity 0.3s;
-      font-size: 13px;
-      line-height: 1.5;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-size: 14px;
+      line-height: 1.6;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      pointer-events: none;
+      white-space: normal;
+      word-wrap: break-word;
     }
     .tooltip .tooltiptext::after {
       content: "";
