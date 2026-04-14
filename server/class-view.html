@@ -232,25 +232,131 @@
     .students-table tr:hover {
       background: var(--color-white);
     }
-    .focus-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
+    /* RAG Badges for SAS Scores */
+    .rag-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-width: 50px !important;
+      padding: 6px 12px !important;
+      border-radius: 20px !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+    }
+    .rag-badge.red {
+      background: #fee2e2 !important;
+      color: #991b1b !important;
+      border: 2px solid #fca5a5 !important;
+    }
+    .rag-badge.amber {
+      background: #fef3c7 !important;
+      color: #92400e !important;
+      border: 2px solid #fde047 !important;
+    }
+    .rag-badge.green {
+      background: #d1fae5 !important;
+      color: #065f46 !important;
+      border: 2px solid #86efac !important;
+    }
+
+    /* Pill Badges */
+    .focus-badge, .demo-badge {
+      display: inline-block !important;
+      padding: 6px 14px !important;
+      border-radius: 20px !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      margin: 2px !important;
+      white-space: nowrap !important;
     }
     .focus-badge.foundation {
-      background: var(--color-error-container);
-      color: var(--color-error-focus);
+      background: #fee2e2 !important;
+      color: #991b1b !important;
+      border: 1px solid #fca5a5 !important;
     }
     .focus-badge.consolidation {
-      background: var(--color-primary-50);
-      color: var(--color-primary-focus);
+      background: #dbeafe !important;
+      color: #1e40af !important;
+      border: 1px solid #93c5fd !important;
     }
     .focus-badge.extension {
-      background: var(--color-tertiary-container);
-      color: var(--color-tertiary);
+      background: #d1fae5 !important;
+      color: #065f46 !important;
+      border: 1px solid #86efac !important;
+    }
+    .demo-badge {
+      background: #f3e8ff !important;
+      color: #6b21a8 !important;
+      border: 1px solid #d8b4fe !important;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      background: white !important;
+      border-radius: 12px !important;
+      padding: 20px !important;
+      margin-bottom: 24px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    }
+    .filter-bar h3 {
+      font-size: 16px !important;
+      margin-bottom: 16px !important;
+      color: #1f2937 !important;
+      font-weight: 600 !important;
+    }
+    .filter-group {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 12px !important;
+      margin-bottom: 16px !important;
+    }
+    .filter-group label {
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #4b5563 !important;
+      margin-right: 8px !important;
+    }
+    .filter-btn {
+      padding: 8px 16px !important;
+      border-radius: 20px !important;
+      border: 2px solid #e5e7eb !important;
+      background: white !important;
+      cursor: pointer !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+      transition: all 0.2s !important;
+    }
+    .filter-btn:hover {
+      border-color: #ba119b !important;
+      color: #ba119b !important;
+    }
+    .filter-btn.active {
+      background: #ba119b !important;
+      color: white !important;
+      border-color: #ba119b !important;
+    }
+    .export-buttons {
+      display: flex !important;
+      gap: 12px !important;
+      margin-top: 16px !important;
+    }
+    .export-btn-custom {
+      padding: 10px 20px !important;
+      border-radius: 8px !important;
+      border: none !important;
+      background: #ba119b !important;
+      color: white !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.2s !important;
+    }
+    .export-btn-custom:hover {
+      background: #ad0a96 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(186, 17, 155, 0.3) !important;
     }
     .score-cell {
       font-weight: 600;
@@ -503,6 +609,68 @@
         padding: 8px 6px;
       }
     }
+
+    /* Print Styles for PDF Export */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 1cm;
+      }
+
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .hamburger-menu,
+      .sidebar,
+      .sidebar-overlay,
+      .menu-toggle,
+      .filter-bar,
+      #pdf-export-container {
+        display: none !important;
+      }
+
+      .header {
+        margin-top: 0 !important;
+        page-break-after: avoid !important;
+      }
+
+      .container {
+        max-width: 100% !important;
+        padding: 0.5cm !important;
+      }
+
+      .summary-grid {
+        page-break-after: avoid !important;
+      }
+
+      .students-section {
+        page-break-inside: avoid !important;
+      }
+
+      .students-table {
+        width: 100% !important;
+        font-size: 9pt !important;
+      }
+
+      .students-table th,
+      .students-table td {
+        padding: 6px 4px !important;
+      }
+
+      .rag-badge, .focus-badge, .demo-badge {
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      * {
+        color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -619,9 +787,22 @@
       }
     }
 
+    // Global variables for filtering
+    let allStudents = [];
+    let filteredStudents = [];
+    let currentFilters = {
+      ragStatus: 'all',
+      focusGroup: 'all',
+      demographic: 'all'
+    };
+
     function renderClassView(classData) {
       const summary = classData.classSummary;
       const vaClass = summary.valueAdded >= 0 ? 'positive' : 'negative';
+
+      // Store students globally for filtering
+      allStudents = classData.students;
+      filteredStudents = [...allStudents];
 
       document.getElementById('pageTitle').textContent =
         `Class ${classData.className} - ${classData.teacherName}`;
@@ -694,9 +875,49 @@
       html += '  </div>';
       html += '</div>';
 
+      // Filter Bar
+      html += '<div class="filter-bar">';
+      html += '  <h3>🔍 Filter & Export Students</h3>';
+      html += '  <div class="filter-group">';
+      html += '    <label>SAS Status:</label>';
+      html += '    <button class="filter-btn active" onclick="filterByRAG(\'all\')">All</button>';
+      html += '    <button class="filter-btn" onclick="filterByRAG(\'red\')">🔴 Red (<90)</button>';
+      html += '    <button class="filter-btn" onclick="filterByRAG(\'amber\')">🟡 Amber (90-110)</button>';
+      html += '    <button class="filter-btn" onclick="filterByRAG(\'green\')">🟢 Green (>110)</button>';
+      html += '  </div>';
+      html += '  <div class="filter-group">';
+      html += '    <label>Focus Group:</label>';
+      html += '    <button class="filter-btn active" onclick="filterByFocus(\'all\')">All</button>';
+      html += '    <button class="filter-btn" onclick="filterByFocus(\'foundation\')">Foundation</button>';
+      html += '    <button class="filter-btn" onclick="filterByFocus(\'consolidation\')">Consolidation</button>';
+      html += '    <button class="filter-btn" onclick="filterByFocus(\'extension\')">Extension</button>';
+      html += '  </div>';
+      html += '  <div class="filter-group">';
+      html += '    <label>Demographics:</label>';
+      html += '    <button class="filter-btn active" onclick="filterByDemo(\'all\')">All</button>';
+      html += '    <button class="filter-btn" onclick="filterByDemo(\'fsm\')">FSM</button>';
+      html += '    <button class="filter-btn" onclick="filterByDemo(\'eal\')">EAL</button>';
+      html += '    <button class="filter-btn" onclick="filterByDemo(\'send\')">SEND</button>';
+      html += '  </div>';
+      html += '  <div class="export-buttons">';
+      html += '    <button class="export-btn-custom" onclick="exportFilteredCSV()">📥 Export CSV</button>';
+      html += '    <button class="export-btn-custom" onclick="exportFilteredPDF()">📄 Export PDF</button>';
+      html += '    <button class="export-btn-custom" onclick="resetFilters()">↺ Reset Filters</button>';
+      html += '  </div>';
+      html += '</div>';
+
       // Students Table
       html += '<div class="students-section">';
-      html += '  <h2>All Students (' + classData.students.length + ')</h2>';
+      html += '  <h2 id="studentCountLabel">All Students (' + classData.students.length + ')</h2>';
+      html += '  <div id="studentsTableContainer"></div>';
+      html += '</div>';
+
+      document.getElementById('content').innerHTML = html;
+      renderStudentsTable();
+    }
+
+    function renderStudentsTable() {
+      let html = '';
       html += '  <table class="students-table">';
       html += '    <thead>';
       html += '      <tr>';
@@ -711,32 +932,172 @@
       html += '    </thead>';
       html += '    <tbody>';
 
-      classData.students.forEach(function(student) {
+      filteredStudents.forEach(function(student) {
         const va = student.ngmt.sas - student.cat4.meanSAS;
         const vaClass = va >= 0 ? 'high' : 'low';
-        const scoreClass = student.ngmt.sas < 90 ? 'low' : student.ngmt.sas > 110 ? 'high' : 'average';
+
+        // RAG status for NGMT
+        let ragClass = 'amber';
+        if (student.ngmt.sas < 90) ragClass = 'red';
+        else if (student.ngmt.sas > 110) ragClass = 'green';
+
+        // RAG status for CAT4
+        let cat4RagClass = 'amber';
+        if (student.cat4.meanSAS < 90) cat4RagClass = 'red';
+        else if (student.cat4.meanSAS > 110) cat4RagClass = 'green';
 
         html += '      <tr>';
-        html += '        <td>' + student.studentName + '</td>';
-        html += '        <td class="score-cell">' + student.cat4.meanSAS + '</td>';
-        html += '        <td class="score-cell ' + scoreClass + '">' + student.ngmt.sas + '</td>';
+        html += '        <td><strong>' + student.studentName + '</strong></td>';
+        html += '        <td><span class="rag-badge ' + cat4RagClass + '">' + student.cat4.meanSAS + '</span></td>';
+        html += '        <td><span class="rag-badge ' + ragClass + '">' + student.ngmt.sas + '</span></td>';
         html += '        <td class="score-cell ' + vaClass + '">' + (va > 0 ? '+' : '') + va + '</td>';
         html += '        <td>' + (student.ptm.progress > 0 ? '+' : '') + student.ptm.progress + '</td>';
         html += '        <td><span class="focus-badge ' + student.focusGroup + '">' + student.focusGroup + '</span></td>';
-        html += '        <td style="font-size: 12px;">';
-        if (student.demographics.fsm) html += 'FSM ';
-        if (student.demographics.eal) html += 'EAL ';
-        if (student.demographics.send) html += 'SEND';
-        if (!student.demographics.fsm && !student.demographics.eal && !student.demographics.send) html += '—';
+        html += '        <td>';
+        if (student.demographics.fsm) html += '<span class="demo-badge">FSM</span>';
+        if (student.demographics.eal) html += '<span class="demo-badge">EAL</span>';
+        if (student.demographics.send) html += '<span class="demo-badge">SEND</span>';
+        if (!student.demographics.fsm && !student.demographics.eal && !student.demographics.send) html += '<span style="color: #9ca3af;">—</span>';
         html += '        </td>';
         html += '      </tr>';
       });
 
       html += '    </tbody>';
       html += '  </table>';
-      html += '</div>';
 
-      document.getElementById('content').innerHTML = html;
+      document.getElementById('studentsTableContainer').innerHTML = html;
+      document.getElementById('studentCountLabel').textContent =
+        (currentFilters.ragStatus !== 'all' || currentFilters.focusGroup !== 'all' || currentFilters.demographic !== 'all' ? 'Filtered ' : '') +
+        'Students (' + filteredStudents.length + ' of ' + allStudents.length + ')';
+    }
+
+    // Filter Functions
+    function filterByRAG(status) {
+      currentFilters.ragStatus = status;
+      applyFilters();
+      updateFilterButtons();
+    }
+
+    function filterByFocus(group) {
+      currentFilters.focusGroup = group;
+      applyFilters();
+      updateFilterButtons();
+    }
+
+    function filterByDemo(demo) {
+      currentFilters.demographic = demo;
+      applyFilters();
+      updateFilterButtons();
+    }
+
+    function applyFilters() {
+      filteredStudents = allStudents.filter(student => {
+        // RAG filter
+        if (currentFilters.ragStatus !== 'all') {
+          const sas = student.ngmt.sas;
+          const ragClass = sas < 90 ? 'red' : sas > 110 ? 'green' : 'amber';
+          if (ragClass !== currentFilters.ragStatus) return false;
+        }
+
+        // Focus group filter
+        if (currentFilters.focusGroup !== 'all') {
+          if (student.focusGroup !== currentFilters.focusGroup) return false;
+        }
+
+        // Demographic filter
+        if (currentFilters.demographic !== 'all') {
+          if (!student.demographics[currentFilters.demographic]) return false;
+        }
+
+        return true;
+      });
+
+      renderStudentsTable();
+    }
+
+    function updateFilterButtons() {
+      // Update RAG buttons
+      document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-btn').forEach((btn, idx) => {
+        btn.classList.remove('active');
+      });
+      const ragStatuses = ['all', 'red', 'amber', 'green'];
+      const ragIdx = ragStatuses.indexOf(currentFilters.ragStatus);
+      document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-btn')[ragIdx].classList.add('active');
+
+      // Update Focus buttons
+      document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-btn').forEach((btn, idx) => {
+        btn.classList.remove('active');
+      });
+      const focusGroups = ['all', 'foundation', 'consolidation', 'extension'];
+      const focusIdx = focusGroups.indexOf(currentFilters.focusGroup);
+      document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-btn')[focusIdx].classList.add('active');
+
+      // Update Demo buttons
+      document.querySelectorAll('.filter-group')[2].querySelectorAll('.filter-btn').forEach((btn, idx) => {
+        btn.classList.remove('active');
+      });
+      const demos = ['all', 'fsm', 'eal', 'send'];
+      const demoIdx = demos.indexOf(currentFilters.demographic);
+      document.querySelectorAll('.filter-group')[2].querySelectorAll('.filter-btn')[demoIdx].classList.add('active');
+    }
+
+    function resetFilters() {
+      currentFilters = {
+        ragStatus: 'all',
+        focusGroup: 'all',
+        demographic: 'all'
+      };
+      applyFilters();
+      updateFilterButtons();
+    }
+
+    // Export Functions
+    function exportFilteredCSV() {
+      const headers = ['Student Name', 'CAT4 SAS', 'CAT4 RAG', 'NGMT SAS', 'NGMT RAG', 'Value Added', 'PTM Progress', 'Focus Group', 'FSM', 'EAL', 'SEND'];
+      const rows = filteredStudents.map(student => {
+        const va = student.ngmt.sas - student.cat4.meanSAS;
+        const ngmtRAG = student.ngmt.sas < 90 ? 'Red' : student.ngmt.sas > 110 ? 'Green' : 'Amber';
+        const cat4RAG = student.cat4.meanSAS < 90 ? 'Red' : student.cat4.meanSAS > 110 ? 'Green' : 'Amber';
+
+        return [
+          student.studentName,
+          student.cat4.meanSAS,
+          cat4RAG,
+          student.ngmt.sas,
+          ngmtRAG,
+          (va > 0 ? '+' : '') + va,
+          (student.ptm.progress > 0 ? '+' : '') + student.ptm.progress,
+          student.focusGroup,
+          student.demographics.fsm ? 'Yes' : 'No',
+          student.demographics.eal ? 'Yes' : 'No',
+          student.demographics.send ? 'Yes' : 'No'
+        ];
+      });
+
+      const csvContent = [
+        ['Class Student Data Export'],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Filters Applied: RAG=${currentFilters.ragStatus}, Focus=${currentFilters.focusGroup}, Demo=${currentFilters.demographic}`],
+        [`Total Students: ${filteredStudents.length}`],
+        [],
+        headers,
+        ...rows
+      ].map(row => row.join(',')).join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `class_students_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportFilteredPDF() {
+      window.print();
     }
 
     loadClassData();

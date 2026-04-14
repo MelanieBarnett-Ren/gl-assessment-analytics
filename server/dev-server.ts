@@ -310,11 +310,11 @@ app.get('/api/gl-assessment/all', (req, res) => {
     const { getGLAssessmentData } = require('./gl-assessment-data');
     const { generateGLIntegratedInsights } = require('../engine/gl-assessment-analyzer');
 
-    const schools = ['school6', 'school8'];
+    const schools = ['school6', 'school7', 'school8'];
     const results = schools.map(schoolId => {
       const data = getGLAssessmentData(schoolId);
       if (data.ngmt && data.ptm && data.cat4) {
-        const schoolName = schoolId === 'school6' ? 'School A' : 'School C';
+        const schoolName = schoolId === 'school6' ? 'School A' : schoolId === 'school7' ? 'School B' : 'School C';
         return generateGLIntegratedInsights(schoolId, schoolName, data.ngmt, data.ptm, data.cat4);
       }
       return null;
