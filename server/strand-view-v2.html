@@ -1040,7 +1040,28 @@
             { code: 'Y5.N.FDP.6', text: 'Read and write decimal numbers', level: 'developing', focusSkill: null, masteryPercent: 76, studentCount: 114 },
             { code: 'Y5.N.FDP.7', text: 'Understand percentages', level: 'emerging', focusSkill: '544', masteryPercent: 58, studentCount: 114 }
           ],
-          students: generateMockStudents(114, schoolId)
+          students: generateMockStudents(114, 'school6', 6)
+        },
+        'number-operations': {
+          name: 'Number - Four Operations',
+          schoolName: 'School A - Oakwood Primary',
+          studentCount: 114,
+          objectives: [
+            { code: 'Y5.N.OP.1', text: 'Add and subtract whole numbers', level: 'developing', focusSkill: '312', masteryPercent: 68, studentCount: 114 },
+            { code: 'Y5.N.OP.2', text: 'Multiply multi-digit numbers', level: 'emerging', focusSkill: '345', masteryPercent: 54, studentCount: 114 },
+            { code: 'Y5.N.OP.3', text: 'Divide multi-digit numbers', level: 'concern', focusSkill: '367', masteryPercent: 41, studentCount: 114 }
+          ],
+          students: generateMockStudents(114, 'school6', 3)
+        },
+        'number-place-value': {
+          name: 'Number - Place Value',
+          schoolName: 'School A - Oakwood Primary',
+          studentCount: 114,
+          objectives: [
+            { code: 'Y5.N.PV.1', text: 'Read and write numbers to 1,000,000', level: 'developing', focusSkill: '201', masteryPercent: 72, studentCount: 114 },
+            { code: 'Y5.N.PV.2', text: 'Compare and order numbers', level: 'emerging', focusSkill: '215', masteryPercent: 64, studentCount: 114 }
+          ],
+          students: generateMockStudents(114, 'school6', 2)
         }
       },
       'school7': {
@@ -1056,7 +1077,28 @@
             { code: 'Y5.N.FDP.6', text: 'Read and write decimal numbers', level: 'mastered', focusSkill: null, masteryPercent: 87, studentCount: 110 },
             { code: 'Y5.N.FDP.7', text: 'Understand percentages', level: 'developing', focusSkill: '544', masteryPercent: 74, studentCount: 110 }
           ],
-          students: generateMockStudents(110, schoolId)
+          students: generateMockStudents(110, 'school7', 6)
+        },
+        'number-operations': {
+          name: 'Number - Four Operations',
+          schoolName: 'School B - Riverside Academy',
+          studentCount: 110,
+          objectives: [
+            { code: 'Y5.N.OP.1', text: 'Add and subtract whole numbers', level: 'mastered', focusSkill: '312', masteryPercent: 85, studentCount: 110 },
+            { code: 'Y5.N.OP.2', text: 'Multiply multi-digit numbers', level: 'developing', focusSkill: '345', masteryPercent: 76, studentCount: 110 },
+            { code: 'Y5.N.OP.3', text: 'Divide multi-digit numbers', level: 'emerging', focusSkill: '367', masteryPercent: 68, studentCount: 110 }
+          ],
+          students: generateMockStudents(110, 'school7', 3)
+        },
+        'number-place-value': {
+          name: 'Number - Place Value',
+          schoolName: 'School B - Riverside Academy',
+          studentCount: 110,
+          objectives: [
+            { code: 'Y5.N.PV.1', text: 'Read and write numbers to 1,000,000', level: 'mastered', focusSkill: '201', masteryPercent: 88, studentCount: 110 },
+            { code: 'Y5.N.PV.2', text: 'Compare and order numbers', level: 'developing', focusSkill: '215', masteryPercent: 79, studentCount: 110 }
+          ],
+          students: generateMockStudents(110, 'school7', 2)
         }
       },
       'school8': {
@@ -1072,19 +1114,97 @@
             { code: 'Y5.N.FDP.6', text: 'Read and write decimal numbers', level: 'mastered', focusSkill: null, masteryPercent: 94, studentCount: 110 },
             { code: 'Y5.N.FDP.7', text: 'Understand percentages', level: 'mastered', focusSkill: '544', masteryPercent: 86, studentCount: 110 }
           ],
-          students: generateMockStudents(110, schoolId)
+          students: generateMockStudents(110, 'school8', 6)
+        },
+        'number-operations': {
+          name: 'Number - Four Operations',
+          schoolName: 'School C - Hillside Primary',
+          studentCount: 110,
+          objectives: [
+            { code: 'Y5.N.OP.1', text: 'Add and subtract whole numbers', level: 'mastered', focusSkill: '312', masteryPercent: 93, studentCount: 110 },
+            { code: 'Y5.N.OP.2', text: 'Multiply multi-digit numbers', level: 'mastered', focusSkill: '345', masteryPercent: 88, studentCount: 110 },
+            { code: 'Y5.N.OP.3', text: 'Divide multi-digit numbers', level: 'developing', focusSkill: '367', masteryPercent: 81, studentCount: 110 }
+          ],
+          students: generateMockStudents(110, 'school8', 3)
+        },
+        'number-place-value': {
+          name: 'Number - Place Value',
+          schoolName: 'School C - Hillside Primary',
+          studentCount: 110,
+          objectives: [
+            { code: 'Y5.N.PV.1', text: 'Read and write numbers to 1,000,000', level: 'mastered', focusSkill: '201', masteryPercent: 95, studentCount: 110 },
+            { code: 'Y5.N.PV.2', text: 'Compare and order numbers', level: 'mastered', focusSkill: '215', masteryPercent: 91, studentCount: 110 }
+          ],
+          students: generateMockStudents(110, 'school8', 2)
         }
       }
     };
 
-    function generateMockStudents(count, schoolId) {
+    // Add remaining strands dynamically for all schools
+    ['school6', 'school7', 'school8'].forEach(schoolId => {
+      const schoolName = schoolId === 'school6' ? 'School A - Oakwood Primary' : (schoolId === 'school7' ? 'School B - Riverside Academy' : 'School C - Hillside Primary');
+      const studentCount = schoolId === 'school6' ? 114 : 110;
+      const baseLevel = schoolId === 'school6' ? 'emerging' : (schoolId === 'school7' ? 'developing' : 'mastered');
+
+      strandData[schoolId]['algebra-sequences'] = {
+        name: 'Algebra - Sequences & Patterns',
+        schoolName: schoolName,
+        studentCount: studentCount,
+        objectives: [
+          { code: 'Y5.A.SEQ.1', text: 'Find missing numbers in sequences', level: baseLevel, focusSkill: '612', masteryPercent: schoolId === 'school6' ? 58 : (schoolId === 'school7' ? 75 : 87), studentCount: studentCount }
+        ],
+        students: generateMockStudents(studentCount, schoolId, 1)
+      };
+
+      strandData[schoolId]['measurement-length'] = {
+        name: 'Measurement',
+        schoolName: schoolName,
+        studentCount: studentCount,
+        objectives: [
+          { code: 'Y5.M.LEN.1', text: 'Convert between units of measurement', level: baseLevel, focusSkill: '701', masteryPercent: schoolId === 'school6' ? 62 : (schoolId === 'school7' ? 78 : 89), studentCount: studentCount }
+        ],
+        students: generateMockStudents(studentCount, schoolId, 1)
+      };
+
+      strandData[schoolId]['geometry-properties'] = {
+        name: 'Geometry - Properties of Shapes',
+        schoolName: schoolName,
+        studentCount: studentCount,
+        objectives: [
+          { code: 'Y5.G.PROP.1', text: 'Identify 2D and 3D shapes', level: baseLevel, focusSkill: '801', masteryPercent: schoolId === 'school6' ? 65 : (schoolId === 'school7' ? 80 : 90), studentCount: studentCount }
+        ],
+        students: generateMockStudents(studentCount, schoolId, 1)
+      };
+
+      strandData[schoolId]['geometry-position'] = {
+        name: 'Geometry - Position & Direction',
+        schoolName: schoolName,
+        studentCount: studentCount,
+        objectives: [
+          { code: 'Y5.G.POS.1', text: 'Use coordinates in the first quadrant', level: baseLevel, focusSkill: '851', masteryPercent: schoolId === 'school6' ? 60 : (schoolId === 'school7' ? 77 : 88), studentCount: studentCount }
+        ],
+        students: generateMockStudents(studentCount, schoolId, 1)
+      };
+
+      strandData[schoolId]['statistics-data'] = {
+        name: 'Statistics',
+        schoolName: schoolName,
+        studentCount: studentCount,
+        objectives: [
+          { code: 'Y5.S.DATA.1', text: 'Interpret and construct charts', level: baseLevel, focusSkill: '901', masteryPercent: schoolId === 'school6' ? 57 : (schoolId === 'school7' ? 74 : 86), studentCount: studentCount }
+        ],
+        students: generateMockStudents(studentCount, schoolId, 1)
+      };
+    });
+
+    function generateMockStudents(count, schoolId, objectiveCount = 6) {
       const students = [];
       const baseScore = schoolId === 'school6' ? 55 : (schoolId === 'school7' ? 75 : 85);
       const baseSAS = schoolId === 'school6' ? 92 : (schoolId === 'school7' ? 100 : 108);
 
       for (let i = 0; i < count; i++) {
         const objectiveScores = [];
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < objectiveCount; j++) {
           const score = Math.max(0, Math.min(100, baseScore + (Math.random() - 0.5) * 40));
           objectiveScores.push(Math.round(score));
         }
