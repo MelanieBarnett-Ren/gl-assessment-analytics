@@ -12,6 +12,7 @@ import { AIService, createAIService } from '../engine/ai-service';
 import { findSimilarCohorts } from '../engine/similarity-matcher';
 import { detectOutliers } from '../engine/outlier-detector';
 import { InsightPanel, ViewLevel } from '../models/insights';
+import { getQuestionRecommender } from '../engine/question-recommender';
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +47,17 @@ try {
   console.log('⚠️  Failed to initialize AI service - using mock insights');
   console.error(error);
 }
+
+// Initialize Question Recommender
+let questionRecommender: any = null;
+(async () => {
+  try {
+    questionRecommender = await getQuestionRecommender();
+    console.log('✅ Question recommender initialized');
+  } catch (error) {
+    console.log('⚠️  Question recommender not available');
+  }
+})();
 
 // ============================================================================
 // ROUTES
@@ -385,6 +397,90 @@ app.get('/api/gl-assessment/class/:classId', (req, res) => {
     });
   } catch (error) {
     console.error('Error getting class data:', error);
+    res.status(500).json({
+      success: false,
+      error: { message: error instanceof Error ? error.message : 'Unknown error' },
+    });
+  }
+});
+
+/**
+ * GET /api/focus-group-questions/:classId/:group
+ * Get recommended questions and students for a specific focus group
+ */
+app.get('/api/focus-group-questions/:classId/:group', async (req, res) => {
+  try {
+    const { classId, group } = req.params;
+    const { getClassById } = require('./gl-class-data');
+
+    const classData = getClassById(classId);
+
+    if (!classData) {
+      return res.status(404).json({
+        success: false,
+        error: { message: 'Class not found' },
+      });
+    }
+
+    // Filter students by focus group
+    const focusGroupStudents = classData.students.filter((student: any) =>
+      student.focusGroup.toLowerCase() === group.toLowerCase()
+    );
+
+    // Determine year group and difficulty based on group
+    let yearGroup = 5; // Default
+    let scoreThreshold = 50;
+
+    if (group === 'foundation') {
+      scoreThreshold = 40; // Foundation needs easier questions
+    } else if (group === 'consolidation') {
+      scoreThreshold = 60; // Consolidation needs grade-level questions
+    } else if (group === 'extension') {
+      scoreThreshold = 80; // Extension needs challenge questions
+    }
+
+    // Get question recommendations if recommender available
+    let recommendedQuestions = [];
+    if (questionRecommender && focusGroupStudents.length > 0) {
+      // Identify weak areas across the focus group
+      const weakPoints = [
+        { skill: 'Number operations', domain: 'Number', currentScore: scoreThreshold, yearGroup },
+        { skill: 'Fractions and decimals', domain: 'FDP', currentScore: scoreThreshold, yearGroup },
+        { skill: 'Problem solving', domain: 'Number', currentScore: scoreThreshold, yearGroup },
+      ];
+
+      recommendedQuestions = questionRecommender.recommendQuestions(weakPoints, yearGroup, 10);
+    }
+
+    res.json({
+      success: true,
+      data: {
+        group,
+        groupName: group.charAt(0).toUpperCase() + group.slice(1),
+        studentCount: focusGroupStudents.length,
+        students: focusGroupStudents.map((s: any) => ({
+          id: s.id,
+          name: s.name,
+          cat4: s.cat4.meanSAS,
+          ngmt: s.ngmt.sas,
+          valueAdded: s.ngmt.sas - s.cat4.meanSAS,
+          demographics: s.demographics,
+        })),
+        questions: recommendedQuestions.map(rec => ({
+          id: rec.question.id,
+          yearGroup: rec.question.yearGroup,
+          strand: rec.question.strand,
+          questionText: rec.question.questionText,
+          options: rec.question.options,
+          correctAnswer: rec.question.correctAnswer,
+          difficultyBand: rec.question.difficultyBand,
+          rationale: rec.rationale,
+          isPrerequisite: rec.isPrerequisite,
+        })),
+      },
+    });
+  } catch (error) {
+    console.error('Error getting focus group questions:', error);
     res.status(500).json({
       success: false,
       error: { message: error instanceof Error ? error.message : 'Unknown error' },

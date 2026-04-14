@@ -172,18 +172,36 @@
       padding: 16px;
       border-radius: 8px;
       text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .focus-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
     }
     .focus-card.foundation {
       background: #fef2f2;
       border: 2px solid #fca5a5;
     }
+    .focus-card.foundation:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
     .focus-card.consolidation {
       background: #eff6ff;
       border: 2px solid #93c5fd;
     }
+    .focus-card.consolidation:hover {
+      background: #dbeafe;
+      border-color: #60a5fa;
+    }
     .focus-card.extension {
       background: #f0fdf4;
       border: 2px solid #86efac;
+    }
+    .focus-card.extension:hover {
+      background: #dcfce7;
+      border-color: #4ade80;
     }
     .focus-card h3 {
       font-size: 14px;
@@ -193,6 +211,135 @@
     .focus-card .count {
       font-size: 32px;
       font-weight: 700;
+    }
+    .focus-card-hint {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* Focus Group Questions Panel */
+    .focus-questions-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      margin-bottom: 32px;
+      display: none;
+    }
+    .focus-questions-panel.visible {
+      display: block;
+      animation: slideDown 0.4s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .focus-questions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .focus-questions-header h2 {
+      font-size: 24px;
+      color: #1f2937;
+      font-weight: 700;
+      margin: 0;
+    }
+    .close-panel-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .close-panel-btn:hover {
+      background: #dc2626;
+    }
+    .students-list {
+      margin-bottom: 28px;
+    }
+    .students-list h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #374151;
+    }
+    .student-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .student-chip {
+      background: #f3f4f6;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1f2937;
+    }
+    .questions-list h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #374151;
+    }
+    .question-item {
+      background: #f9fafb;
+      border-left: 4px solid #ba119b;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+    }
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .question-meta {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .question-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+    .question-options {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+    .question-options li {
+      margin: 6px 0;
+      font-size: 14px;
+      color: #374151;
+    }
+    .question-answer {
+      background: #d1fae5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #065f46;
+      margin-top: 12px;
+    }
+    .question-rationale {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 8px;
+      font-style: italic;
     }
 
     /* Students Table */
@@ -916,22 +1063,29 @@
       html += '<div class="focus-groups">';
       html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected)</span></span></h2>';
       html += '  <div class="focus-grid">';
-      html += '    <div class="focus-card foundation">';
+      html += '    <div class="focus-card foundation" onclick="showFocusGroupQuestions(\'' + classId + '\', \'foundation\')">';
       html += '      <h3>Foundation</h3>';
       html += '      <div class="count">' + summary.focusGroups.foundation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Need support</p>';
+      html += '      <p class="focus-card-hint">Click for practice questions</p>';
       html += '    </div>';
-      html += '    <div class="focus-card consolidation">';
+      html += '    <div class="focus-card consolidation" onclick="showFocusGroupQuestions(\'' + classId + '\', \'consolidation\')">';
       html += '      <h3>Consolidation</h3>';
       html += '      <div class="count">' + summary.focusGroups.consolidation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Core teaching</p>';
+      html += '      <p class="focus-card-hint">Click for practice questions</p>';
       html += '    </div>';
-      html += '    <div class="focus-card extension">';
+      html += '    <div class="focus-card extension" onclick="showFocusGroupQuestions(\'' + classId + '\', \'extension\')">';
       html += '      <h3>Extension</h3>';
       html += '      <div class="count">' + summary.focusGroups.extension + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Ready to stretch</p>';
+      html += '      <p class="focus-card-hint">Click for practice questions</p>';
       html += '    </div>';
       html += '  </div>';
+      html += '</div>';
+
+      // Focus Group Questions Panel (hidden by default)
+      html += '<div class="focus-questions-panel" id="focusQuestionsPanel">';
       html += '</div>';
 
       // Filter Bar
@@ -1157,6 +1311,97 @@
 
     function exportFilteredPDF() {
       window.print();
+    }
+
+    // Show focus group questions
+    async function showFocusGroupQuestions(classId, group) {
+      const panel = document.getElementById('focusQuestionsPanel');
+      panel.classList.add('visible');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Show loading
+      panel.innerHTML = `
+        <div class="focus-questions-header">
+          <h2>🔄 Loading ${group.charAt(0).toUpperCase() + group.slice(1)} Group...</h2>
+          <button class="close-panel-btn" onclick="closeFocusPanel()">✕ Close</button>
+        </div>
+        <p style="text-align: center; padding: 40px; color: #6b7280;">Loading students and practice questions...</p>
+      `;
+
+      try {
+        const response = await fetch(`${API_BASE}/api/focus-group-questions/${classId}/${group}`);
+        const result = await response.json();
+
+        if (result.success) {
+          const data = result.data;
+          let html = `
+            <div class="focus-questions-header">
+              <h2>📚 ${data.groupName} Group (${data.studentCount} students)</h2>
+              <button class="close-panel-btn" onclick="closeFocusPanel()">✕ Close</button>
+            </div>
+
+            <div class="students-list">
+              <h3>👥 Students in this group:</h3>
+              <div class="student-chips">
+                ${data.students.map(s => `
+                  <div class="student-chip" title="CAT4: ${s.cat4}, NGMT: ${s.ngmt}, VA: ${s.valueAdded > 0 ? '+' : ''}${s.valueAdded}">
+                    ${s.name}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="questions-list">
+              <h3>📝 Recommended Practice Questions (${data.questions.length}):</h3>
+              ${data.questions.length > 0 ? data.questions.map((q, idx) => `
+                <div class="question-item">
+                  <div class="question-header">
+                    <div>
+                      <div class="question-meta">
+                        Question ${idx + 1} • Year ${q.yearGroup} • ${q.strand}
+                        ${q.isPrerequisite ? ' • <span style="color: #f59e0b;">Foundation</span>' : ''}
+                      </div>
+                    </div>
+                    <div class="question-meta">Difficulty: ${q.difficultyBand || 'N/A'}</div>
+                  </div>
+                  <div class="question-text">${q.questionText}</div>
+                  ${q.options && q.options.length > 0 ? `
+                    <ul class="question-options">
+                      ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+                  ` : ''}
+                  <div class="question-answer">✓ Answer: ${q.correctAnswer}</div>
+                  <div class="question-rationale">💡 ${q.rationale}</div>
+                </div>
+              `).join('') : '<p style="color: #6b7280; text-align: center; padding: 20px;">No questions available for this group at this time.</p>'}
+            </div>
+          `;
+
+          panel.innerHTML = html;
+        } else {
+          panel.innerHTML = `
+            <div class="focus-questions-header">
+              <h2>⚠️ Error</h2>
+              <button class="close-panel-btn" onclick="closeFocusPanel()">✕ Close</button>
+            </div>
+            <p style="color: #dc2626; text-align: center; padding: 40px;">${result.error.message}</p>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading focus group questions:', error);
+        panel.innerHTML = `
+          <div class="focus-questions-header">
+            <h2>⚠️ Error</h2>
+            <button class="close-panel-btn" onclick="closeFocusPanel()">✕ Close</button>
+          </div>
+          <p style="color: #dc2626; text-align: center; padding: 40px;">Failed to load questions. Please try again.</p>
+        `;
+      }
+    }
+
+    function closeFocusPanel() {
+      const panel = document.getElementById('focusQuestionsPanel');
+      panel.classList.remove('visible');
     }
 
     loadClassData();
