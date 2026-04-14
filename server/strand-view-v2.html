@@ -317,18 +317,18 @@
     /* Objectives List (Simplified) */
     body .objectives-compact {
       display: grid !important;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)) !important;
       gap: 12px !important;
     }
 
     body .objective-compact {
-      padding: 12px 16px !important;
+      padding: 16px 20px !important;
       border-radius: 8px !important;
       border-left: 4px solid !important;
       font-size: 13px !important;
       display: flex !important;
       justify-content: space-between !important;
-      align-items: center !important;
+      align-items: flex-start !important;
       cursor: pointer !important;
       transition: all 0.2s !important;
       font-family: 'Inter', sans-serif !important;
@@ -336,7 +336,7 @@
 
     body .objective-compact:hover {
       transform: translateX(4px) !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
     }
 
     body .objective-compact.mastered {
@@ -666,18 +666,20 @@
 
     <!-- Export Section -->
     <div class="export-section">
-      <div class="chart-title">📥 Export Student Lists & Reports</div>
-      <p class="chart-subtitle">Download actionable student lists grouped by performance level (% correct) for targeted interventions</p>
+      <div class="chart-title" style="color: #1f2937; font-family: 'Inter', sans-serif;">📥 Export Student Lists & Reports</div>
+      <p class="chart-subtitle" style="color: #6b7280; font-family: 'Inter', sans-serif;">
+        Download student lists with full objective descriptions, or export objectives breakdown showing each objective's full text and performance data
+      </p>
 
-      <div style="background: #eff6ff; border-left: 4px solid var(--color-link); padding: 12px 16px; margin: 12px 0; border-radius: 6px; font-size: 13px;">
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; margin: 12px 0; border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif;">
         <strong style="color: #1e40af;">💡 Understanding % Correct:</strong>
-        <span style="color: var(--color-50);">These percentages represent questions answered correctly per objective. They do not account for:</span>
-        <ul style="margin: 6px 0 0 20px; color: var(--color-50); line-height: 1.6;">
+        <span style="color: #6b7280;">These percentages represent questions answered correctly per objective. They do not account for:</span>
+        <ul style="margin: 6px 0 0 20px; color: #6b7280; line-height: 1.6;">
           <li>Question weighting within the assessment</li>
           <li>Difficulty levels of individual questions</li>
           <li>Number of questions per objective (which may vary)</li>
         </ul>
-        <span style="color: var(--color-50); font-style: italic; display: block; margin-top: 6px;">For weighted scores and detailed question-level analysis, refer to the full PTM assessment report.</span>
+        <span style="color: #6b7280; font-style: italic; display: block; margin-top: 6px;">For weighted scores and detailed question-level analysis, refer to the full PTM assessment report.</span>
       </div>
 
       <div class="export-grid">
@@ -739,25 +741,25 @@
       <div class="chart-title">🚨 Students Requiring Urgent Support (Concern Level)</div>
       <p class="chart-subtitle">Students with average % correct below 50% across objectives in this strand</p>
 
-      <div style="background: #fffbeb; border-left: 4px solid var(--color-warning); padding: 12px 16px; margin: 16px 0; border-radius: 6px; font-size: 13px;">
+      <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; margin: 16px 0; border-radius: 6px; font-size: 13px;">
         <strong style="color: #d97706;">⚠️ Note on % Correct:</strong>
-        <span style="color: var(--color-50);">This metric shows the percentage of questions answered correctly but does not reflect question weighting or difficulty. Some objectives may have more questions or weighted items in the actual assessment.</span>
+        <span style="color: #6b7280;">This metric shows the percentage of questions answered correctly but does not reflect question weighting or difficulty. Some objectives may have more questions or weighted items in the actual assessment.</span>
       </div>
 
       <div style="overflow-x: auto; margin-top: 16px;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; font-family: 'Inter', sans-serif;">
           <thead>
-            <tr style="background: #f9fafb; border-bottom: 2px solid var(--color-table-border);">
-              <th style="padding: 12px; text-align: left; font-weight: 600;">Student ID</th>
-              <th style="padding: 12px; text-align: left; font-weight: 600;">Student Name</th>
-              <th style="padding: 12px; text-align: center; font-weight: 600;">
+            <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+              <th style="padding: 12px; text-align: left; font-weight: 600; color: #1f2937;">Student ID</th>
+              <th style="padding: 12px; text-align: left; font-weight: 600; color: #1f2937;">Student Name</th>
+              <th style="padding: 12px; text-align: center; font-weight: 600; color: #1f2937;">
                 <div style="position: relative; display: inline-block;">
                   Avg % Correct
-                  <span style="cursor: help; color: var(--color-50); font-size: 11px; margin-left: 4px;">ⓘ</span>
+                  <span style="cursor: help; color: #9ca3af; font-size: 11px; margin-left: 4px;">ⓘ</span>
                 </div>
               </th>
-              <th style="padding: 12px; text-align: left; font-weight: 600;">Weakest Objectives</th>
-              <th style="padding: 12px; text-align: center; font-weight: 600;">Actions</th>
+              <th style="padding: 12px; text-align: left; font-weight: 600; color: #1f2937; min-width: 300px;">Weakest Objectives</th>
+              <th style="padding: 12px; text-align: center; font-weight: 600; color: #1f2937;">Actions</th>
             </tr>
           </thead>
           <tbody id="concerningStudentsTable">
@@ -766,9 +768,9 @@
         </table>
       </div>
 
-      <div style="margin-top: 16px; padding: 16px; background: #fef2f2; border-left: 4px solid var(--color-error); border-radius: 8px;">
-        <strong style="color: var(--color-error);">⚠️ Recommended Actions:</strong>
-        <ul style="margin: 8px 0 0 20px; color: var(--color-50); line-height: 1.8;">
+      <div style="margin-top: 16px; padding: 16px; background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 8px;">
+        <strong style="color: #dc2626;">⚠️ Recommended Actions:</strong>
+        <ul style="margin: 8px 0 0 20px; color: #6b7280; line-height: 1.8;">
           <li>Prioritize small-group interventions targeting Focus Skills (⭐) in concern areas</li>
           <li>Review student progress weekly using PTM assessments</li>
           <li>Consider 1-on-1 support for students below 40% correct</li>
@@ -810,7 +812,10 @@
     <!-- Objectives List (Compact, Ordered) -->
     <div class="chart-card">
       <div class="chart-title">📚 National Curriculum Objectives (Ordered by Priority)</div>
-      <p class="chart-subtitle">Click an objective to see detailed student breakdown</p>
+      <p class="chart-subtitle" style="color: #6b7280; font-family: 'Inter', sans-serif;">
+        Each card shows the full objective description, performance level, and % correct.
+        Use the export buttons above to download student lists or objectives breakdown with full details.
+      </p>
       <div class="objectives-compact" id="objectivesList">
         <!-- Objectives will be inserted here -->
       </div>
@@ -1179,13 +1184,15 @@
 
       const html = sorted.map(obj => `
         <div class="objective-compact ${obj.level}">
-          <div>
-            <span class="objective-code">${obj.code}</span>
-            ${obj.focusSkill ? `<span class="focus-skill-badge">⭐ ${obj.focusSkill}</span>` : ''}
-            <br>
-            <span style="font-size: 12px; color: var(--color-50);">${obj.text}</span>
+          <div style="flex: 1;">
+            <div style="margin-bottom: 6px;">
+              <span class="objective-code">${obj.code}</span>
+              ${obj.focusSkill ? `<span class="focus-skill-badge">⭐ Focus Skill ${obj.focusSkill}</span>` : ''}
+            </div>
+            <div style="font-size: 14px; color: #1f2937; font-weight: 500; line-height: 1.5;">${obj.text}</div>
+            <div style="font-size: 11px; color: #9ca3af; margin-top: 4px;">${obj.studentCount} students assessed</div>
           </div>
-          <div>
+          <div style="text-align: right; margin-left: 16px;">
             <span class="objective-badge ${obj.level}">${obj.masteryPercent}%</span>
           </div>
         </div>
@@ -1236,24 +1243,26 @@
         objectiveScoresWithIndex.sort((a, b) => a.score - b.score);
         const weakest = objectiveScoresWithIndex.slice(0, 2);
 
-        const weakestText = weakest.map(w => `${w.objective.code} (${w.score}%)`).join(', ');
+        const weakestText = weakest.map(w =>
+          `<div style="margin-bottom: 4px;"><strong>${w.objective.code}</strong>: ${w.objective.text} <span style="color: #dc2626; font-weight: 700;">(${w.score}%)</span></div>`
+        ).join('');
 
         return `
-          <tr style="border-bottom: 1px solid var(--color-table-border);">
-            <td style="padding: 12px; font-family: monospace; color: var(--color-50);">${student.studentId}</td>
-            <td style="padding: 12px; font-weight: 600;">${student.studentName}</td>
+          <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px; font-family: monospace; color: #9ca3af;">${student.studentId}</td>
+            <td style="padding: 12px; font-weight: 600; color: #1f2937;">${student.studentName}</td>
             <td style="padding: 12px; text-align: center;">
-              <span style="background: #fef2f2; color: var(--color-error); padding: 4px 12px; border-radius: 12px; font-weight: 700;">
+              <span style="background: #fef2f2; color: #dc2626; padding: 4px 12px; border-radius: 12px; font-weight: 700;">
                 ${student.averageMastery}%
               </span>
             </td>
-            <td style="padding: 12px; font-size: 12px; color: var(--color-50);">${weakestText}</td>
+            <td style="padding: 12px; font-size: 12px; color: #1f2937; line-height: 1.6;">${weakestText}</td>
             <td style="padding: 12px; text-align: center;">
               <button
                 onclick="viewStudentDetail('${student.studentId}')"
-                style="background: var(--color-secondary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;"
+                style="background: #d946ef; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;"
                 onmouseover="this.style.background='#c026d3'"
-                onmouseout="this.style.background='var(--color-secondary)'">
+                onmouseout="this.style.background='#d946ef'">
                 View Details
               </button>
             </td>
