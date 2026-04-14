@@ -175,6 +175,28 @@
     }
 
     /* ============================================
+       PENGUIN ON SNOWBOARD
+       ============================================ */
+    .penguin-snowboard {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      font-size: 48px;
+      z-index: 500;
+      animation: snowboard-slide 3s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes snowboard-slide {
+      0%, 100% {
+        transform: translateX(0) rotate(-5deg);
+      }
+      50% {
+        transform: translateX(-10px) rotate(-8deg);
+      }
+    }
+
+    /* ============================================
        MAIN CONTENT
        ============================================ */
     .content {
@@ -602,6 +624,11 @@
     </h1>
     <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">☰</button>
   </header>
+
+  <!-- PENGUIN ON SNOWBOARD -->
+  <div class="penguin-snowboard" title="Shredding the data slopes! 🏂">
+    🐧🏂
+  </div>
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar" aria-label="Main navigation">
