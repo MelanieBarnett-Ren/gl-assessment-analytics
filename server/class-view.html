@@ -129,32 +129,44 @@
 
     /* Value Added */
     .value-added-section {
-      background: white;
-      border-radius: 12px;
-      padding: 28px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 32px;
-      transition: all 0.3s ease;
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 16px 20px;
+      box-shadow: none;
+      margin-bottom: 24px;
+      transition: all 0.2s ease;
+      border: 1px solid #e5e7eb;
     }
-    .value-added-section:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-    .value-added-section.positive { border-left: 4px solid #10b981; }
-    .value-added-section.negative { border-left: 4px solid #dc2626; }
+    .value-added-section.positive { border-left: 3px solid #10b981; }
+    .value-added-section.negative { border-left: 3px solid #ef4444; }
     .value-added-section h2 {
-      font-size: 16px;
-      color: #1f2937;
-      margin-bottom: 16px;
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .va-score {
-      font-size: 42px;
+      font-size: 24px;
       font-weight: 700;
-      margin: 12px 0;
+      margin: 0;
       line-height: 1.2;
+      display: inline-block;
+      margin-right: 12px;
     }
-    .va-score.positive { color: var(--color-tertiary); }
-    .va-score.negative { color: var(--color-error); }
+    .va-score.positive { color: #10b981; }
+    .va-score.negative { color: #ef4444; }
+    .value-added-section p {
+      display: inline-block;
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .value-added-section p strong {
+      font-weight: 600;
+      color: #1f2937;
+    }
 
     /* Focus Groups */
     .focus-groups {
@@ -1034,22 +1046,24 @@
       html += '  </div>';
       html += '</div>';
 
-      // Value Added Analysis
+      // Value Added Analysis - more compact
       html += '<div class="value-added-section ' + vaClass + '">';
-      html += '  <h2 style="display: flex; align-items: center; gap: 8px;">';
-      html += '    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">';
+      html += '  <h2 style="display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">';
+      html += '    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">';
       html += '      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />';
       html += '    </svg>';
-      html += '    Value-Added Analysis';
+      html += '    Value-Added';
       html += '  </h2>';
-      html += '  <div class="va-score ' + vaClass + '">' + (summary.valueAdded > 0 ? '+' : '') + summary.valueAdded + ' SAS</div>';
+      html += '  <div>';
+      html += '    <span class="va-score ' + vaClass + '">' + (summary.valueAdded > 0 ? '+' : '') + summary.valueAdded + ' SAS</span>';
       if (summary.valueAdded < -2) {
-        html += '  <p><strong>CONCERN:</strong> Class underachieving vs. cognitive ability</p>';
+        html += '    <p><strong>Concern:</strong> Underachieving vs. cognitive ability</p>';
       } else if (summary.valueAdded > 2) {
-        html += '  <p><strong>EXCELLENT:</strong> Class exceeding cognitive ability predictions</p>';
+        html += '    <p><strong>Excellent:</strong> Exceeding predicted performance</p>';
       } else {
-        html += '  <p><strong>AS EXPECTED:</strong> Class working to potential</p>';
+        html += '    <p><strong>As Expected:</strong> Working to potential</p>';
       }
+      html += '  </div>';
       html += '</div>';
 
       // Calculate RAG counts for tabs
