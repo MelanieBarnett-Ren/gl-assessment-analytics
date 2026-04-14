@@ -1187,73 +1187,87 @@
       let html = '<h2 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #1f2937;">Curriculum Strands</h2>';
       html += '<p style="color: #6b7280; margin-bottom: 24px; font-size: 14px;">National Curriculum strands organized by domain - click to view detailed objectives</p>';
 
-      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">';
+      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">';
 
       const strandsData = [
         {
           id: 'number-fractions',
           name: 'Fractions, Decimals & Percentages',
           description: 'Converting between forms, ordering, and solving problems',
+          icon: '🔢',
           domainKey: 'number'
         },
         {
           id: 'number-operations',
           name: 'Four Operations',
           description: 'Addition, subtraction, multiplication, and division',
+          icon: '➗',
           domainKey: 'number'
         },
         {
           id: 'number-place-value',
           name: 'Place Value',
           description: 'Understanding place value and number representation',
+          icon: '🔢',
           domainKey: 'number'
         },
         {
           id: 'algebra-sequences',
           name: 'Sequences & Patterns',
           description: 'Number sequences, formulae, and algebraic problems',
+          icon: '📐',
           domainKey: 'algebra'
         },
         {
           id: 'measurement-length',
           name: 'Measurement',
           description: 'Length, mass, capacity, time, and converting units',
+          icon: '📏',
           domainKey: 'measurement'
         },
         {
           id: 'geometry-properties',
           name: 'Properties of Shapes',
           description: '2D and 3D shapes, angles, and geometric properties',
+          icon: '📐',
           domainKey: 'geometry'
         },
         {
           id: 'geometry-position',
           name: 'Position & Direction',
           description: 'Coordinates, translation, and geometric transformations',
+          icon: '🧭',
           domainKey: 'geometry'
         },
         {
           id: 'statistics-data',
           name: 'Statistics',
           description: 'Interpreting charts, graphs, and data analysis',
+          icon: '📊',
           domainKey: 'statistics'
         }
       ];
 
       strandsData.forEach(function(strand) {
         const domainData = ngmt.domains[strand.domainKey];
-        const avgScore = domainData && domainData.score ? domainData.score.sas : 100;
-        const scoreClass = getScoreClass(avgScore);
-        const scoreColor = scoreClass === 'high' ? '#10b981' : scoreClass === 'good' ? '#059669' : scoreClass === 'medium' ? '#f59e0b' : '#dc2626';
+        const hasData = domainData && domainData.score;
+        const avgScore = hasData ? domainData.score.sas : null;
+        const scoreClass = avgScore ? getScoreClass(avgScore) : 'medium';
+        const scoreColor = hasData ? (scoreClass === 'high' ? '#10b981' : scoreClass === 'good' ? '#059669' : scoreClass === 'medium' ? '#f59e0b' : '#dc2626') : '#9ca3af';
 
         html += '<a href="/school/' + schoolId + '/strand/' + strand.id + '" style="text-decoration: none; display: block;">';
-        html += '  <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s ease; cursor: pointer; height: 100%; border: 1px solid #e5e7eb; border-left: 4px solid ' + scoreColor + ';" onmouseover="this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.15)\'; this.style.transform=\'translateY(-2px)\';" onmouseout="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.1)\'; this.style.transform=\'translateY(0)\';">';
+        html += '  <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.2s ease; cursor: pointer; height: 100%; border-left: 4px solid ' + scoreColor + ';" onmouseover="this.style.boxShadow=\'0 4px 12px rgba(0,0,0,0.12)\';" onmouseout="this.style.boxShadow=\'0 1px 3px rgba(0,0,0,0.1)\';">';
 
-        // Header with score
+        // Header with icon and score
         html += '    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">';
+        html += '      <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #f8e5f2 0%, #fce7f3 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">' + strand.icon + '</div>';
         html += '      <div style="text-align: right;">';
-        html += '        <div style="font-size: 24px; font-weight: 700; color: ' + scoreColor + ';">' + avgScore + '</div>';
-        html += '        <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">SAS</div>';
+        if (hasData) {
+          html += '        <div style="font-size: 24px; font-weight: 700; color: ' + scoreColor + ';">' + avgScore + '</div>';
+          html += '        <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">SAS</div>';
+        } else {
+          html += '        <div style="font-size: 14px; font-weight: 500; color: #9ca3af;">No data</div>';
+        }
         html += '      </div>';
         html += '    </div>';
 
