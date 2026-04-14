@@ -566,6 +566,109 @@
         grid-template-columns: 1fr !important;
       }
     }
+
+    /* Student Detail Modal */
+    body .student-modal {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 2000 !important;
+      padding: 20px !important;
+    }
+
+    body .student-modal.active {
+      display: flex !important;
+    }
+
+    body .student-modal-content {
+      background: white !important;
+      border-radius: 12px !important;
+      max-width: 800px !important;
+      width: 100% !important;
+      max-height: 90vh !important;
+      overflow-y: auto !important;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+    }
+
+    body .student-modal-header {
+      padding: 24px !important;
+      border-bottom: 1px solid #e5e7eb !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      position: sticky !important;
+      top: 0 !important;
+      background: white !important;
+      z-index: 10 !important;
+    }
+
+    body .student-modal-title {
+      font-size: 20px !important;
+      font-weight: 700 !important;
+      color: #1f2937 !important;
+      font-family: 'Inter', sans-serif !important;
+      margin: 0 !important;
+    }
+
+    body .student-modal-close {
+      background: none !important;
+      border: none !important;
+      font-size: 24px !important;
+      color: #9ca3af !important;
+      cursor: pointer !important;
+      padding: 0 !important;
+      width: 32px !important;
+      height: 32px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 6px !important;
+      transition: all 0.2s !important;
+    }
+
+    body .student-modal-close:hover {
+      background: #f3f4f6 !important;
+      color: #1f2937 !important;
+    }
+
+    body .student-modal-body {
+      padding: 24px !important;
+    }
+
+    body .student-info-card {
+      background: #f9fafb !important;
+      border-radius: 8px !important;
+      padding: 16px !important;
+      margin-bottom: 20px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+    }
+
+    body .objective-detail-card {
+      background: white !important;
+      border-radius: 8px !important;
+      border: 1px solid #e5e7eb !important;
+      padding: 16px !important;
+      margin-bottom: 12px !important;
+      border-left: 4px solid !important;
+      transition: all 0.2s !important;
+    }
+
+    body .objective-detail-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
+
+    body .objective-detail-card.concern { border-left-color: #dc2626 !important; }
+    body .objective-detail-card.emerging { border-left-color: #f59e0b !important; }
+    body .objective-detail-card.developing { border-left-color: #3b82f6 !important; }
+    body .objective-detail-card.mastered { border-left-color: #10b981 !important; }
   </style>
 </head>
 <body>
@@ -818,6 +921,19 @@
       </p>
       <div class="objectives-compact" id="objectivesList">
         <!-- Objectives will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Detail Modal -->
+  <div class="student-modal" id="studentModal">
+    <div class="student-modal-content">
+      <div class="student-modal-header">
+        <h2 class="student-modal-title" id="modalStudentName">Student Details</h2>
+        <button class="student-modal-close" onclick="closeStudentModal()">&times;</button>
+      </div>
+      <div class="student-modal-body" id="modalStudentBody">
+        <!-- Student details will be inserted here -->
       </div>
     </div>
   </div>
@@ -1274,9 +1390,139 @@
     }
 
     function viewStudentDetail(studentId) {
-      // Placeholder - would navigate to student detail page
-      alert(`Navigating to detailed view for ${studentId}...\n\nThis would show:\n- Individual objective scores\n- Learning gaps analysis\n- Recommended interventions\n- Progress history\n- Teacher notes`);
+      const data = strandData[schoolId]?.[strandId];
+      if (!data) return;
+
+      // Find the student
+      const student = data.students.find(s => s.studentId === studentId);
+      if (!student) return;
+
+      // Set modal title
+      document.getElementById('modalStudentName').textContent =
+        `${student.studentName} (${student.studentId})`;
+
+      // Build modal content
+      let html = `
+        <div class="student-info-card">
+          <div>
+            <div style="font-size: 14px; color: #6b7280; margin-bottom: 4px;">Overall Performance in ${data.name}</div>
+            <div style="font-size: 32px; font-weight: 700; color: #1f2937; font-family: 'Inter', sans-serif;">
+              ${student.averageMastery}% Correct
+            </div>
+            <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+              ${student.averageMastery >= 85 ? 'Mastered' :
+                student.averageMastery >= 70 ? 'Developing' :
+                student.averageMastery >= 50 ? 'Emerging' : 'Concern'} Level
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Objectives</div>
+            <div style="font-size: 20px; font-weight: 600; color: #1f2937;">
+              ${student.objectiveScores.length} Total
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 600; color: #1f2937; margin: 24px 0 12px; font-family: 'Inter', sans-serif;">
+          📊 Performance by Objective
+        </h3>
+        <p style="font-size: 13px; color: #6b7280; margin-bottom: 16px; font-family: 'Inter', sans-serif;">
+          This student's % correct for each objective in this strand (unweighted)
+        </p>
+      `;
+
+      // Sort objectives by student's score (weakest first)
+      const objectivesWithScores = data.objectives.map((obj, idx) => ({
+        ...obj,
+        studentScore: student.objectiveScores[idx]
+      })).sort((a, b) => a.studentScore - b.studentScore);
+
+      // Add objective cards
+      objectivesWithScores.forEach(obj => {
+        const level = obj.studentScore >= 85 ? 'mastered' :
+                     obj.studentScore >= 70 ? 'developing' :
+                     obj.studentScore >= 50 ? 'emerging' : 'concern';
+
+        html += `
+          <div class="objective-detail-card ${level}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div style="flex: 1;">
+                <div style="font-weight: 700; color: #1f2937; font-size: 13px; font-family: 'Inter', sans-serif;">
+                  ${obj.code}
+                  ${obj.focusSkill ? '<span style="background: #d946ef; color: white; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-left: 6px;">⭐ Focus Skill ' + obj.focusSkill + '</span>' : ''}
+                </div>
+                <div style="font-size: 14px; color: #1f2937; margin-top: 6px; line-height: 1.5; font-family: 'Inter', sans-serif;">
+                  ${obj.text}
+                </div>
+              </div>
+              <div style="margin-left: 16px; text-align: right;">
+                <div style="font-size: 24px; font-weight: 700; font-family: 'Inter', sans-serif; color: ${
+                  level === 'concern' ? '#dc2626' :
+                  level === 'emerging' ? '#f59e0b' :
+                  level === 'developing' ? '#3b82f6' : '#10b981'
+                };">
+                  ${obj.studentScore}%
+                </div>
+                <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 600; margin-top: 2px;">
+                  ${level}
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
+              <strong>Class Average:</strong> ${obj.masteryPercent}% correct
+              ${obj.studentScore < obj.masteryPercent ?
+                ' <span style="color: #dc2626;">↓ Below class average</span>' :
+                ' <span style="color: #10b981;">↑ At or above class average</span>'}
+            </div>
+          </div>
+        `;
+      });
+
+      // Add recommendations
+      const concernObjectives = objectivesWithScores.filter(o => o.studentScore < 50);
+      if (concernObjectives.length > 0) {
+        html += `
+          <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 16px; border-radius: 8px; margin-top: 20px;">
+            <h4 style="color: #dc2626; font-size: 14px; font-weight: 600; margin: 0 0 8px 0; font-family: 'Inter', sans-serif;">
+              🎯 Recommended Focus Areas
+            </h4>
+            <ul style="margin: 8px 0 0 20px; color: #6b7280; line-height: 1.8; font-size: 13px;">
+              ${concernObjectives.slice(0, 3).map(obj => `
+                <li><strong>${obj.code}</strong>: ${obj.text} (${obj.studentScore}% correct)</li>
+              `).join('')}
+            </ul>
+            <p style="margin: 12px 0 0 0; font-size: 12px; color: #6b7280; font-style: italic;">
+              Consider small-group intervention or 1-on-1 support for these objectives.
+            </p>
+          </div>
+        `;
+      }
+
+      document.getElementById('modalStudentBody').innerHTML = html;
+      document.getElementById('studentModal').classList.add('active');
+
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
     }
+
+    function closeStudentModal() {
+      document.getElementById('studentModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeStudentModal();
+      }
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('studentModal').addEventListener('click', (e) => {
+      if (e.target.id === 'studentModal') {
+        closeStudentModal();
+      }
+    });
 
     function exportByLevel(level) {
       const data = strandData[schoolId]?.[strandId];
