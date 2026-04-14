@@ -181,6 +181,21 @@
       padding: 40px;
     }
 
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--color-50);
+      margin-bottom: 24px;
+    }
+
+    .breadcrumb a {
+      color: var(--color-secondary);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
     .page-header {
       margin-bottom: 32px;
     }
@@ -194,6 +209,78 @@
     .subtitle {
       font-size: 16px;
       color: var(--color-50);
+    }
+
+    /* School Selector */
+    .school-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    body .school-btn {
+      padding: 10px 20px !important;
+      border: 2px solid rgba(186, 17, 155, 0.3) !important;
+      background: rgba(186, 17, 155, 0.05) !important;
+      color: #ba119b !important;
+      border-radius: 8px !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.2s !important;
+    }
+
+    body .school-btn:hover {
+      border-color: #ba119b !important;
+      background: rgba(186, 17, 155, 0.1) !important;
+    }
+
+    body .school-btn.active {
+      border-color: #ba119b !important;
+      background: #ba119b !important;
+      color: white !important;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--color-table-border);
+      padding-bottom: 0;
+    }
+
+    .tab {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      color: var(--color-50);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+
+    .tab:hover {
+      color: var(--color-10);
+      background: rgba(186, 17, 155, 0.05);
+    }
+
+    .tab.active {
+      color: #ba119b;
+      border-bottom-color: #ba119b;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
 
     /* Report Sections */
@@ -446,30 +533,30 @@
       </div>
 
       <div class="nav-section">
-        <div class="nav-section-title">Classes</div>
-        <a href="/class/class6a" class="nav-link">
+        <div class="nav-section-title">Schools & Classes</div>
+        <a href="/school/school6/skills" class="nav-link">
           <span class="nav-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
             </svg>
           </span>
-          <span>Class 5A (School A)</span>
+          <span>School A</span>
         </a>
-        <a href="/class/class7a" class="nav-link">
+        <a href="/school/school7/skills" class="nav-link">
           <span class="nav-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
             </svg>
           </span>
-          <span>Class 5B (School B)</span>
+          <span>School B</span>
         </a>
-        <a href="/class/class8a" class="nav-link">
+        <a href="/school/school8/skills" class="nav-link">
           <span class="nav-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
             </svg>
           </span>
-          <span>Class 5C (School C)</span>
+          <span>School C</span>
         </a>
       </div>
 
@@ -500,21 +587,27 @@
 
   <!-- MAIN CONTENT -->
   <div class="container">
+    <div class="breadcrumb">
+      <a href="/mat">MAT Overview</a> /
+      <a href="/gl">GL Assessment</a> /
+      <span>Reports & Exports</span>
+    </div>
+
     <div class="page-header">
       <h1>📋 Reports & Data Exports</h1>
       <p class="subtitle">Generate actionable reports and export student lists for targeted interventions</p>
     </div>
 
+    <!-- School Selector -->
+    <div class="school-selector">
+      <button class="school-btn active" data-school="all" onclick="changeSchool('all')">All Schools</button>
+      <button class="school-btn" data-school="school6" onclick="changeSchool('school6')">School A</button>
+      <button class="school-btn" data-school="school7" onclick="changeSchool('school7')">School B</button>
+      <button class="school-btn" data-school="school8" onclick="changeSchool('school8')">School C</button>
+    </div>
+
     <!-- Global Filters -->
     <div class="filter-bar">
-      <span class="filter-label">School:</span>
-      <select class="filter-select" id="schoolSelect">
-        <option value="all">All Schools</option>
-        <option value="school6">School A - Oakwood Primary</option>
-        <option value="school7">School B - Riverside Academy</option>
-        <option value="school8">School C - Hillside Primary</option>
-      </select>
-
       <span class="filter-label">Term:</span>
       <select class="filter-select" id="termSelect">
         <option value="autumn-2024">Autumn 2024</option>
@@ -531,244 +624,266 @@
       </select>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="report-section">
-      <div class="section-title">⚡ Quick Exports</div>
-      <div class="section-desc">One-click exports for common reports</div>
-      <div class="quick-actions">
-        <button class="quick-btn" onclick="exportAllStudentsByLevel()">
-          <span>📥</span>
-          <span>All Students by Mastery Level</span>
-        </button>
-        <button class="quick-btn" onclick="exportConcernStudents()">
-          <span>🔴</span>
-          <span>Concern Level Students Only</span>
-        </button>
-        <button class="quick-btn" onclick="exportFocusGroups()">
-          <span>🎯</span>
-          <span>Focus Groups (Foundation/Consolidation/Extension)</span>
-        </button>
-        <button class="quick-btn" onclick="exportDemographics()">
-          <span>👥</span>
-          <span>Demographics Analysis (FSM/EAL/SEND/Gender)</span>
-        </button>
-      </div>
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('quick')">⚡ Quick Exports</button>
+      <button class="tab" onclick="switchTab('students')">👨‍🎓 Student Lists</button>
+      <button class="tab" onclick="switchTab('strands')">📚 Curriculum Strands</button>
+      <button class="tab" onclick="switchTab('assessment')">📈 Assessment Data</button>
+      <button class="tab" onclick="switchTab('classes')">👥 Class Reports</button>
+      <button class="tab" onclick="switchTab('mat')">🏫 MAT Reports</button>
     </div>
 
-    <!-- Student Lists -->
-    <div class="report-section">
-      <div class="section-title">👨‍🎓 Student Lists & Interventions</div>
-      <div class="section-desc">Export student lists grouped by performance level for targeted support</div>
-      <div class="report-grid">
-        <div class="report-card" onclick="exportReport('concern-students')">
-          <div class="report-icon">🔴</div>
-          <div class="report-title">Concern Level Students</div>
-          <div class="report-desc">Students scoring below 50% requiring urgent intervention</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
-          </div>
-        </div>
-
-        <div class="report-card" onclick="exportReport('emerging-students')">
-          <div class="report-icon">🟠</div>
-          <div class="report-title">Emerging Level Students</div>
-          <div class="report-desc">Students scoring 50-69% needing additional practice</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
-          </div>
-        </div>
-
-        <div class="report-card" onclick="exportReport('developing-students')">
-          <div class="report-icon">🔵</div>
-          <div class="report-title">Developing Level Students</div>
-          <div class="report-desc">Students scoring 70-84% who are on track</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
-          </div>
-        </div>
-
-        <div class="report-card" onclick="exportReport('mastered-students')">
-          <div class="report-icon">🟢</div>
-          <div class="report-title">Mastered Level Students</div>
-          <div class="report-desc">Students scoring 85%+ ready for extension work</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
-          </div>
+    <!-- Quick Exports Tab -->
+    <div class="tab-content active" id="quick-tab">
+      <div class="report-section">
+        <div class="section-title">⚡ Quick Exports</div>
+        <div class="section-desc">One-click exports for common reports</div>
+        <div class="quick-actions">
+          <button class="quick-btn" onclick="exportAllStudentsByLevel()">
+            <span>📥</span>
+            <span>All Students by Mastery Level</span>
+          </button>
+          <button class="quick-btn" onclick="exportConcernStudents()">
+            <span>🔴</span>
+            <span>Concern Level Students Only</span>
+          </button>
+          <button class="quick-btn" onclick="exportFocusGroups()">
+            <span>🎯</span>
+            <span>Focus Groups (Foundation/Consolidation/Extension)</span>
+          </button>
+          <button class="quick-btn" onclick="exportDemographics()">
+            <span>👥</span>
+            <span>Demographics Analysis (FSM/EAL/SEND/Gender)</span>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Strand Reports -->
-    <div class="report-section">
-      <div class="section-title">📚 National Curriculum Strand Analysis</div>
-      <div class="section-desc">Detailed breakdowns by curriculum strand with objective-level data</div>
-      <div class="report-grid">
-        <div class="report-card" onclick="exportStrandReport('number-fractions')">
-          <div class="report-icon">➗</div>
-          <div class="report-title">Number - Fractions, Decimals & Percentages</div>
-          <div class="report-desc">6 objectives • Student-level mastery data</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Full Report</button>
-            <button class="btn btn-secondary">📊 Objectives Only</button>
+    <!-- Student Lists Tab -->
+    <div class="tab-content" id="students-tab">
+      <div class="report-section">
+        <div class="section-title">👨‍🎓 Student Lists & Interventions</div>
+        <div class="section-desc">Export student lists grouped by performance level for targeted support</div>
+        <div class="report-grid">
+          <div class="report-card" onclick="exportReport('concern-students')">
+            <div class="report-icon">🔴</div>
+            <div class="report-title">Concern Level Students</div>
+            <div class="report-desc">Students scoring below 50% requiring urgent intervention</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
           </div>
-        </div>
 
-        <div class="report-card" onclick="exportStrandReport('geometry')">
-          <div class="report-icon">📐</div>
-          <div class="report-title">Geometry - Properties & Position</div>
-          <div class="report-desc">8 objectives • Student-level mastery data</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Full Report</button>
-            <button class="btn btn-secondary">📊 Objectives Only</button>
+          <div class="report-card" onclick="exportReport('emerging-students')">
+            <div class="report-icon">🟠</div>
+            <div class="report-title">Emerging Level Students</div>
+            <div class="report-desc">Students scoring 50-69% needing additional practice</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
           </div>
-        </div>
 
-        <div class="report-card" onclick="exportStrandReport('measurement')">
-          <div class="report-icon">📏</div>
-          <div class="report-title">Measurement</div>
-          <div class="report-desc">5 objectives • Student-level mastery data</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Full Report</button>
-            <button class="btn btn-secondary">📊 Objectives Only</button>
+          <div class="report-card" onclick="exportReport('developing-students')">
+            <div class="report-icon">🔵</div>
+            <div class="report-title">Developing Level Students</div>
+            <div class="report-desc">Students scoring 70-84% who are on track</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
           </div>
-        </div>
 
-        <div class="report-card" onclick="exportStrandReport('statistics')">
-          <div class="report-icon">📊</div>
-          <div class="report-title">Statistics</div>
-          <div class="report-desc">4 objectives • Student-level mastery data</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Full Report</button>
-            <button class="btn btn-secondary">📊 Objectives Only</button>
+          <div class="report-card" onclick="exportReport('mastered-students')">
+            <div class="report-icon">🟢</div>
+            <div class="report-title">Mastered Level Students</div>
+            <div class="report-desc">Students scoring 85%+ ready for extension work</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Assessment Data Reports -->
-    <div class="report-section">
-      <div class="section-title">📈 Assessment Data & Progress</div>
-      <div class="section-desc">GL Assessment scores, value-added analysis, and progress tracking</div>
-      <div class="report-grid">
-        <div class="report-card" onclick="exportReport('gl-full')">
-          <div class="report-icon">📋</div>
-          <div class="report-title">Complete GL Assessment Data</div>
-          <div class="report-desc">NGMT, CAT4, PTM scores with demographics</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
+    <!-- Curriculum Strands Tab -->
+    <div class="tab-content" id="strands-tab">
+      <div class="report-section">
+        <div class="section-title">📚 National Curriculum Strand Analysis</div>
+        <div class="section-desc">Detailed breakdowns by curriculum strand with objective-level data</div>
+        <div class="report-grid">
+          <div class="report-card" onclick="exportStrandReport('number-fractions')">
+            <div class="report-icon">➗</div>
+            <div class="report-title">Number - Fractions, Decimals & Percentages</div>
+            <div class="report-desc">6 objectives • Student-level mastery data</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Full Report</button>
+              <button class="btn btn-secondary">📊 Objectives Only</button>
+            </div>
           </div>
-        </div>
 
-        <div class="report-card" onclick="exportReport('value-added')">
-          <div class="report-icon">📊</div>
-          <div class="report-title">Value-Added Analysis</div>
-          <div class="report-desc">CAT4 vs NGMT comparison for all students</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
+          <div class="report-card" onclick="exportStrandReport('geometry')">
+            <div class="report-icon">📐</div>
+            <div class="report-title">Geometry - Properties & Position</div>
+            <div class="report-desc">8 objectives • Student-level mastery data</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Full Report</button>
+              <button class="btn btn-secondary">📊 Objectives Only</button>
+            </div>
           </div>
-        </div>
 
-        <div class="report-card" onclick="exportReport('progress-tracking')">
-          <div class="report-icon">📈</div>
-          <div class="report-title">Progress Over Time <span class="badge new">NEW</span></div>
-          <div class="report-desc">6-term historical data for trend analysis</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
+          <div class="report-card" onclick="exportStrandReport('measurement')">
+            <div class="report-icon">📏</div>
+            <div class="report-title">Measurement</div>
+            <div class="report-desc">5 objectives • Student-level mastery data</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Full Report</button>
+              <button class="btn btn-secondary">📊 Objectives Only</button>
+            </div>
           </div>
-        </div>
 
-        <div class="report-card" onclick="exportReport('demographics-gaps')">
-          <div class="report-icon">👥</div>
-          <div class="report-title">Demographic Gap Analysis</div>
-          <div class="report-desc">Performance gaps by FSM, EAL, SEND, Gender</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Class-Level Reports -->
-    <div class="report-section">
-      <div class="section-title">👥 Class-Level Reports</div>
-      <div class="section-desc">Detailed reports for individual classes with teacher insights</div>
-      <div class="report-grid">
-        <div class="report-card" onclick="exportClassReport('class6a')">
-          <div class="report-icon">👥</div>
-          <div class="report-title">Class 5A - Mrs Thompson</div>
-          <div class="report-desc">School A • 28 students</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Full Report</button>
-          </div>
-        </div>
-
-        <div class="report-card" onclick="exportClassReport('class6b')">
-          <div class="report-icon">👥</div>
-          <div class="report-title">Class 5B - Mr Patel</div>
-          <div class="report-desc">School A • 29 students</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Full Report</button>
-          </div>
-        </div>
-
-        <div class="report-card" onclick="exportClassReport('class6c')">
-          <div class="report-icon">👥</div>
-          <div class="report-title">Class 5C - Miss Davies</div>
-          <div class="report-desc">School A • 30 students</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Full Report</button>
-          </div>
-        </div>
-
-        <div class="report-card" onclick="window.location.href='/class/class6a'">
-          <div class="report-icon">➕</div>
-          <div class="report-title">More Classes...</div>
-          <div class="report-desc">View all 12 classes across 3 schools</div>
-          <div class="report-actions">
-            <button class="btn btn-secondary">View All</button>
+          <div class="report-card" onclick="exportStrandReport('statistics')">
+            <div class="report-icon">📊</div>
+            <div class="report-title">Statistics</div>
+            <div class="report-desc">4 objectives • Student-level mastery data</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Full Report</button>
+              <button class="btn btn-secondary">📊 Objectives Only</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- MAT-Level Reports -->
-    <div class="report-section">
-      <div class="section-title">🏫 MAT-Level Executive Reports</div>
-      <div class="section-desc">High-level reports for trust-wide analysis and benchmarking</div>
-      <div class="report-grid">
-        <div class="report-card" onclick="exportReport('mat-summary')">
-          <div class="report-icon">📊</div>
-          <div class="report-title">MAT Executive Summary</div>
-          <div class="report-desc">Trust-wide performance overview</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
+    <!-- Assessment Data Tab -->
+    <div class="tab-content" id="assessment-tab">
+      <div class="report-section">
+        <div class="section-title">📈 Assessment Data & Progress</div>
+        <div class="section-desc">GL Assessment scores, value-added analysis, and progress tracking</div>
+        <div class="report-grid">
+          <div class="report-card" onclick="exportReport('gl-full')">
+            <div class="report-icon">📋</div>
+            <div class="report-title">Complete GL Assessment Data</div>
+            <div class="report-desc">NGMT, CAT4, PTM scores with demographics</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="exportReport('value-added')">
+            <div class="report-icon">📊</div>
+            <div class="report-title">Value-Added Analysis</div>
+            <div class="report-desc">CAT4 vs NGMT comparison for all students</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="exportReport('progress-tracking')">
+            <div class="report-icon">📈</div>
+            <div class="report-title">Progress Over Time <span class="badge new">NEW</span></div>
+            <div class="report-desc">6-term historical data for trend analysis</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="exportReport('demographics-gaps')">
+            <div class="report-icon">👥</div>
+            <div class="report-title">Demographic Gap Analysis</div>
+            <div class="report-desc">Performance gaps by FSM, EAL, SEND, Gender</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="report-card" onclick="exportReport('school-comparison')">
-          <div class="report-icon">📈</div>
-          <div class="report-title">School-to-School Comparison</div>
-          <div class="report-desc">Benchmark schools within the MAT</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
+    <!-- Class Reports Tab -->
+    <div class="tab-content" id="classes-tab">
+      <div class="report-section">
+        <div class="section-title">👥 Class-Level Reports</div>
+        <div class="section-desc">Detailed reports for individual classes with teacher insights</div>
+        <div class="report-grid">
+          <div class="report-card" onclick="exportClassReport('class6a')">
+            <div class="report-icon">👥</div>
+            <div class="report-title">Class 5A - Mrs Thompson</div>
+            <div class="report-desc">School A • 28 students</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Full Report</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="exportClassReport('class6b')">
+            <div class="report-icon">👥</div>
+            <div class="report-title">Class 5B - Mr Patel</div>
+            <div class="report-desc">School A • 29 students</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Full Report</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="exportClassReport('class6c')">
+            <div class="report-icon">👥</div>
+            <div class="report-title">Class 5C - Miss Davies</div>
+            <div class="report-desc">School A • 30 students</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Full Report</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="window.location.href='/class/class6a'">
+            <div class="report-icon">➕</div>
+            <div class="report-title">More Classes...</div>
+            <div class="report-desc">View all 12 classes across 3 schools</div>
+            <div class="report-actions">
+              <button class="btn btn-secondary">View All</button>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="report-card" onclick="exportReport('best-practice')">
-          <div class="report-icon">⭐</div>
-          <div class="report-title">Best Practice Insights</div>
-          <div class="report-desc">What's working well across the trust</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
+    <!-- MAT Reports Tab -->
+    <div class="tab-content" id="mat-tab">
+      <div class="report-section">
+        <div class="section-title">🏫 MAT-Level Executive Reports</div>
+        <div class="section-desc">High-level reports for trust-wide analysis and benchmarking</div>
+        <div class="report-grid">
+          <div class="report-card" onclick="exportReport('mat-summary')">
+            <div class="report-icon">📊</div>
+            <div class="report-title">MAT Executive Summary</div>
+            <div class="report-desc">Trust-wide performance overview</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
           </div>
-        </div>
 
-        <div class="report-card" onclick="exportReport('action-priorities')">
-          <div class="report-icon">🎯</div>
-          <div class="report-title">Action Priorities <span class="badge">RECOMMENDED</span></div>
-          <div class="report-desc">Priority areas for MAT-wide improvement</div>
-          <div class="report-actions">
-            <button class="btn btn-primary">📥 Export CSV</button>
+          <div class="report-card" onclick="exportReport('school-comparison')">
+            <div class="report-icon">📈</div>
+            <div class="report-title">School-to-School Comparison</div>
+            <div class="report-desc">Benchmark schools within the MAT</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="exportReport('best-practice')">
+            <div class="report-icon">⭐</div>
+            <div class="report-title">Best Practice Insights</div>
+            <div class="report-desc">What's working well across the trust</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="exportReport('action-priorities')">
+            <div class="report-icon">🎯</div>
+            <div class="report-title">Action Priorities <span class="badge">RECOMMENDED</span></div>
+            <div class="report-desc">Priority areas for MAT-wide improvement</div>
+            <div class="report-actions">
+              <button class="btn btn-primary">📥 Export CSV</button>
+            </div>
           </div>
         </div>
       </div>
@@ -776,6 +891,8 @@
   </div>
 
   <script>
+    let currentSchool = 'all';
+
     function toggleMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('overlay');
@@ -792,6 +909,35 @@
         }
       });
     });
+
+    // School selector
+    function changeSchool(schoolId) {
+      currentSchool = schoolId;
+
+      // Update button states
+      document.querySelectorAll('.school-btn').forEach(btn => {
+        if (btn.getAttribute('data-school') === schoolId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(tabName + '-tab').classList.add('active');
+    }
 
     // Export functions
     function downloadCSV(content, filename) {
@@ -810,7 +956,7 @@
 
     function getFilters() {
       return {
-        school: document.getElementById('schoolSelect').value,
+        school: currentSchool,
         term: document.getElementById('termSelect').value,
         year: document.getElementById('yearSelect').value
       };
