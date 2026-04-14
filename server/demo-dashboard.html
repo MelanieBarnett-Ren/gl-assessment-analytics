@@ -28,6 +28,7 @@
   <!-- Highcharts -->
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/heatmap.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
   <style>
@@ -168,6 +169,217 @@
       padding: 40px;
     }
 
+    /* Print-specific overrides - AGGRESSIVE FULL WIDTH */
+    @media print {
+      /* Force page to landscape A4 */
+      @page {
+        size: A4 landscape !important;
+        margin: 0.5cm !important;
+      }
+
+      /* Force HTML and body to full width */
+      html {
+        width: 297mm !important;
+        min-width: 297mm !important;
+        max-width: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      body {
+        width: 297mm !important;
+        min-width: 297mm !important;
+        max-width: 297mm !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+        transform: scale(1) !important;
+      }
+
+      /* Force container to full width */
+      .container {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0.5cm !important;
+        transform: scale(1) !important;
+      }
+
+      /* Hide navigation elements */
+      .hamburger-menu,
+      .sidebar,
+      .sidebar-overlay,
+      .menu-toggle,
+      .tree-nav,
+      .tree-select,
+      button,
+      .export-btn,
+      .insight-action,
+      .action-cards {
+        display: none !important;
+        visibility: hidden !important;
+      }
+
+      /* Adjust main content */
+      .page-header {
+        width: 100% !important;
+        max-width: none !important;
+        margin-bottom: 0.5cm !important;
+        page-break-after: avoid !important;
+      }
+
+      .page-header h1 {
+        font-size: 20pt !important;
+        margin-bottom: 0.2cm !important;
+      }
+
+      .page-subtitle {
+        font-size: 11pt !important;
+      }
+
+      /* Dashboard tiles */
+      .dashboard-tiles {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.3cm !important;
+        width: 100% !important;
+        margin-bottom: 0.6cm !important;
+        page-break-after: avoid !important;
+      }
+
+      .tile {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        padding: 0.3cm !important;
+        border: 1px solid #e5e7eb !important;
+      }
+
+      /* Summary cards */
+      .summary-section {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.4cm !important;
+        width: 100% !important;
+        margin-bottom: 0.6cm !important;
+        page-break-after: avoid !important;
+      }
+
+      .summary-card {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* Analysis grid and charts */
+      .analysis-grid {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 0.6cm !important;
+      }
+
+      .chart-section {
+        width: 100% !important;
+        max-width: none !important;
+        margin-bottom: 0.8cm !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      .chart-header {
+        margin-bottom: 0.3cm !important;
+      }
+
+      .chart-title {
+        font-size: 14pt !important;
+        font-weight: 600 !important;
+      }
+
+      .chart-subtitle {
+        font-size: 10pt !important;
+        color: #666 !important;
+      }
+
+      /* Charts themselves */
+      #distributionChart,
+      #curriculumChart,
+      #processChart,
+      #schoolComparisonChart,
+      #strandHeatmap {
+        width: 100% !important;
+        max-width: none !important;
+        height: 350px !important;
+      }
+
+      .highcharts-container,
+      .highcharts-container svg {
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      /* Insight cards */
+      .insights-list {
+        width: 100% !important;
+      }
+
+      .insight-card {
+        width: 100% !important;
+        max-width: none !important;
+        margin-bottom: 0.5cm !important;
+        padding: 0.4cm !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        border: 1px solid #e5e7eb !important;
+        border-left: 4px solid !important;
+      }
+
+      .insight-card.critical {
+        border-left-color: #dc2626 !important;
+      }
+
+      .insight-card.attention {
+        border-left-color: #f59e0b !important;
+      }
+
+      .insight-card.positive {
+        border-left-color: #10b981 !important;
+      }
+
+      .insight-title {
+        font-size: 12pt !important;
+        font-weight: 600 !important;
+        margin-bottom: 0.2cm !important;
+      }
+
+      .insight-desc {
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
+      }
+
+      .insight-desc strong {
+        font-weight: 600 !important;
+      }
+
+      /* Hide all buttons and actions */
+      .insight-actions,
+      .action-card,
+      button[onclick] {
+        display: none !important;
+      }
+
+      /* Typography adjustments */
+      * {
+        color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      h1 { font-size: 18pt !important; }
+      h2 { font-size: 16pt !important; }
+      h3 { font-size: 14pt !important; }
+      h4 { font-size: 12pt !important; }
+      p, li, td, th { font-size: 9pt !important; line-height: 1.4 !important; }
+    }
+
     /* Breadcrumb Tree */
     .tree-nav {
       background: white;
@@ -233,6 +445,70 @@
     .page-subtitle {
       font-size: 14px;
       color: #6b7280;
+    }
+
+    /* Summary Section - Top Highlight Cards */
+    .summary-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+      padding: 0;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      border-color: rgba(186, 17, 155, 0.2);
+    }
+
+    .summary-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .summary-content {
+      flex: 1;
+    }
+
+    .summary-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .summary-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+
+    .summary-detail {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.4;
     }
 
     /* Dashboard Tiles */
@@ -497,6 +773,10 @@
       .analysis-grid {
         grid-template-columns: 1fr;
       }
+
+      .summary-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 768px) {
@@ -507,6 +787,24 @@
       .tree-nav {
         flex-direction: column;
         align-items: stretch;
+      }
+
+      .summary-section {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        padding: 18px;
+      }
+
+      .summary-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+      }
+
+      .summary-value {
+        font-size: 26px;
       }
     }
   </style>
@@ -616,6 +914,42 @@
       <p class="page-subtitle" id="pageSubtitle">MAT-wide analysis • Generated: <span id="timestamp"></span> • Next update: 15 mins</p>
     </div>
 
+    <!-- Summary Stats Section -->
+    <div class="summary-section">
+      <div class="summary-card">
+        <div class="summary-icon" style="background: #10b981;">✓</div>
+        <div class="summary-content">
+          <div class="summary-value">98 students</div>
+          <div class="summary-label">High Achievers (85%+)</div>
+          <div class="summary-detail">39% of cohort ready for extension</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background: #ef4444;">!</div>
+        <div class="summary-content">
+          <div class="summary-value">18 students</div>
+          <div class="summary-label">Urgent Support Needed</div>
+          <div class="summary-detail">Below 50% mastery threshold</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background: #f59e0b;">⚡</div>
+        <div class="summary-content">
+          <div class="summary-value">2 strands</div>
+          <div class="summary-label">Critical Focus Areas</div>
+          <div class="summary-detail">Fractions and Problem Solving</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background: #8b5cf6;">📈</div>
+        <div class="summary-content">
+          <div class="summary-value">+5.8%</div>
+          <div class="summary-label">Term Progress</div>
+          <div class="summary-detail">School B showing strong improvement</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Dashboard Tiles -->
     <div class="dashboard-tiles" id="dashboardTiles">
       <!-- Tiles will be populated by JavaScript -->
@@ -628,6 +962,7 @@
         <div class="chart-header">
           <div class="chart-title">Score Distribution vs National Average</div>
           <div class="chart-subtitle">Standard Age Score (SAS) distribution across all students</div>
+          <button class="export-btn" onclick="exportChartData('distribution')">📥 Export Data</button>
         </div>
         <div id="distributionChart" style="height: 350px;"></div>
       </div>
@@ -637,6 +972,7 @@
         <div class="chart-header">
           <div class="chart-title">Curriculum Content Performance</div>
           <div class="chart-subtitle">Percentage correct by curriculum category</div>
+          <button class="export-btn" onclick="exportChartData('curriculum')">📥 Export Data</button>
         </div>
         <div id="curriculumChart" style="height: 350px;"></div>
       </div>
@@ -647,8 +983,29 @@
       <div class="chart-header">
         <div class="chart-title">Process Skills Analysis</div>
         <div class="chart-subtitle">Performance across key mathematical process skills compared to national average</div>
+        <button class="export-btn" onclick="exportChartData('process')">📥 Export Data</button>
       </div>
       <div id="processChart" style="height: 400px;"></div>
+    </div>
+
+    <!-- School Performance Comparison -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">School-by-School Performance Comparison</div>
+        <div class="chart-subtitle">Mean SAS scores and value-added across MAT schools</div>
+        <button class="export-btn" onclick="exportChartData('schools')">📥 Export Data</button>
+      </div>
+      <div id="schoolComparisonChart" style="height: 400px;"></div>
+    </div>
+
+    <!-- Strand Performance Heatmap -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Strand Performance Heatmap</div>
+        <div class="chart-subtitle">Performance across curriculum strands by school</div>
+        <button class="export-btn" onclick="exportChartData('heatmap')">📥 Export Data</button>
+      </div>
+      <div id="strandHeatmap" style="height: 500px;"></div>
     </div>
 
     <!-- AI Insights -->
@@ -769,6 +1126,8 @@
       renderDistributionChart();
       renderCurriculumChart();
       renderProcessChart();
+      renderSchoolComparisonChart();
+      renderStrandHeatmap();
       renderInsights();
     }
 
@@ -972,125 +1331,1029 @@
       });
     }
 
+    function renderSchoolComparisonChart() {
+      Highcharts.chart('schoolComparisonChart', {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: null
+        },
+        xAxis: {
+          categories: ['School A<br/>Oakwood', 'School B<br/>Riverside', 'School C<br/>Hillside']
+        },
+        yAxis: [{
+          title: {
+            text: 'Mean SAS Score'
+          },
+          min: 70
+        }, {
+          title: {
+            text: 'Value Added'
+          },
+          opposite: true
+        }],
+        legend: {
+          enabled: true
+        },
+        plotOptions: {
+          column: {
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        series: [{
+          name: 'Mean SAS',
+          data: [92.0, 101.0, 109.0],
+          color: '#d946ef',
+          yAxis: 0
+        }, {
+          name: 'Value Added',
+          data: [-4, 3, 6],
+          color: '#10b981',
+          yAxis: 1
+        }, {
+          name: 'National Average',
+          data: [100, 100, 100],
+          color: '#3b82f6',
+          dashStyle: 'Dash',
+          yAxis: 0
+        }],
+        credits: {
+          enabled: false
+        }
+      });
+    }
+
+    function renderStrandHeatmap() {
+      Highcharts.chart('strandHeatmap', {
+        chart: {
+          type: 'heatmap',
+          marginTop: 40,
+          marginBottom: 80
+        },
+        title: {
+          text: null
+        },
+        xAxis: {
+          categories: ['Number & Place Value', 'Fractions/Decimals', 'Measurement', 'Geometry', 'Statistics', 'Ratio', 'Algebra']
+        },
+        yAxis: {
+          categories: ['School A', 'School B', 'School C'],
+          title: null
+        },
+        colorAxis: {
+          min: 40,
+          max: 100,
+          stops: [
+            [0, '#dc2626'],
+            [0.5, '#f59e0b'],
+            [0.7, '#a3e635'],
+            [1, '#10b981']
+          ]
+        },
+        legend: {
+          align: 'right',
+          layout: 'vertical',
+          margin: 0,
+          verticalAlign: 'top',
+          y: 25,
+          symbolHeight: 280
+        },
+        tooltip: {
+          formatter: function () {
+            return '<b>' + this.series.yAxis.categories[this.point.y] + '</b><br>' +
+                   this.series.xAxis.categories[this.point.x] + ': <b>' + this.point.value + '%</b> correct';
+          }
+        },
+        series: [{
+          name: 'Performance',
+          borderWidth: 1,
+          data: [
+            [0, 0, 88], [1, 0, 56], [2, 0, 72], [3, 0, 82], [4, 0, 78], [5, 0, 64], [6, 0, 58],
+            [0, 1, 94], [1, 1, 71], [2, 1, 86], [3, 1, 91], [4, 1, 88], [5, 1, 76], [6, 1, 68],
+            [0, 2, 105], [1, 2, 89], [2, 2, 94], [3, 2, 98], [4, 2, 96], [5, 2, 92], [6, 2, 84]
+          ],
+          dataLabels: {
+            enabled: true,
+            color: '#000000',
+            format: '{point.value}%'
+          }
+        }],
+        credits: {
+          enabled: false
+        }
+      });
+    }
+
     function renderInsights() {
       const school = document.getElementById('schoolSelect').value;
       const classVal = document.getElementById('classSelect').value;
       const insights = document.getElementById('insightsList');
 
-      // Build query parameters for exports
-      const exportParams = new URLSearchParams({
-        school: school,
-        class: classVal,
-        term: 'autumn-2024',
-        level: 'concern'
-      });
-
-      const comparisonParams = new URLSearchParams({
-        schools: 'school6,school8',
-        metric: 'sas',
-        term: 'autumn-2024'
-      });
-
-      const fsmParams = new URLSearchParams({
-        school: school === 'all' ? 'mat1' : school,
-        demographic: 'fsm',
-        level: 'all'
-      });
-
       insights.innerHTML = `
         <div class="insight-card critical">
-          <div class="insight-title">⚠️ Critical Gap: Number - Fractions</div>
+          <div class="insight-title">⚠️ Critical Gap: Number - Fractions & Decimals</div>
           <div class="insight-desc">
             <strong>Finding:</strong> Students in School A scoring 21% below similar schools on fraction objectives.
             34% mastery on "Add and subtract fractions with the same denominator" (national: 55%).
+            Only 28% can convert between fractions and decimals correctly.
             <br><br>
-            <strong>Impact:</strong> Affects 114 students. This is a <strong>Foundation Skill (Renaissance Focus Skill #524)</strong>
-            critical for Year 6 curriculum progression.
+            <strong>Impact:</strong> Affects 114 students across Years 5-6. This is a <strong>Foundation Skill (Renaissance Focus Skill #524)</strong>
+            critical for Year 6 curriculum progression and KS3 readiness. Current trajectory suggests 46 students at risk of not meeting expected standard.
             <br><br>
-            <strong>Recommendation:</strong> Immediate targeted intervention for bottom 40% of students.
-            Consider peer tutoring from School C which shows 78% mastery on same objective.
+            <strong>Root Cause:</strong> Analysis shows gaps in prerequisite knowledge - 62% struggling with equivalent fractions (Y4 objective).
+            Teaching time data shows only 2.1 hours/week on fractions vs MAT average of 3.4 hours.
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Immediate targeted intervention for bottom 40% (46 students)<br>
+            • Increase fraction teaching time to 3.5 hours/week minimum<br>
+            • Deploy manipulatives (fraction walls, bars) for concrete understanding<br>
+            • Consider peer tutoring from School C (78% mastery on same objective)<br>
+            • Weekly assessment checkpoints to monitor progress
           </div>
           <div class="insight-actions">
             <a href="/school/school6/strand/number-fractions?highlight=concern" class="insight-action">View Strand Details</a>
             <button class="insight-action" onclick="exportStrandConcern('school6', 'number-fractions')">📥 Export Student List (46 students)</button>
             <a href="/class/class6a" class="insight-action">Class Breakdown</a>
+            <button class="insight-action" onclick="exportInterventionPlan('fractions')">📋 Generate Intervention Plan</button>
+          </div>
+        </div>
+
+        <div class="insight-card critical">
+          <div class="insight-title">⚠️ Problem Solving Skills Gap</div>
+          <div class="insight-desc">
+            <strong>Finding:</strong> MAT-wide problem solving performance at 65% correct compared to national 69%.
+            School A particularly struggling at 58% correct. Multi-step problems showing 41% success rate (national: 61%).
+            <br><br>
+            <strong>Impact:</strong> Problem solving comprises 40% of KS2 SATs paper. Current performance suggests 28 students
+            at risk of below-expected outcomes. This aligns with CAT4 data showing verbal reasoning scores below non-verbal.
+            <br><br>
+            <strong>Root Cause:</strong> Students can perform calculations but struggle to identify correct operations from word problems.
+            Reading comprehension may be a barrier - 34% of low problem solvers also score below expected in reading.
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Implement RUCSAC or BAR model for structured problem solving<br>
+            • Cross-curricular with English dept on mathematical vocabulary<br>
+            • Daily "problem of the day" routine to build stamina<br>
+            • Use visualization techniques and drawing diagrams<br>
+            • Target bottom 25% with small-group pre-teaching
+          </div>
+          <div class="insight-actions">
+            <a href="/school/school6/strand/reasoning-problem-solving" class="insight-action">Detailed Analysis</a>
+            <button class="insight-action" onclick="exportStrandConcern('all', 'problem-solving')">📥 Export All Problem Solving Data</button>
+            <button class="insight-action" onclick="exportInterventionPlan('problem-solving')">📋 Problem Solving Resources</button>
           </div>
         </div>
 
         <div class="insight-card attention">
-          <div class="insight-title">📊 Performance Variance Detected</div>
+          <div class="insight-title">📊 Significant Performance Variance Between Schools</div>
           <div class="insight-desc">
             <strong>Finding:</strong> 17-point SAS gap between School A (92.0) and School C (109.0) despite similar demographics.
-            School C shows +6 value-added while School A shows -4.
+            School C shows +6 value-added while School A shows -4. Gap has increased from 12 points last term to 17 points this term.
             <br><br>
-            <strong>Impact:</strong> Suggests teaching approach differences. School C's problem-solving scores 27% above national
-            vs School A at 10% above.
+            <strong>Impact:</strong> Suggests systematic differences in teaching effectiveness. School C's problem-solving scores 27% above national
+            vs School A at 10% above. School C students 2.3x more likely to achieve greater depth standard.
+            Demographic analysis shows both schools have similar FSM (38% vs 41%) and EAL (22% vs 24%) populations.
             <br><br>
-            <strong>Recommendation:</strong> Arrange best-practice sharing session between School C and School A staff.
-            Focus on problem-solving pedagogy and mental math strategies.
+            <strong>Key Differences Identified:</strong>
+            • School C uses mastery approach with 5+ hours weekly maths time<br>
+            • Staff professional development: School C 18 hours/year vs School A 8 hours<br>
+            • School C implemented daily fluency practice and reasoning journals<br>
+            • Different schemes of work (School C uses White Rose + Power Maths)
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Arrange collaborative planning sessions between schools<br>
+            • School A leadership observe School C teaching practices<br>
+            • Share School C's planning resources and assessment materials<br>
+            • Consider joint CPD sessions on mastery approaches<br>
+            • Set target: reduce gap to 10 points by end of academic year
           </div>
           <div class="insight-actions">
             <a href="/mat?compare=school6,school8" class="insight-action">Compare Schools</a>
-            <button class="insight-action" onclick="exportComparison('school6', 'school8')">📥 Generate Comparison Report</button>
+            <button class="insight-action" onclick="exportComparison('school6', 'school8')">📥 Full Comparison Report</button>
+            <button class="insight-action" onclick="exportBestPractices('school8')">📋 School C Best Practices</button>
           </div>
         </div>
 
         <div class="insight-card positive">
-          <div class="insight-title">✅ Excellent Progress: School B Cohort</div>
+          <div class="insight-title">✅ Exceptional Progress: School B Cohort</div>
           <div class="insight-desc">
-            <strong>Finding:</strong> School B students show +5.8% improvement term-on-term.
-            Mathematical reasoning scores increased from 54% to 79% (national: 54%).
+            <strong>Finding:</strong> School B students show +5.8% improvement term-on-term with 92% of students on track.
+            Mathematical reasoning scores increased from 54% to 79% (national: 54%). Value-added improved from -3 to +3.
+            Zero students now in "concern" category (down from 12 last term).
             <br><br>
-            <strong>Impact:</strong> 110 students now on track for expected SATs outcomes. Value-added score improved from -3 to +3.
+            <strong>Impact:</strong> 110 students now confidently on track for expected SATs outcomes. 34 students moved from
+            "developing" to "secure" band. Projected to exceed national average by end of year. Teacher assessments show
+            increased confidence and mathematical vocabulary usage.
             <br><br>
-            <strong>Recommendation:</strong> Document successful interventions used in School B for MAT-wide rollout.
-            Continue current teaching approach and consider extending to struggling cohorts.
+            <strong>Success Factors:</strong>
+            • Implemented twice-weekly small-group interventions (Jan-Mar)<br>
+            • Introduced pre-teaching for bottom 30% before new topics<br>
+            • Weekly times tables practice using Times Tables Rock Stars<br>
+            • Parental engagement workshops (68% attendance)<br>
+            • Regular formative assessment with same-day feedback
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Document intervention strategies for MAT-wide rollout<br>
+            • Share resources and planning with Schools A and C<br>
+            • Consider School B staff leading CPD sessions<br>
+            • Continue monitoring to maintain momentum<br>
+            • Extend successful approaches to other year groups
           </div>
           <div class="insight-actions">
-            <a href="/school/school7/skills" class="insight-action">View School B Data</a>
-            <button class="insight-action" onclick="exportProgress('school7')">📥 Progress Report</button>
+            <a href="/school/school7/skills" class="insight-action">View Full School B Data</a>
+            <button class="insight-action" onclick="exportProgress('school7')">📥 Detailed Progress Report</button>
+            <button class="insight-action" onclick="exportInterventions('school7')">📋 Intervention Strategies Doc</button>
           </div>
         </div>
 
         <div class="insight-card attention">
-          <div class="insight-title">👥 Demographic Gap Analysis</div>
+          <div class="insight-title">👥 Widening Demographic Attainment Gap</div>
           <div class="insight-desc">
             <strong>Finding:</strong> FSM students scoring on average 8.2 SAS points below non-FSM (95.8 vs 104.0).
-            Gap has widened by 1.5 points since last term.
+            Gap has widened by 1.5 points since last term (was 6.7, now 8.2). FSM students also show lower
+            value-added scores (-2.1 vs +4.3 for non-FSM) suggesting interventions not effectively targeting disadvantaged students.
             <br><br>
-            <strong>Impact:</strong> Affects 136 students (54% of cohort). Risk of widening attainment gap without intervention.
+            <strong>Impact:</strong> Affects 136 students (54% of cohort). At current trajectory, 42 FSM students unlikely to meet
+            expected standard by end of KS2. Risk of widening attainment gap without targeted intervention. Ofsted focus area.
             <br><br>
-            <strong>Recommendation:</strong> Review Pupil Premium spending effectiveness. Consider small-group tuition
-            focusing on fluency skills where FSM students show largest gaps (18% below in conceptual fluency).
+            <strong>Root Cause Analysis:</strong>
+            • FSM students show largest gaps in conceptual fluency (18% below) and problem solving (15% below)<br>
+            • Attendance data: FSM students average 91.2% vs 96.8% non-FSM<br>
+            • Homework completion: 62% for FSM vs 89% non-FSM<br>
+            • Access to online resources: only 48% FSM families report regular internet access
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Review and increase Pupil Premium spending on maths interventions<br>
+            • Provide device loan program for FSM students (online practice access)<br>
+            • Before-school maths club with breakfast provision<br>
+            • Focus small-group tuition on conceptual understanding<br>
+            • Parental engagement strategy specifically for FSM families<br>
+            • Track FSM student progress weekly with intervention adjustments
           </div>
           <div class="insight-actions">
-            <button class="insight-action" onclick="exportDemographic('fsm')">📥 Export FSM Student List (136 students)</button>
+            <button class="insight-action" onclick="exportDemographic('fsm')">📥 Export FSM Analysis (136 students)</button>
             <a href="/dashboard?filter=fsm" class="insight-action">Demographics Dashboard</a>
+            <button class="insight-action" onclick="exportPupilPremiumReport()">📋 Pupil Premium Impact Report</button>
+          </div>
+        </div>
+
+        <div class="insight-card attention">
+          <div class="insight-title">🎯 Renaissance Focus Skills - Targeted Priorities</div>
+          <div class="insight-desc">
+            <strong>Finding:</strong> Of 305 Renaissance Focus Skills (essential 23% of curriculum), students showing weakness
+            in 42 critical skills. These focus skills are proven predictors of overall maths attainment and SATs outcomes.
+            Current mastery: 68% on focus skills vs 74% on non-focus skills (should be higher on focus skills).
+            <br><br>
+            <strong>Key Gaps in Focus Skills:</strong>
+            • Y5.N.FDP.2 - Compare and order fractions: 34% mastery (target: 80%)<br>
+            • Y5.N.F.1 - Multiply/divide by 10, 100, 1000: 52% mastery (target: 90%)<br>
+            • Y5.M.1 - Convert between metric units: 48% mastery (target: 85%)<br>
+            • Y6.R.2 - Use BODMAS: 41% mastery (target: 75%)<br>
+            • Y6.A.1 - Use simple formulae: 38% mastery (target: 70%)
+            <br><br>
+            <strong>Impact:</strong> These 42 skills appear in 76% of SATs questions. Addressing these would have maximum
+            impact on outcomes with focused effort. Research shows focusing on these skills yields 2.3x better SATs improvement
+            than untargeted general practice.
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Prioritize these 42 focus skills in lesson planning<br>
+            • Create targeted practice booklets for home learning<br>
+            • Implement "skill of the week" focus across MAT<br>
+            • Use Renaissance diagnostic to track focus skill mastery<br>
+            • Intervention groups specifically target focus skill gaps<br>
+            • Monthly assessment of focus skills with data review
+          </div>
+          <div class="insight-actions">
+            <a href="/reports?filter=focus-skills" class="insight-action">View All Focus Skills Data</a>
+            <button class="insight-action" onclick="exportFocusSkills()">📥 Export Focus Skills Analysis</button>
+            <button class="insight-action" onclick="exportFocusSkillsPlan()">📋 Focus Skills Teaching Plan</button>
+          </div>
+        </div>
+
+        <div class="insight-card positive">
+          <div class="insight-title">✅ Strong Performance: Geometry & Measurement</div>
+          <div class="insight-desc">
+            <strong>Finding:</strong> MAT-wide geometry performance at 89% correct (national: 61%) and measurement at 87% (national: 69%).
+            All three schools performing well above national average. School C showing exceptional 94% mastery in geometry.
+            Students particularly strong on angles, properties of shapes, and position/direction.
+            <br><br>
+            <strong>Impact:</strong> 214 students (85% of cohort) at expected or greater depth in these domains. This strength
+            can be leveraged to build confidence and develop problem-solving skills using geometric contexts.
+            <br><br>
+            <strong>Success Factors:</strong>
+            • Consistent use of practical equipment (rulers, protractors, 3D shapes)<br>
+            • Strong CPA (Concrete-Pictorial-Abstract) approach<br>
+            • Regular outdoor maths activities connecting to real-world contexts<br>
+            • Effective use of visualization and spatial reasoning activities
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Maintain current effective practices<br>
+            • Use geometry as hook for struggling students to build confidence<br>
+            • Create cross-strand problems linking geometry to weaker areas (e.g., fractions of shapes)<br>
+            • Celebrate and share success - student work displays<br>
+            • Consider entering students in UKMT Junior Maths Challenge
+          </div>
+          <div class="insight-actions">
+            <a href="/mat?strand=geometry" class="insight-action">Geometry Detailed View</a>
+            <button class="insight-action" onclick="exportSuccessStory('geometry')">📥 Export Success Analysis</button>
+          </div>
+        </div>
+
+        <div class="insight-card attention">
+          <div class="insight-title">⏱️ Times Tables Fluency - Inconsistent Mastery</div>
+          <div class="insight-desc">
+            <strong>Finding:</strong> Times tables check data shows 64% of Y4 students meeting expected standard (25/25 in <6 seconds).
+            National average is 71%. Significant variation: School C at 82%, School B at 68%, School A at 46%.
+            Correlation analysis shows strong link between times tables fluency and overall maths SAS (r=0.73).
+            <br><br>
+            <strong>Impact:</strong> 91 students not yet fluent with times tables affecting progress in fractions, division,
+            area/perimeter, ratio, and problem-solving. Students without fluency spending 40% longer on calculations,
+            leaving less time for reasoning and problem-solving in assessments.
+            <br><br>
+            <strong>Patterns Identified:</strong>
+            • 7x, 8x, 9x tables causing most difficulty<br>
+            • Division facts weaker than multiplication facts<br>
+            • Lack of daily practice routines in School A<br>
+            • School C's regular online practice showing clear impact
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Implement daily 5-minute times tables practice across all schools<br>
+            • Use Times Tables Rock Stars or similar for engagement and tracking<br>
+            • Home-school partnership: weekly practice expectations<br>
+            • Target bottom 25% with additional small-group practice<br>
+            • Celebrate progress with certificates and displays<br>
+            • Re-assess monthly to track improvement
+          </div>
+          <div class="insight-actions">
+            <a href="/reports?filter=times-tables" class="insight-action">Times Tables Full Report</a>
+            <button class="insight-action" onclick="exportTimesTables()">📥 Export Student Data</button>
+            <button class="insight-action" onclick="exportTimesTablesPractice()">📋 Practice Resources</button>
+          </div>
+        </div>
+
+        <div class="insight-card positive">
+          <div class="insight-title">📈 CAT4 Value-Added: Above Expected Progress</div>
+          <div class="insight-desc">
+            <strong>Finding:</strong> MAT-wide value-added score of +3.2 indicates students performing 3.2 SAS points above
+            CAT4 predictions. This is statistically significant (p<0.05) and places MAT in top 30% nationally for value-added.
+            193 students (77%) meeting or exceeding CAT4 predictions.
+            <br><br>
+            <strong>Impact:</strong> Demonstrates effective teaching and intervention strategies are working for majority of students.
+            Students making better progress than would be predicted from cognitive ability alone. Strong evidence of
+            quality-first teaching and targeted support.
+            <br><br>
+            <strong>Notable Examples:</strong>
+            • School B: +5.2 value-added (exceptional)<br>
+            • School C: +4.8 value-added (excellent)<br>
+            • 23 students showing +10 or more value-added (significantly above expectations)<br>
+            • Even School A showing +1.2 despite lower raw scores
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Celebrate and communicate success to staff, governors, and parents<br>
+            • Analyze what's working and document successful strategies<br>
+            • Share best practices across MAT<br>
+            • Continue current approaches while addressing specific gaps<br>
+            • Use as evidence for school improvement plans and Ofsted<br>
+            • Set ambitious targets: maintain +3.0 minimum value-added
+          </div>
+          <div class="insight-actions">
+            <a href="/mat?view=value-added" class="insight-action">Value-Added Dashboard</a>
+            <button class="insight-action" onclick="exportValueAdded()">📥 Full Value-Added Report</button>
+          </div>
+        </div>
+
+        <div class="insight-card attention">
+          <div class="insight-title">🔄 Assessment Consistency - Moderation Needed</div>
+          <div class="insight-desc">
+            <strong>Finding:</strong> Comparing GL assessment data with teacher assessments reveals inconsistencies.
+            School A teachers rate students 12% higher than GL data suggests. School B highly aligned (2% difference).
+            School C teachers slightly under-assess (4% below GL data). This suggests potential variation in
+            assessment standards and moderation processes.
+            <br><br>
+            <strong>Impact:</strong> Risk of inconsistent expectations and standards across MAT. Students may receive
+            inappropriate support if teacher assessment doesn't accurately reflect actual attainment. Creates issues
+            for transition between schools and year groups. Potential Ofsted concern about assessment accuracy.
+            <br><br>
+            <strong>Root Cause:</strong>
+            • Different interpretation of assessment frameworks<br>
+            • Variation in moderation processes<br>
+            • Possible unconscious bias in teacher judgements<br>
+            • Lack of cross-MAT standardization and moderation
+            <br><br>
+            <strong>Recommendation:</strong>
+            • Implement termly cross-MAT moderation sessions<br>
+            • Use GL data to calibrate teacher assessments<br>
+            • Develop shared assessment exemplars and standards<br>
+            • Provide training on objective assessment practices<br>
+            • Create consistent assessment recording systems<br>
+            • Regular data triangulation meetings (GL + teacher assessment + classwork)
+          </div>
+          <div class="insight-actions">
+            <button class="insight-action" onclick="exportAssessmentComparison()">📥 Teacher vs GL Comparison</button>
+            <button class="insight-action" onclick="exportModerationGuidance()">📋 Moderation Guidelines</button>
           </div>
         </div>
       `;
     }
 
+    // CSV Download Helper Function
+    function downloadCSV(content, filename) {
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    }
+
     // Export functions with proper parameters
     function exportStrandConcern(schoolId, strandId) {
       const filename = `${schoolId}_${strandId}_concern_students_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating CSV export:\n\nFile: ${filename}\n\nFilters:\n- School: ${schoolId}\n- Strand: ${strandId}\n- Level: Concern (< 50% mastery)\n- Students: 46\n\nExport will include:\n- Student ID & Name\n- Average Mastery %\n- Individual objective scores\n- Recommended interventions`);
-      // In real implementation, this would call the actual export API
+
+      // Generate mock data for demonstration
+      const headers = ['Student ID', 'Student Name', 'Average % Correct', 'Performance Level', 'Y5.N.FDP.2', 'Y5.N.FDP.3', 'Y5.N.FDP.5', 'Recommended Intervention'];
+      const mockStudents = [];
+
+      for (let i = 1; i <= 46; i++) {
+        mockStudents.push([
+          `STU${String(i).padStart(4, '0')}`,
+          `Student ${i}`,
+          Math.floor(Math.random() * 20 + 30) + '%',
+          'Concern',
+          Math.floor(Math.random() * 30 + 20) + '%',
+          Math.floor(Math.random() * 30 + 15) + '%',
+          Math.floor(Math.random() * 30 + 25) + '%',
+          'Small group intervention - Focus on fraction fundamentals'
+        ]);
+      }
+
+      const csvContent = [
+        ['Strand Concern Students Report'],
+        [`School: ${schoolId}`],
+        [`Strand: ${strandId}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Filter: Concern Level (< 50% correct)`],
+        [`Total Students: 46`],
+        [],
+        headers,
+        ...mockStudents
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     function exportComparison(school1, school2) {
       const filename = `comparison_${school1}_vs_${school2}_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating comparison report:\n\nFile: ${filename}\n\nComparing:\n- School A (${school1}): 92.0 SAS, -4 VA\n- School C (${school2}): 109.0 SAS, +6 VA\n\nReport will include:\n- SAS scores by curriculum area\n- Process skills breakdown\n- Demographics comparison\n- Teaching time analysis`);
+
+      const headers = ['Metric', school1, school2, 'Difference'];
+      const data = [
+        ['Mean SAS Score', '92.0', '109.0', '+17.0'],
+        ['Value Added', '-4', '+6', '+10'],
+        ['Number & Place Value', '88', '105', '+17'],
+        ['Fractions & Decimals', '85', '112', '+27'],
+        ['Measurement', '94', '108', '+14'],
+        ['Geometry', '96', '110', '+14'],
+        ['Statistics', '91', '107', '+16'],
+        ['Mathematical Fluency', '87%', '94%', '+7%'],
+        ['Problem Solving', '82%', '91%', '+9%'],
+        ['Reasoning', '79%', '88%', '+9%'],
+        ['FSM Students Count', '58', '42', '-16'],
+        ['EAL Students Count', '34', '28', '-6'],
+        ['Average Teaching Time (hrs/week)', '5.2', '5.8', '+0.6']
+      ];
+
+      const csvContent = [
+        ['School Comparison Report'],
+        [`Comparing: ${school1} vs ${school2}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [],
+        headers,
+        ...data
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     function exportProgress(schoolId) {
       const filename = `${schoolId}_progress_report_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating progress report:\n\nFile: ${filename}\n\nSchool: ${schoolId}\nTerm range: Last 6 terms\n\nReport will include:\n- Term-on-term SAS changes\n- Student-level progress tracking\n- Value-added trends\n- Intervention effectiveness`);
+
+      const headers = ['Term', 'Mean SAS', 'Change from Previous', 'Value Added', 'Students On Track', 'Intervention Count'];
+      const terms = ['Autumn 1', 'Autumn 2', 'Spring 1', 'Spring 2', 'Summer 1', 'Summer 2'];
+      const data = [];
+
+      let prevSAS = 88;
+      for (let i = 0; i < 6; i++) {
+        const currentSAS = prevSAS + Math.floor(Math.random() * 5 + 1);
+        data.push([
+          terms[i],
+          currentSAS.toFixed(1),
+          i === 0 ? 'N/A' : '+' + (currentSAS - prevSAS).toFixed(1),
+          (Math.random() * 10 - 2).toFixed(1),
+          Math.floor(Math.random() * 20 + 75) + '%',
+          Math.floor(Math.random() * 15 + 10)
+        ]);
+        prevSAS = currentSAS;
+      }
+
+      const csvContent = [
+        ['Progress Report'],
+        [`School: ${schoolId}`],
+        [`Term Range: Last 6 terms`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [],
+        headers,
+        ...data,
+        [],
+        ['Summary'],
+        ['Total SAS Improvement', '+' + (prevSAS - 88).toFixed(1)],
+        ['Average Term Growth', '+' + ((prevSAS - 88) / 6).toFixed(1)],
+        ['Current Value Added', '+3.0']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     function exportDemographic(demographic) {
       const filename = `${demographic}_students_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating demographic export:\n\nFile: ${filename}\n\nDemographic: ${demographic.toUpperCase()}\nStudents: 136 (54% of cohort)\n\nExport will include:\n- Student ID & Name\n- Current SAS & NPR\n- Gap vs non-${demographic} (8.2 points)\n- Focus areas for intervention`);
+
+      const headers = ['Student ID', 'Student Name', 'Current SAS', 'NPR', 'Gap vs Non-' + demographic.toUpperCase(), 'Focus Areas'];
+      const mockStudents = [];
+
+      for (let i = 1; i <= 136; i++) {
+        mockStudents.push([
+          `STU${String(i).padStart(4, '0')}`,
+          `Student ${i}`,
+          Math.floor(Math.random() * 15 + 88),
+          Math.floor(Math.random() * 40 + 20),
+          '-' + (Math.random() * 10 + 3).toFixed(1),
+          'Fluency, Reasoning'
+        ]);
+      }
+
+      const csvContent = [
+        ['Demographic Analysis Report'],
+        [`Demographic: ${demographic.toUpperCase()}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Total Students: 136 (54% of cohort)`],
+        [`Average Gap: -8.2 SAS points`],
+        [],
+        headers,
+        ...mockStudents,
+        [],
+        ['Summary'],
+        ['Average SAS', '95.8'],
+        ['Non-' + demographic.toUpperCase() + ' Average', '104.0'],
+        ['Gap', '-8.2'],
+        ['Recommended Action', 'Small-group tuition focusing on conceptual fluency']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportChartData(chartType) {
+      const filename = `chart_data_${chartType}_${new Date().toISOString().split('T')[0]}.csv`;
+      let csvContent = '';
+
+      if (chartType === 'distribution') {
+        const headers = ['SAS Band', 'Your Group %', 'National %'];
+        const bands = ['<74', '74-81', '82-88', '89-96', '97-103', '104-111', '112-118', '119-126', '>126'];
+        const rows = bands.map((band, i) => [band, data.distribution.group[i], data.distribution.national[i]]);
+        csvContent = [
+          ['SAS Score Distribution Data'],
+          [`Exported: ${new Date().toLocaleString()}`],
+          [],
+          headers,
+          ...rows
+        ].map(row => row.join(',')).join('\n');
+      } else if (chartType === 'curriculum') {
+        const headers = ['Category', 'Your Group %', 'National %'];
+        const rows = data.curriculum.categories.map((cat, i) => [cat, data.curriculum.group[i], data.curriculum.national[i]]);
+        csvContent = [
+          ['Curriculum Performance Data'],
+          [`Exported: ${new Date().toLocaleString()}`],
+          [],
+          headers,
+          ...rows
+        ].map(row => row.join(',')).join('\n');
+      } else if (chartType === 'process') {
+        const headers = ['Skill', 'Your Group %', 'National %'];
+        const rows = data.process.categories.map((cat, i) => [cat, data.process.group[i], data.process.national[i]]);
+        csvContent = [
+          ['Process Skills Data'],
+          [`Exported: ${new Date().toLocaleString()}`],
+          [],
+          headers,
+          ...rows
+        ].map(row => row.join(',')).join('\n');
+      } else if (chartType === 'schools') {
+        const headers = ['School', 'Mean SAS', 'Value Added', 'Students'];
+        const rows = [
+          ['School A - Oakwood', '92.0', '-4', '82'],
+          ['School B - Riverside', '101.0', '+3', '110'],
+          ['School C - Hillside', '109.0', '+6', '60']
+        ];
+        csvContent = [
+          ['School Comparison Data'],
+          [`Exported: ${new Date().toLocaleString()}`],
+          [],
+          headers,
+          ...rows
+        ].map(row => row.join(',')).join('\n');
+      } else if (chartType === 'heatmap') {
+        const headers = ['School', 'Number', 'Fractions', 'Measurement', 'Geometry', 'Statistics', 'Ratio', 'Algebra'];
+        const rows = [
+          ['School A', '88', '56', '72', '82', '78', '64', '58'],
+          ['School B', '94', '71', '86', '91', '88', '76', '68'],
+          ['School C', '105', '89', '94', '98', '96', '92', '84']
+        ];
+        csvContent = [
+          ['Strand Performance Heatmap Data'],
+          [`Exported: ${new Date().toLocaleString()}`],
+          [],
+          headers,
+          ...rows
+        ].map(row => row.join(',')).join('\n');
+      }
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportInterventionPlan(topic) {
+      const filename = `intervention_plan_${topic}_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        [`Intervention Plan: ${topic}`],
+        [`Generated: ${new Date().toLocaleString()}`],
+        [],
+        ['Week', 'Focus Area', 'Activity', 'Resources Needed', 'Success Criteria'],
+        ['Week 1', 'Assessment & Grouping', 'Diagnostic assessment, create intervention groups', 'Pre-assessment materials', 'All students assessed and grouped'],
+        ['Week 2', 'Foundation Skills', 'Revisit prerequisite knowledge', 'Manipulatives, visual aids', '70% demonstrate foundation understanding'],
+        ['Week 3', 'Targeted Practice', 'Small-group focused practice', 'Practice workbooks, online resources', '60% show improvement on target skills'],
+        ['Week 4', 'Application', 'Apply skills in problem-solving contexts', 'Word problems, real-world tasks', '50% can apply skills independently'],
+        ['Week 5', 'Consolidation', 'Mixed practice and review', 'Mixed question sets', '70% consistent mastery'],
+        ['Week 6', 'Re-assessment', 'Progress assessment and adjustment', 'Post-assessment materials', '75% meet success criteria']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportInterventions(schoolId) {
+      const filename = `interventions_${schoolId}_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        [`Intervention Strategies: ${schoolId}`],
+        [`Documented: ${new Date().toLocaleString()}`],
+        [],
+        ['Intervention Name', 'Duration', 'Frequency', 'Group Size', 'Impact (SAS Gain)', 'Cost', 'Notes'],
+        ['Pre-teaching sessions', '30 mins', '2x weekly', '6-8 students', '+4.2 SAS', '£Low', 'Before new topics introduced'],
+        ['Small group tuition', '45 mins', '3x weekly', '4-6 students', '+6.8 SAS', '£££High', 'Led by specialist TA'],
+        ['Times Tables practice', '10 mins', 'Daily', 'Whole class', '+2.4 SAS', '£Free', 'Online platform (TTRS)'],
+        ['Parental workshops', '90 mins', 'Termly', 'Parents', '+1.8 SAS', '££Medium', '68% attendance rate'],
+        ['Peer tutoring', '20 mins', '2x weekly', 'Pairs', '+3.2 SAS', '£Free', 'High achievers support strugglers'],
+        ['Fluency starters', '5 mins', 'Daily', 'Whole class', '+2.1 SAS', '£Free', 'Mental math warm-ups']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportBestPractices(schoolId) {
+      const filename = `best_practices_${schoolId}_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        [`Best Practice Documentation: ${schoolId}`],
+        [`Compiled: ${new Date().toLocaleString()}`],
+        [],
+        ['Practice Area', 'Approach', 'Implementation Details', 'Impact Evidence', 'Transferability'],
+        ['Mastery Approach', 'Whole-class mastery teaching', '5+ hours weekly maths, flexible grouping, depth over acceleration', 'SAS 109, +6 VA', 'High - requires CPD and planning time'],
+        ['Problem Solving', 'Bar model visualization', 'Taught explicitly, daily practice, display models', 'Problem solving 91% vs national 69%', 'High - minimal cost'],
+        ['Fluency Practice', 'Daily mental math starters', '5-min fluency drills, times tables focus', 'Calculation accuracy 94%', 'Very High - easy to implement'],
+        ['Planning', 'Collaborative planning', 'Weekly year group planning, shared resources', 'Consistency across classes, time-efficient', 'Medium - requires scheduling'],
+        ['Assessment', 'Regular low-stakes quizzes', 'Weekly 10-question quizzes, immediate feedback', 'Students more aware of gaps', 'High - templates shareable'],
+        ['Parental Engagement', 'Maths workshops', 'Termly workshops showing strategies, homework expectations', '72% parent attendance', 'Medium - requires preparation']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportFocusSkills() {
+      const filename = `renaissance_focus_skills_${new Date().toISOString().split('T')[0]}.csv`;
+      const headers = ['Focus Skill ID', 'Year', 'Strand', 'Objective', 'Current Mastery %', 'Target %', 'Gap', 'Priority'];
+      const mockSkills = [
+        ['524', 'Y5', 'Fractions', 'Compare and order fractions', '34', '80', '-46', 'Critical'],
+        ['531', 'Y5', 'Number', 'Multiply/divide by 10,100,1000', '52', '90', '-38', 'Critical'],
+        ['612', 'Y5', 'Measurement', 'Convert between metric units', '48', '85', '-37', 'High'],
+        ['701', 'Y6', 'Reasoning', 'Use BODMAS', '41', '75', '-34', 'High'],
+        ['715', 'Y6', 'Algebra', 'Use simple formulae', '38', '70', '-32', 'High'],
+        ['528', 'Y5', 'Fractions', 'Add/subtract fractions same denominator', '44', '75', '-31', 'High'],
+        ['534', 'Y5', 'Number', 'Solve multi-step problems', '51', '80', '-29', 'Medium'],
+        ['618', 'Y5', 'Measurement', 'Calculate perimeter and area', '58', '85', '-27', 'Medium']
+      ];
+
+      const csvContent = [
+        ['Renaissance Focus Skills Analysis'],
+        [`Total Focus Skills: 305 (essential 23% of curriculum)`],
+        [`Skills Below Target: 42`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [],
+        headers,
+        ...mockSkills,
+        [],
+        ['Summary'],
+        ['Overall Focus Skills Mastery', '68%'],
+        ['Target Mastery', '80%'],
+        ['Gap', '-12%'],
+        ['Estimated Impact', 'Addressing these skills could improve SATs outcomes by 8-12%']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportFocusSkillsPlan() {
+      const filename = `focus_skills_teaching_plan_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        ['Focus Skills Teaching Plan'],
+        [`Generated: ${new Date().toLocaleString()}`],
+        [],
+        ['Week', 'Focus Skill', 'Teaching Approach', 'Practice Activities', 'Assessment Method'],
+        ['Week 1', 'Compare/order fractions (524)', 'Visual models, number lines', 'Matching activities, ordering tasks', 'Mini-quiz Friday'],
+        ['Week 2', 'Multiply/divide by powers of 10 (531)', 'Place value charts, patterns', 'Quick-fire questions, games', 'Times practice test'],
+        ['Week 3', 'Metric unit conversion (612)', 'Real-world contexts, measurement tasks', 'Practical measuring, word problems', 'Conversion challenges'],
+        ['Week 4', 'BODMAS (701)', 'Step-by-step method, acronym', 'Multi-step calculations, puzzles', 'Mixed BODMAS questions'],
+        ['Week 5', 'Simple formulae (715)', 'Substitution practice, real formulas', 'Area, perimeter, real-world contexts', 'Formula application test'],
+        ['Week 6', 'Review & consolidation', 'Mixed practice all focus skills', 'Group challenges, peer teaching', 'Comprehensive assessment']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportSuccessStory(topic) {
+      const filename = `success_story_${topic}_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        [`Success Story: ${topic}`],
+        [`Documented: ${new Date().toLocaleString()}`],
+        [],
+        ['Metric', 'Value', 'Comparison'],
+        ['MAT Performance', '89% correct', 'National: 61%'],
+        ['Students at Expected+', '85% (214 students)', 'National: 71%'],
+        ['School A', '86%', '+25% vs national'],
+        ['School B', '88%', '+27% vs national'],
+        ['School C', '94%', '+33% vs national'],
+        [],
+        ['Success Factors'],
+        ['Factor', 'Details'],
+        ['Practical Equipment', 'Regular use of rulers, protractors, 3D shapes'],
+        ['CPA Approach', 'Consistent Concrete-Pictorial-Abstract progression'],
+        ['Outdoor Activities', 'Monthly outdoor maths linking to real-world'],
+        ['Visualization', 'Emphasis on spatial reasoning and drawing'],
+        [],
+        ['Recommendations'],
+        ['Action', 'Notes'],
+        ['Maintain Current Practice', 'Continue effective approaches'],
+        ['Leverage Strength', 'Use geometry to build confidence in struggling students'],
+        ['Cross-strand Links', 'Connect geometry to fractions (e.g. fractions of shapes)'],
+        ['Celebrate Success', 'Display student work, share achievements'],
+        ['Extension Opportunities', 'UKMT Junior Maths Challenge entry']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportTimesTables() {
+      const filename = `times_tables_analysis_${new Date().toISOString().split('T')[0]}.csv`;
+      const headers = ['Student ID', 'Student Name', 'School', 'Score (/25)', 'Average Time (s)', 'Weakest Tables', 'Intervention Group'];
+      const mockData = [];
+
+      for (let i = 1; i <= 91; i++) {
+        const score = Math.floor(Math.random() * 15 + 5);
+        const time = (Math.random() * 4 + 3).toFixed(1);
+        mockData.push([
+          `STU${String(i).padStart(4, '0')}`,
+          `Student ${i}`,
+          ['School A', 'School B', 'School C'][Math.floor(Math.random() * 3)],
+          score,
+          time,
+          ['7x, 8x', '8x, 9x', '6x, 7x, 9x'][Math.floor(Math.random() * 3)],
+          score < 15 ? 'Yes' : 'No'
+        ]);
+      }
+
+      const csvContent = [
+        ['Times Tables Fluency Analysis'],
+        [`Students Not Yet Fluent: 91`],
+        [`Target: <6 seconds, 25/25 correct`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [],
+        headers,
+        ...mockData,
+        [],
+        ['School Summary'],
+        ['School', 'Fluent %', 'Average Score', 'Average Time'],
+        ['School A', '46%', '17.2/25', '7.8s'],
+        ['School B', '68%', '21.4/25', '5.9s'],
+        ['School C', '82%', '23.8/25', '4.6s'],
+        ['National', '71%', '22.1/25', '5.4s']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportTimesTablesPractice() {
+      const filename = `times_tables_practice_resources_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        ['Times Tables Practice Resources'],
+        [`Compiled: ${new Date().toLocaleString()}`],
+        [],
+        ['Resource Type', 'Name', 'Cost', 'Implementation', 'Effectiveness'],
+        ['Online Platform', 'Times Tables Rock Stars', '£££', 'School license, 10 mins daily', 'High - gamified, competitive'],
+        ['Online Platform', 'Hit the Button', 'Free', 'Individual practice', 'Medium - simple but effective'],
+        ['Physical Resource', 'Times Tables Flashcards', '£', 'Small group practice', 'Medium - requires supervision'],
+        ['Strategy', 'Skip Counting Songs', 'Free', 'Whole class daily', 'Medium - good for younger learners'],
+        ['Strategy', 'Times Tables Grid Method', 'Free', 'Visual reference, practice', 'High - shows patterns'],
+        ['Game', 'Times Tables Bingo', 'Free', 'Weekly whole-class game', 'Medium - engagement high'],
+        [],
+        ['Recommended Schedule'],
+        ['Day', 'Activity', 'Duration'],
+        ['Monday', 'Introduce table of the week + practice', '10 mins'],
+        ['Tuesday', 'TTRS online practice', '10 mins'],
+        ['Wednesday', 'Quick-fire questions', '5 mins'],
+        ['Thursday', 'Application in problems', '10 mins'],
+        ['Friday', 'Times tables test/challenge', '10 mins']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportValueAdded() {
+      const filename = `value_added_report_${new Date().toISOString().split('T')[0]}.csv`;
+      const headers = ['Student ID', 'Student Name', 'School', 'CAT4 Predicted SAS', 'Actual NGMT SAS', 'Value Added', 'Category'];
+      const mockData = [];
+
+      for (let i = 1; i <= 252; i++) {
+        const predicted = Math.floor(Math.random() * 20 + 90);
+        const valueAdded = Math.random() * 20 - 5;
+        const actual = Math.round(predicted + valueAdded);
+        const category = valueAdded >= 5 ? 'Significantly Above' : valueAdded >= 0 ? 'Above/On Track' : valueAdded >= -5 ? 'Below Expected' : 'Significantly Below';
+
+        mockData.push([
+          `STU${String(i).padStart(4, '0')}`,
+          `Student ${i}`,
+          ['School A', 'School B', 'School C'][i % 3],
+          predicted,
+          actual,
+          valueAdded.toFixed(1),
+          category
+        ]);
+      }
+
+      const csvContent = [
+        ['Value-Added Analysis Report'],
+        [`MAT-wide Value Added: +3.2 SAS points`],
+        [`Significantly Above Expected: 23 students`],
+        [`Above/On Track: 193 students (77%)`],
+        [`Below Expected: 36 students`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [],
+        headers,
+        ...mockData,
+        [],
+        ['School Summary'],
+        ['School', 'Mean VA', 'Students Above Expected', '% Above Expected'],
+        ['School A', '+1.2', '58', '71%'],
+        ['School B', '+5.2', '94', '85%'],
+        ['School C', '+4.8', '53', '88%']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportAssessmentComparison() {
+      const filename = `teacher_vs_gl_assessment_${new Date().toISOString().split('T')[0]}.csv`;
+      const headers = ['Student ID', 'Student Name', 'School', 'Teacher Assessment', 'GL Assessment SAS', 'Difference', 'Notes'];
+      const mockData = [];
+
+      for (let i = 1; i <= 120; i++) {
+        const glSAS = Math.floor(Math.random() * 30 + 85);
+        const schoolBias = i <= 40 ? 12 : i <= 80 ? 2 : -4;
+        const teacherEquiv = Math.round(glSAS + schoolBias);
+        const diff = teacherEquiv - glSAS;
+        const notes = Math.abs(diff) > 10 ? 'Significant discrepancy' : Math.abs(diff) > 5 ? 'Moderate discrepancy' : 'Aligned';
+
+        mockData.push([
+          `STU${String(i).padStart(4, '0')}`,
+          `Student ${i}`,
+          i <= 40 ? 'School A' : i <= 80 ? 'School B' : 'School C',
+          ['Working Towards', 'Expected', 'Greater Depth'][Math.floor((teacherEquiv - 85) / 15)],
+          glSAS,
+          diff > 0 ? '+' + diff : diff,
+          notes
+        ]);
+      }
+
+      const csvContent = [
+        ['Teacher vs GL Assessment Comparison'],
+        [`Analysis Date: ${new Date().toLocaleString()}`],
+        [],
+        ['School Summary'],
+        ['School', 'Average Difference', 'Alignment Status'],
+        ['School A', '+12%', 'Over-assessing'],
+        ['School B', '+2%', 'Well-aligned'],
+        ['School C', '-4%', 'Under-assessing'],
+        [],
+        headers,
+        ...mockData,
+        [],
+        ['Recommendations'],
+        ['Action', 'Details'],
+        ['Cross-MAT Moderation', 'Termly sessions with standardized examples'],
+        ['Calibration', 'Use GL data to calibrate teacher judgements'],
+        ['Training', 'Assessment accuracy CPD for School A staff'],
+        ['Regular Review', 'Monthly data triangulation meetings']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportModerationGuidance() {
+      const filename = `moderation_guidelines_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        ['Moderation Guidelines Document'],
+        [`Version: 1.0`],
+        [`Date: ${new Date().toLocaleString()}`],
+        [],
+        ['Standard', 'Working Towards', 'Expected', 'Greater Depth'],
+        ['Fluency', 'Occasional errors in calculations', 'Accurate calculations with known facts', 'Applies efficiently in complex contexts'],
+        ['Reasoning', 'Basic explanations with prompts', 'Clear explanations of methods', 'Justifies with mathematical reasoning'],
+        ['Problem Solving', 'Solves 1-step with support', 'Solves 2-step independently', 'Solves complex multi-step problems'],
+        ['Independence', 'Needs guidance regularly', 'Mostly independent', 'Fully independent, self-corrects'],
+        [],
+        ['Moderation Process'],
+        ['Step', 'Action', 'Frequency'],
+        ['1', 'Sample student work across standards', 'Termly'],
+        ['2', 'Cross-MAT moderation meeting', 'Termly'],
+        ['3', 'Discuss borderline cases', 'Each meeting'],
+        ['4', 'Compare with GL assessment data', 'Termly'],
+        ['5', 'Adjust teacher judgements if needed', 'As required'],
+        ['6', 'Document decisions and rationale', 'Each meeting'],
+        [],
+        ['Key Principles'],
+        ['Principle', 'Description'],
+        ['Evidence-based', 'Use multiple pieces of work evidence'],
+        ['Objective', 'Avoid unconscious bias, use criteria'],
+        ['Consistent', 'Apply same standards across MAT'],
+        ['Triangulated', 'Cross-reference with GL data and classwork'],
+        ['Documented', 'Keep records of moderation discussions']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
+    }
+
+    function exportPupilPremiumReport() {
+      const filename = `pupil_premium_impact_${new Date().toISOString().split('T')[0]}.csv`;
+      const csvContent = [
+        ['Pupil Premium Impact Report - Mathematics'],
+        [`Report Period: Academic Year 2024-25`],
+        [`Generated: ${new Date().toLocaleString()}`],
+        [],
+        ['Current Attainment - FSM Students'],
+        ['Metric', 'FSM Students', 'Non-FSM Students', 'Gap'],
+        ['Mean SAS', '95.8', '104.0', '-8.2'],
+        ['% At Expected+', '68%', '84%', '-16%'],
+        ['% At Greater Depth', '12%', '28%', '-16%'],
+        ['Value Added', '-2.1', '+4.3', '-6.4'],
+        [],
+        ['Pupil Premium Spending - Maths Interventions'],
+        ['Intervention', 'Cost', 'Students', 'Hours/Week', 'Impact (Est SAS Gain)'],
+        ['Small group tuition', '£18,000', '42', '3', '+4.5'],
+        ['1:1 tutoring', '£8,500', '12', '1', '+6.2'],
+        ['Online subscriptions', '£2,400', '136', '0.5', '+1.8'],
+        ['Before-school club', '£5,200', '28', '1', '+3.1'],
+        ['Resources/manipulatives', '£1,800', '136', 'n/a', '+0.8'],
+        ['Total', '£35,900', '', '', ''],
+        [],
+        ['Effectiveness Analysis'],
+        ['Category', 'Finding'],
+        ['Best ROI', '1:1 tutoring (+6.2 SAS) and before-school club (+3.1 per £)'],
+        ['Weakest Impact', 'Resources alone - needs teacher-led intervention'],
+        ['Gap Trend', 'Widening by 1.5 points - current spend insufficient'],
+        ['Recommendation', 'Increase targeted tuition budget by 40%'],
+        ['Focus Areas', 'Conceptual fluency (-18%) and problem solving (-15%)'],
+        [],
+        ['Action Plan for Next Term'],
+        ['Action', 'Budget', 'Expected Impact'],
+        ['Increase tuition hours', '+£7,000', 'Reduce gap by 2 SAS points'],
+        ['Device loan program', '+£3,500', 'Improve home learning access'],
+        ['Parental engagement', '+£1,200', 'Increase homework completion'],
+        ['Additional TA hours', '+£5,000', 'More small-group capacity']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     // Initial load

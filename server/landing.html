@@ -329,16 +329,69 @@
       .nav-cards {
         grid-template-columns: 1fr;
       }
+
+      .insight-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
     }
 
-    /* Tooltips */
+    @media (max-width: 480px) {
+      .hero {
+        padding: 24px 16px;
+      }
+
+      .hero h2 {
+        font-size: 20px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .quick-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 28px;
+      }
+
+      .insight-card {
+        padding: 16px;
+      }
+
+      .insight-card-value {
+        font-size: 20px;
+      }
+
+      .feature-item {
+        padding: 16px;
+      }
+
+      .tooltip::before {
+        max-width: 200px;
+        font-size: 12px;
+      }
+    }
+
+    /* Enhanced Tooltips */
     .tooltip {
       position: relative;
       border-bottom: 1px dotted #9ca3af;
       cursor: help;
+      display: inline-block;
     }
 
-    .tooltip:hover::after {
+    .tooltip::before {
       content: attr(data-tooltip);
       position: absolute;
       bottom: 100%;
@@ -346,12 +399,163 @@
       transform: translateX(-50%);
       background: #1f2937;
       color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      white-space: nowrap;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      white-space: normal;
+      max-width: 280px;
+      width: max-content;
       z-index: 1000;
+      margin-bottom: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #1f2937;
+      margin-bottom: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 1000;
+    }
+
+    .tooltip:hover::before,
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      color: #6b7280;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: help;
+      margin-left: 4px;
+    }
+
+    .tooltip-icon:hover {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    /* Insight Cards */
+    .insight-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .insight-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-left: 4px solid;
+    }
+
+    .insight-card.success {
+      border-left-color: #10b981;
+    }
+
+    .insight-card.warning {
+      border-left-color: #f59e0b;
+    }
+
+    .insight-card.danger {
+      border-left-color: #dc2626;
+    }
+
+    .insight-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
       margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .insight-card-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .insight-card.success .insight-card-value {
+      color: #10b981;
+    }
+
+    .insight-card.warning .insight-card-value {
+      color: #f59e0b;
+    }
+
+    .insight-card.danger .insight-card-value {
+      color: #dc2626;
+    }
+
+    .insight-card-detail {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    /* Feature highlights */
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .feature-item {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .feature-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .feature-text {
+      flex: 1;
+    }
+
+    .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -455,7 +659,12 @@
     <section class="quick-stats" aria-labelledby="stats-title">
       <h2 id="stats-title" class="sr-only">Quick Statistics</h2>
       <div class="stat-card">
-        <div class="stat-label">MAT Average</div>
+        <div class="stat-label">
+          MAT Average
+          <span class="tooltip" data-tooltip="Standard Age Score: National average is 100. Your MAT is 0.2 points below national average.">
+            <span class="tooltip-icon">?</span>
+          </span>
+        </div>
         <div class="stat-value">
           99.8
           <span style="font-size: 16px; color: #f59e0b;">SAS</span>
@@ -464,13 +673,23 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-label">Schools</div>
+        <div class="stat-label">
+          Schools
+          <span class="tooltip" data-tooltip="3 schools in the Multi-Academy Trust, all Year 5 cohorts included in this analysis.">
+            <span class="tooltip-icon">?</span>
+          </span>
+        </div>
         <div class="stat-value">3</div>
         <div class="stat-detail">Total: 204 Year 5 students</div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-label">Performance Range</div>
+        <div class="stat-label">
+          Performance Range
+          <span class="tooltip" data-tooltip="22-point gap between highest (School C: 112 SAS) and lowest (School A: 90 SAS) performing schools.">
+            <span class="tooltip-icon">?</span>
+          </span>
+        </div>
         <div class="stat-value">
           90–112
           <span style="font-size: 16px; color: #a855f7;">SAS</span>
@@ -479,12 +698,133 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-label">Focus Skills</div>
+        <div class="stat-label">
+          Focus Skills
+          <span class="tooltip" data-tooltip="Essential 23% of mathematics skills (305 out of 1,304 total) identified by Renaissance as critical building blocks for future learning.">
+            <span class="tooltip-icon">?</span>
+          </span>
+        </div>
         <div class="stat-value">
           305
           <span style="font-size: 16px; color: #d946ef;">⭐</span>
         </div>
         <div class="stat-detail">Essential 23% to prioritize</div>
+      </div>
+    </section>
+
+    <!-- KEY INSIGHTS -->
+    <section aria-labelledby="insights-title">
+      <h2 id="insights-title" class="section-title">Key Insights at a Glance</h2>
+      <div class="insight-cards">
+        <div class="insight-card success">
+          <div class="insight-card-title">
+            ✅ Schools Excelling
+            <span class="tooltip" data-tooltip="Schools with SAS scores above 105 and positive value-added scores">
+              <span class="tooltip-icon">?</span>
+            </span>
+          </div>
+          <div class="insight-card-value">1 school</div>
+          <div class="insight-card-detail">
+            <strong>School C (Hillside Primary)</strong> - SAS 109, +6 value added.
+            Strong performance in all domains, ready to share best practice.
+          </div>
+        </div>
+
+        <div class="insight-card warning">
+          <div class="insight-card-title">
+            ⚠️ Schools Needing Support
+            <span class="tooltip" data-tooltip="Schools with SAS below 95 or negative value-added scores requiring intervention">
+              <span class="tooltip-icon">?</span>
+            </span>
+          </div>
+          <div class="insight-card-value">1 school</div>
+          <div class="insight-card-detail">
+            <strong>School A (Oakwood Primary)</strong> - SAS 92, -4 value added.
+            46 students at concern level in fractions strand require urgent intervention.
+          </div>
+        </div>
+
+        <div class="insight-card success">
+          <div class="insight-card-title">
+            📈 Improving Trajectory
+            <span class="tooltip" data-tooltip="Schools showing positive term-on-term improvement">
+              <span class="tooltip-icon">?</span>
+            </span>
+          </div>
+          <div class="insight-card-value">1 school</div>
+          <div class="insight-card-detail">
+            <strong>School B (Riverside Academy)</strong> - +5.8% improvement term-on-term.
+            Mathematical reasoning scores increased from 54% to 79%.
+          </div>
+        </div>
+
+        <div class="insight-card danger">
+          <div class="insight-card-title">
+            🎯 Critical Focus Areas
+            <span class="tooltip" data-tooltip="Strands where more than 40% of students are at concern level">
+              <span class="tooltip-icon">?</span>
+            </span>
+          </div>
+          <div class="insight-card-value">2 strands</div>
+          <div class="insight-card-detail">
+            <strong>Fractions & Decimals</strong> (46 students concern level) and
+            <strong>Problem Solving</strong> (38 students concern level) need immediate attention.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section aria-labelledby="features-title">
+      <h2 id="features-title" class="section-title">What You Can Do</h2>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-text">
+            <div class="feature-title">Identify Gaps</div>
+            <div class="feature-desc">See which skills and strands have the most students at concern level</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <div class="feature-title">Compare Schools</div>
+            <div class="feature-desc">Side-by-side comparison of all schools in your MAT with value-added insights</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-text">
+            <div class="feature-title">Prioritize Focus Skills</div>
+            <div class="feature-desc">305 essential skills marked with ⭐ - the critical 23% for maximum impact</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">📥</div>
+          <div class="feature-text">
+            <div class="feature-title">Export Data</div>
+            <div class="feature-desc">Download student lists, comparison reports, and progress tracking as CSV or PDF</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">👥</div>
+          <div class="feature-text">
+            <div class="feature-title">Student-Level Detail</div>
+            <div class="feature-desc">Drill down to individual student mastery levels for targeted interventions</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">🤖</div>
+          <div class="feature-text">
+            <div class="feature-title">AI-Powered Insights</div>
+            <div class="feature-desc">Automated recommendations for next steps based on your data patterns</div>
+          </div>
+        </div>
       </div>
     </section>
 
