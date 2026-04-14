@@ -549,13 +549,13 @@
           </span>
           <span>Skills Analysis</span>
         </a>
-        <a href="/school/school6/strand/number-fractions" class="nav-link active">
+        <a href="/school/school6/strands" class="nav-link active">
           <span class="nav-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
             </svg>
           </span>
-          <span>Strand Drill-Down</span>
+          <span>Strand Analysis</span>
         </a>
       </div>
 
@@ -614,7 +614,7 @@
 
   <div class="header">
     <div class="breadcrumb">
-      <a href="/gl">← Schools</a> / <a href="#" id="schoolLink">School</a> / <a href="#" id="skillsLink">Skills</a> / <span id="strandBreadcrumb">Strand</span>
+      <a href="/mat">MAT Overview</a> / <a href="/gl">GL Assessment</a> / <a href="#" id="schoolLink">School</a> / <a href="#" id="strandsLink">Strands</a> / <span id="strandBreadcrumb">Strand</span>
     </div>
     <h1 id="pageTitle">Loading...</h1>
   </div>
@@ -685,7 +685,7 @@
         const schoolName = schoolId === 'school6' ? 'School A' : 'School C';
         document.getElementById('schoolLink').textContent = schoolName;
         document.getElementById('schoolLink').href = '/gl';
-        document.getElementById('skillsLink').href = '/school/' + schoolId + '/skills';
+        document.getElementById('strandsLink').href = '/school/' + schoolId + '/strands';
         document.getElementById('strandBreadcrumb').textContent = strandConfig.name;
         document.getElementById('pageTitle').textContent = strandConfig.domain + ': ' + strandConfig.name;
 

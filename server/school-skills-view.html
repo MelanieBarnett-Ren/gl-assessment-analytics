@@ -79,42 +79,33 @@
 
     /* School Selector */
     body .school-selector {
-      margin-top: 12px !important;
+      margin-top: 16px !important;
       display: flex !important;
-      align-items: center !important;
       gap: 12px !important;
     }
 
-    body .school-selector label {
-      font-size: 14px !important;
-      font-weight: 600 !important;
-      opacity: 0.9 !important;
-      color: white !important;
-    }
-
-    body .school-selector select {
-      padding: 8px 16px !important;
-      font-size: 14px !important;
-      font-weight: 600 !important;
+    body .school-btn {
+      padding: 10px 20px !important;
       border: 2px solid rgba(255, 255, 255, 0.3) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: white !important;
       border-radius: 8px !important;
-      background: rgba(255, 255, 255, 0.95) !important;
-      color: #1f2937 !important;
       cursor: pointer !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
       transition: all 0.2s !important;
-      min-width: 250px !important;
       font-family: 'Inter', sans-serif !important;
     }
 
-    body .school-selector select:hover {
-      background: white !important;
-      border-color: rgba(255, 255, 255, 0.5) !important;
+    body .school-btn:hover {
+      border-color: rgba(255, 255, 255, 0.6) !important;
+      background: rgba(255, 255, 255, 0.2) !important;
     }
 
-    body .school-selector select:focus {
-      outline: none !important;
+    body .school-btn.active {
       border-color: white !important;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+      background: white !important;
+      color: #ba119b !important;
     }
 
     body .container {
@@ -885,16 +876,16 @@
 
   <div class="header">
     <div class="breadcrumb">
-      <a href="/gl">← Back to Schools</a>
+      <a href="/mat">MAT Overview</a> /
+      <a href="/gl">GL Assessment</a> /
+      <span id="breadcrumbSchool">School</span> /
+      Skills
     </div>
     <h1 id="pageTitle">Loading...</h1>
     <div class="school-selector">
-      <label for="schoolSelect">🏫 School:</label>
-      <select id="schoolSelect" onchange="changeSchool(this.value)">
-        <option value="school6">School A - Oakwood Primary</option>
-        <option value="school7">School B - Riverside Academy</option>
-        <option value="school8">School C - Hillside Primary</option>
-      </select>
+      <button class="school-btn" data-school="school6" onclick="changeSchool('school6')">School A</button>
+      <button class="school-btn" data-school="school7" onclick="changeSchool('school7')">School B</button>
+      <button class="school-btn" data-school="school8" onclick="changeSchool('school8')">School C</button>
     </div>
   </div>
 
@@ -951,17 +942,29 @@
     let schoolData = null;
     let classesData = null;
 
-    // Set the dropdown to match the current school
+    // Set the active button to match the current school
     function initSchoolSelector() {
-      const dropdown = document.getElementById('schoolSelect');
-      if (dropdown && schoolId) {
-        dropdown.value = schoolId;
-      }
+      document.querySelectorAll('.school-btn').forEach(btn => {
+        if (btn.getAttribute('data-school') === schoolId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
     }
 
     // Change school and reload data
     function changeSchool(newSchoolId) {
       schoolId = newSchoolId;
+
+      // Update active button
+      document.querySelectorAll('.school-btn').forEach(btn => {
+        if (btn.getAttribute('data-school') === newSchoolId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
 
       // Update page title
       document.getElementById('pageTitle').textContent = 'Loading...';
@@ -1028,6 +1031,7 @@
           if (schoolData) {
             document.getElementById('pageTitle').textContent =
               schoolData.schoolName + ' - Skills Analysis';
+            document.getElementById('breadcrumbSchool').textContent = schoolData.schoolName;
 
             renderDomains();
             renderSkills();
@@ -1151,37 +1155,49 @@
     function renderSkills() {
       if (!schoolData || !schoolData.skillGaps) return;
 
-      let html = '<div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">';
-      html += '<h2 style="margin-bottom: 20px; font-size: 20px;">Top Skills Needing Attention</h2>';
-      html += '<p style="color: var(--color-50); margin-bottom: 24px;">Based on PTM item-level data compared to national averages</p>';
+      let html = '<h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #1f2937;">Top Skills Needing Attention</h2>';
+      html += '<p style="color: #6b7280; margin-bottom: 32px; font-size: 14px;">Based on PTM item-level data compared to national averages</p>';
 
-      html += '<div class="skills-list">';
+      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">';
+
       schoolData.skillGaps.forEach(function(gap) {
-        const gapClass = gap.severity === 'critical' ? 'low' : 'medium';
+        const isCritical = gap.severity === 'critical';
+        const bgColor = isCritical ? '#fef2f2' : '#fffbeb';
+        const borderColor = isCritical ? '#dc2626' : '#f59e0b';
+        const textColor = isCritical ? '#991b1b' : '#92400e';
+        const scoreColor = isCritical ? '#dc2626' : '#f59e0b';
+        const icon = isCritical ? '🔴' : '🟡';
 
-        html += '<div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + ';">';
-        html += '  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">';
-        html += '    <div style="flex: 1;">';
-        html += '      <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">' + gap.skill + '</div>';
-        html += '      <div style="font-size: 14px; color: var(--color-50);">Gap: <strong>' + gap.gap + '%</strong> below national</div>';
-        html += '    </div>';
+        html += '<div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 2px solid ' + borderColor + '; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform=\'translateY(-4px)\'; this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.15)\';" onmouseout="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'0 2px 12px rgba(0,0,0,0.08)\';">';
+
+        // Header with icon and severity
+        html += '  <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: 16px;">';
+        html += '    <div style="width: 48px; height: 48px; background: ' + bgColor + '; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">' + icon + '</div>';
         html += '    <div style="text-align: right;">';
-        html += '      <div style="font-size: 24px; font-weight: 700; color: ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + ';">' + gap.yourScore + '%</div>';
-        html += '      <div style="font-size: 12px; color: var(--color-50);">vs ' + gap.nationalAverage + '% national</div>';
+        html += '      <div style="font-size: 36px; font-weight: 700; color: ' + scoreColor + '; line-height: 1;">' + gap.yourScore + '%</div>';
+        html += '      <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 600; margin-top: 4px;">School Score</div>';
         html += '    </div>';
         html += '  </div>';
 
-        // Progress bar
-        html += '  <div style="display: flex; gap: 8px; align-items: center;">';
-        html += '    <div style="flex: 1; height: 12px; background: var(--color-table-border); border-radius: 6px; position: relative; overflow: hidden;">';
-        html += '      <div style="position: absolute; height: 100%; background: ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + '; width: ' + gap.yourScore + '%; border-radius: 6px;"></div>';
-        html += '      <div style="position: absolute; left: ' + gap.nationalAverage + '%; top: -8px; width: 2px; height: 28px; background: var(--color-tertiary);"></div>';
+        // Skill name
+        html += '  <h3 style="font-size: 16px; font-weight: 600; color: #1f2937; margin-bottom: 12px; line-height: 1.4;">' + gap.skill + '</h3>';
+
+        // Gap indicator
+        html += '  <div style="background: ' + bgColor + '; padding: 12px; border-radius: 8px; margin-bottom: 16px;">';
+        html += '    <div style="display: flex; justify-content: space-between; align-items: center;">';
+        html += '      <span style="font-size: 13px; color: ' + textColor + '; font-weight: 600;">Gap below national:</span>';
+        html += '      <span style="font-size: 18px; color: ' + scoreColor + '; font-weight: 700;">-' + gap.gap + '%</span>';
         html += '    </div>';
-        html += '    <div style="font-size: 11px; color: var(--color-tertiary); white-space: nowrap;">← National</div>';
         html += '  </div>';
+
+        // National comparison
+        html += '  <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e5e7eb;">';
+        html += '    <span style="font-size: 12px; color: #6b7280;">National Average:</span>';
+        html += '    <span style="font-size: 16px; color: #10b981; font-weight: 600;">' + gap.nationalAverage + '%</span>';
+        html += '  </div>';
+
         html += '</div>';
       });
-      html += '</div>';
 
       html += '</div>';
       document.getElementById('skillsContent').innerHTML = html;

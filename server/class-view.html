@@ -853,13 +853,13 @@
           </span>
           <span>Skills Analysis</span>
         </a>
-        <a href="/school/school6/strand/number-fractions" class="nav-link">
+        <a href="/school/school6/strands" class="nav-link">
           <span class="nav-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
             </svg>
           </span>
-          <span>Strand Drill-Down</span>
+          <span>Strand Analysis</span>
         </a>
       </div>
 
@@ -918,7 +918,10 @@
 
   <div class="header">
     <div class="breadcrumb">
-      <a href="/gl">← Back to Schools</a>
+      <a href="/mat">MAT Overview</a> /
+      <a href="/gl">GL Assessment</a> /
+      <a href="#" id="breadcrumbSchoolLink">School</a> /
+      <span id="breadcrumbClass">Class</span>
     </div>
     <h1 id="pageTitle">Loading...</h1>
   </div>
@@ -982,6 +985,11 @@
 
       document.getElementById('pageTitle').textContent =
         `${schoolName} - Class ${classData.className} - ${classData.teacherName}`;
+
+      // Update breadcrumb
+      document.getElementById('breadcrumbSchoolLink').textContent = schoolName;
+      document.getElementById('breadcrumbSchoolLink').href = `/school/${classData.schoolId}/skills`;
+      document.getElementById('breadcrumbClass').textContent = `Class ${classData.className}`;
 
       // Populate student arrays for table rendering
       allStudents = classData.students;
