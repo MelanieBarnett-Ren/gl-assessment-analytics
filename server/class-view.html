@@ -1041,6 +1041,13 @@
       html += '  </div>';
       html += '</div>';
 
+      // Intervention Groups - Group students by similar skill needs
+      html += '<div class="students-section" style="margin-bottom: 28px;">';
+      html += '  <h2>🎯 Intervention Groups <span style="font-size: 14px; font-weight: 400; color: var(--color-50);">(Students grouped by similar skill needs)</span></h2>';
+      html += '  <p style="color: var(--color-50); margin-bottom: 20px; font-size: 14px;">Take action with small groups of students who need the same intervention</p>';
+      html += '  <div id="interventionGroupsContainer"></div>';
+      html += '</div>';
+
       // Filter Bar
       html += '<div class="filter-bar">';
       html += '  <h3>🔍 Filter & Export Students</h3>';
@@ -1070,13 +1077,6 @@
       html += '    <button class="export-btn-custom" onclick="exportFilteredPDF()">📄 Export PDF</button>';
       html += '    <button class="export-btn-custom" onclick="resetFilters()">↺ Reset Filters</button>';
       html += '  </div>';
-      html += '</div>';
-
-      // Intervention Groups - Group students by similar skill needs
-      html += '<div class="students-section" style="margin-bottom: 28px;">';
-      html += '  <h2>🎯 Intervention Groups <span style="font-size: 14px; font-weight: 400; color: var(--color-50);">(Students grouped by similar skill needs)</span></h2>';
-      html += '  <p style="color: var(--color-50); margin-bottom: 20px; font-size: 14px;">Take action with small groups of students who need the same intervention</p>';
-      html += '  <div id="interventionGroupsContainer"></div>';
       html += '</div>';
 
       // Students Table
