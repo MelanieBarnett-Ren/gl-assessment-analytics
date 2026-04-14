@@ -99,7 +99,11 @@ export class AIService {
       }
 
       // Parse JSON response with error handling
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
+      // First, strip markdown code fences if present
+      let jsonText = textContent.text;
+      jsonText = jsonText.replace(/^```(?:json)?\s*\n/gm, '').replace(/\n```\s*$/gm, '');
+
+      const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         throw new Error('Could not extract JSON from Claude response');
       }
@@ -117,8 +121,10 @@ export class AIService {
           // Remove comments (// and /* */)
           .replace(/\/\/.*$/gm, '')
           .replace(/\/\*[\s\S]*?\*\//g, '')
-          // Fix unescaped quotes in strings (best effort)
-          .replace(/([^\\])"([^"]*)"([^:])/g, '$1\\"$2\\"$3');
+          // Escape literal newlines and tabs in string values
+          .replace(/:\s*"([^"]*[\n\r\t]+[^"]*)"(?=[,\}\]])/g, (match, str) => {
+            return ': "' + str.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t') + '"';
+          });
 
         try {
           parsed = JSON.parse(cleanedJson);
@@ -316,6 +322,18 @@ export class AIService {
         label: 'Create Focus Group',
         actionType: 'create_plan',
         targetUrl: `/dashboard/student/${context.targetCohort.cohortId}/focus-groups`,
+      });
+    }
+
+    if (recommendation.actionType === 'intervention') {
+      actions.push({
+        label: 'Plan Intervention',
+        actionType: 'create_plan',
+        targetUrl: `/dashboard/${context.viewLevel}/${context.targetCohort.cohortId}/interventions`,
+        parameters: {
+          skill: recommendation.targetMetric?.metric || 'skill-based intervention',
+          targetValue: recommendation.targetMetric?.targetValue,
+        },
       });
     }
 

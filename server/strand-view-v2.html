@@ -1605,37 +1605,121 @@
         filename = `${schoolId}_${strandId}_all_students.csv`;
       }
 
-      // Build CSV content
+      // Calculate class averages for comparison
+      const classAverages = data.objectives.map((obj, idx) => {
+        const scores = data.students.map(s => s.objectiveScores[idx]);
+        return scores.reduce((sum, score) => sum + score, 0) / scores.length;
+      });
+
+      const overallClassAverage = data.students.reduce((sum, s) => sum + s.averageMastery, 0) / data.students.length;
+
+      // Build enhanced CSV content with analysis
       const headers = [
         'Student ID',
         'Student Name',
-        'Average % Correct (Unweighted)',
+        'Average % Correct',
         'Performance Level',
-        ...data.objectives.map(obj => `${obj.code} (${obj.text})`)
+        'vs Class Average',
+        'Strengths (Objectives >85%)',
+        'Areas for Development (Objectives <70%)',
+        'Priority Action',
+        'Recommended Intervention',
+        ...data.objectives.map(obj => `${obj.code}: ${obj.text}`),
+        ...data.objectives.map((obj, idx) => `${obj.code} vs Class Avg`)
       ];
 
-      const rows = students.map(student => [
-        student.studentId,
-        student.studentName,
-        student.averageMastery,
-        student.averageMastery >= 85 ? 'Mastered' :
-          student.averageMastery >= 70 ? 'Developing' :
-          student.averageMastery >= 50 ? 'Emerging' : 'Concern',
-        ...student.objectiveScores.map(score => `${score}%`)
-      ]);
+      const rows = students.map(student => {
+        const vsAverage = (student.averageMastery - overallClassAverage).toFixed(1);
 
-      // Add metadata rows at top
+        // Identify strengths and weaknesses
+        const strengths = [];
+        const weaknesses = [];
+
+        student.objectiveScores.forEach((score, idx) => {
+          if (score >= 85) {
+            strengths.push(data.objectives[idx].code);
+          } else if (score < 70) {
+            weaknesses.push(`${data.objectives[idx].code} (${score}%)`);
+          }
+        });
+
+        // Determine priority action
+        let priority = '';
+        let intervention = '';
+
+        if (student.averageMastery < 50) {
+          priority = 'URGENT - Below Expected Standard';
+          intervention = 'Small group intensive intervention on foundation skills: ' + weaknesses.slice(0, 3).join(', ');
+        } else if (student.averageMastery < 70) {
+          priority = 'HIGH - Emerging Understanding';
+          intervention = 'Targeted support on: ' + weaknesses.slice(0, 2).join(', ') + '. Use concrete resources and visual models.';
+        } else if (student.averageMastery < 85) {
+          priority = 'MEDIUM - Consolidating';
+          intervention = weaknesses.length > 0 ? 'Focus practice on: ' + weaknesses.slice(0, 2).join(', ') : 'Continue current support with regular review';
+        } else {
+          priority = 'LOW - Secure Understanding';
+          intervention = 'Provide extension/mastery activities and peer tutoring opportunities';
+        }
+
+        return [
+          student.studentId,
+          student.studentName,
+          student.averageMastery.toFixed(1),
+          student.averageMastery >= 85 ? 'Mastered' :
+            student.averageMastery >= 70 ? 'Developing' :
+            student.averageMastery >= 50 ? 'Emerging' : 'Concern',
+          vsAverage >= 0 ? `+${vsAverage}%` : `${vsAverage}%`,
+          strengths.length > 0 ? strengths.join(', ') : 'None yet',
+          weaknesses.length > 0 ? weaknesses.join('; ') : 'None',
+          priority,
+          intervention,
+          ...student.objectiveScores.map(score => `${score}%`),
+          ...student.objectiveScores.map((score, idx) => {
+            const diff = score - classAverages[idx];
+            return diff >= 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`;
+          })
+        ];
+      });
+
+      // Enhanced metadata section
       const csvContent = [
+        ['GL ASSESSMENT - STRAND DETAILED ANALYSIS EXPORT'],
+        [],
+        ['STRAND INFORMATION'],
         [`Strand: ${data.name}`],
         [`School: ${data.schoolName}`],
-        [`Exported: ${new Date().toLocaleString()}`],
-        [`Filter: ${level.charAt(0).toUpperCase() + level.slice(1)} Level`],
-        [`Total Students: ${students.length}`],
-        [`Note: Percentages are unweighted (simple % correct) and do not account for question difficulty or weighting`],
+        [`Total Objectives Assessed: ${data.objectives.length}`],
+        [`Class Average: ${overallClassAverage.toFixed(1)}%`],
         [],
+        ['PERFORMANCE DISTRIBUTION'],
+        [`Mastered (≥85%): ${data.students.filter(s => s.averageMastery >= 85).length} students`],
+        [`Developing (70-84%): ${data.students.filter(s => s.averageMastery >= 70 && s.averageMastery < 85).length} students`],
+        [`Emerging (50-69%): ${data.students.filter(s => s.averageMastery >= 50 && s.averageMastery < 70).length} students`],
+        [`Concern (<50%): ${data.students.filter(s => s.averageMastery < 50).length} students`],
+        [],
+        ['EXPORT DETAILS'],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Filter Applied: ${level.charAt(0).toUpperCase() + level.slice(1)} Level`],
+        [`Students in Export: ${students.length} of ${data.students.length}`],
+        [],
+        ['CLASS OBJECTIVE AVERAGES'],
+        ['Objective', 'Class Average %'],
+        ...data.objectives.map((obj, idx) => [obj.code + ': ' + obj.text, classAverages[idx].toFixed(1) + '%']),
+        [],
+        ['KEY INFORMATION'],
+        ['- Average % Correct: Unweighted simple percentage (does not account for question difficulty)'],
+        ['- Mastered: ≥85% - secure understanding demonstrated'],
+        ['- Developing: 70-84% - good progress, consolidation needed'],
+        ['- Emerging: 50-69% - partial understanding, targeted support needed'],
+        ['- Concern: <50% - significant gaps, intensive intervention required'],
+        ['- Strengths: Objectives where student scored ≥85%'],
+        ['- Areas for Development: Objectives where student scored <70%'],
+        ['- vs Class Average: Shows if student is above (+) or below (-) class performance'],
+        [],
+        ['DETAILED STUDENT DATA'],
         headers,
         ...rows
-      ].map(row => row.join(',')).join('\n');
+      ].map(row => Array.isArray(row) ? row.join(',') : row).join('\n');
 
       // Download CSV
       downloadCSV(csvContent, filename);
