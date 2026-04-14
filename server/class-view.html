@@ -133,6 +133,12 @@
       padding: 16px;
       border-radius: 8px;
       text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .focus-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .focus-card.foundation {
       background: #fef2f2;
@@ -392,6 +398,87 @@
     .header {
       margin-top: 60px !important;
     }
+
+    /* Modal for Focus Group Details */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal.active {
+      display: block;
+    }
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .modal-header h2 {
+      font-size: 24px;
+      margin: 0;
+      color: #1f2937;
+    }
+    .modal-close {
+      background: #f3f4f6;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+    }
+    .modal-close:hover {
+      background: #e5e7eb;
+      color: #1f2937;
+    }
+    .skill-group {
+      margin-bottom: 24px;
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #3b82f6;
+    }
+    .skill-group h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+    .student-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .student-chip {
+      background: white;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      border: 1px solid #e5e7eb;
+    }
   </style>
 </head>
 <body>
@@ -490,6 +577,16 @@
     const pathParts = window.location.pathname.split('/');
     const classId = pathParts[pathParts.length - 1];
 
+    // School name mapping
+    const SCHOOL_NAMES = {
+      'school6': 'School A',
+      'school7': 'School B',
+      'school8': 'School C'
+    };
+
+    // Store class data globally for modal access
+    let currentClassData = null;
+
     async function loadClassData() {
       try {
         const response = await fetch(`${API_BASE}/api/gl-assessment/class/${classId}`);
@@ -509,11 +606,13 @@
     }
 
     function renderClassView(classData) {
+      currentClassData = classData; // Store for modal access
       const summary = classData.classSummary;
       const vaClass = summary.valueAdded >= 0 ? 'positive' : 'negative';
+      const schoolName = SCHOOL_NAMES[classData.schoolId] || classData.schoolId;
 
       document.getElementById('pageTitle').textContent =
-        `Class ${classData.className} - ${classData.teacherName}`;
+        `${schoolName} - Class ${classData.className} - ${classData.teacherName}`;
 
       let html = '';
 
@@ -563,22 +662,25 @@
 
       // Focus Groups
       html += '<div class="focus-groups">';
-      html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected)</span></span></h2>';
+      html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected). Click a card to see students and their skill needs.</span></span></h2>';
       html += '  <div class="focus-grid">';
-      html += '    <div class="focus-card foundation">';
+      html += '    <div class="focus-card foundation" onclick="showFocusGroupModal(\'foundation\')">';
       html += '      <h3>Foundation</h3>';
       html += '      <div class="count">' + summary.focusGroups.foundation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Need support</p>';
+      html += '      <p style="font-size: 11px; margin-top: 4px; color: #6b7280;">Click to view</p>';
       html += '    </div>';
-      html += '    <div class="focus-card consolidation">';
+      html += '    <div class="focus-card consolidation" onclick="showFocusGroupModal(\'consolidation\')">';
       html += '      <h3>Consolidation</h3>';
       html += '      <div class="count">' + summary.focusGroups.consolidation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Core teaching</p>';
+      html += '      <p style="font-size: 11px; margin-top: 4px; color: #6b7280;">Click to view</p>';
       html += '    </div>';
-      html += '    <div class="focus-card extension">';
+      html += '    <div class="focus-card extension" onclick="showFocusGroupModal(\'extension\')">';
       html += '      <h3>Extension</h3>';
       html += '      <div class="count">' + summary.focusGroups.extension + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Ready to stretch</p>';
+      html += '      <p style="font-size: 11px; margin-top: 4px; color: #6b7280;">Click to view</p>';
       html += '    </div>';
       html += '  </div>';
       html += '</div>';
@@ -625,10 +727,92 @@
       html += '  </table>';
       html += '</div>';
 
+      // Add modal for focus group details
+      html += '<div id="focusGroupModal" class="modal">';
+      html += '  <div class="modal-content">';
+      html += '    <div class="modal-header">';
+      html += '      <h2 id="modalTitle">Focus Group Details</h2>';
+      html += '      <button class="modal-close" onclick="closeFocusGroupModal()">&times;</button>';
+      html += '    </div>';
+      html += '    <div id="modalBody"></div>';
+      html += '  </div>';
+      html += '</div>';
+
       document.getElementById('content').innerHTML = html;
     }
 
     loadClassData();
+
+    // Show focus group modal with students grouped by skills
+    function showFocusGroupModal(focusGroup) {
+      if (!currentClassData) return;
+
+      const modal = document.getElementById('focusGroupModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      // Filter students in this focus group
+      const students = currentClassData.students.filter(s => s.focusGroup === focusGroup);
+
+      // Group students by skills they got wrong
+      const skillGroups = {};
+      students.forEach(student => {
+        const wrongSkills = student.ptm.itemResponses.filter(item => !item.correct);
+        wrongSkills.forEach(item => {
+          if (!skillGroups[item.skill]) {
+            skillGroups[item.skill] = [];
+          }
+          skillGroups[item.skill].push(student.studentName);
+        });
+      });
+
+      // Sort by number of students (most common issues first)
+      const sortedSkills = Object.entries(skillGroups).sort((a, b) => b[1].length - a[1].length);
+
+      // Build modal content
+      const focusGroupTitles = {
+        foundation: 'Foundation Group',
+        consolidation: 'Consolidation Group',
+        extension: 'Extension Group'
+      };
+      modalTitle.textContent = focusGroupTitles[focusGroup] + ' - Skills Requiring Focus';
+
+      let bodyHtml = '<p style="color: #6b7280; margin-bottom: 20px;">';
+      bodyHtml += students.length + ' student' + (students.length === 1 ? '' : 's') + ' in this group, ';
+      bodyHtml += 'grouped by the skills they need help with:';
+      bodyHtml += '</p>';
+
+      if (sortedSkills.length === 0) {
+        bodyHtml += '<p style="text-align: center; color: #6b7280; padding: 40px;">No skill gaps identified for this group.</p>';
+      } else {
+        sortedSkills.forEach(([skill, studentNames]) => {
+          bodyHtml += '<div class="skill-group">';
+          bodyHtml += '  <h3>📚 ' + skill + ' <span style="color: #6b7280; font-size: 14px; font-weight: 400;">(' + studentNames.length + ' student' + (studentNames.length === 1 ? '' : 's') + ')</span></h3>';
+          bodyHtml += '  <div class="student-list">';
+          studentNames.forEach(name => {
+            bodyHtml += '<div class="student-chip">' + name + '</div>';
+          });
+          bodyHtml += '  </div>';
+          bodyHtml += '</div>';
+        });
+      }
+
+      modalBody.innerHTML = bodyHtml;
+      modal.classList.add('active');
+    }
+
+    function closeFocusGroupModal() {
+      const modal = document.getElementById('focusGroupModal');
+      modal.classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('focusGroupModal');
+      if (event.target === modal) {
+        closeFocusGroupModal();
+      }
+    };
 
     // Hamburger menu toggle
     function toggleMenu() {
