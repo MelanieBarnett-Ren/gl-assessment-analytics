@@ -297,6 +297,68 @@
     body .cell-good { background: #dbeafe !important; color: #1e40af !important; }
     body .cell-high { background: #d1fae5 !important; color: #065f46 !important; }
 
+    /* Heatmap Cell Tooltips */
+    body .heatmap-cell {
+      position: relative !important;
+      cursor: pointer !important;
+    }
+    body .heatmap-tooltip {
+      position: absolute !important;
+      display: none !important;
+      background: #1f2937 !important;
+      color: #ffffff !important;
+      padding: 12px !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+      z-index: 1000 !important;
+      min-width: 200px !important;
+      max-width: 300px !important;
+      font-size: 12px !important;
+      line-height: 1.5 !important;
+      pointer-events: none !important;
+    }
+    body .heatmap-tooltip.show {
+      display: block !important;
+    }
+    body .heatmap-tooltip h4 {
+      margin: 0 0 8px 0 !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #ffffff !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+      padding-bottom: 6px !important;
+    }
+    body .heatmap-tooltip .student-section {
+      margin-bottom: 8px !important;
+    }
+    body .heatmap-tooltip .student-section:last-child {
+      margin-bottom: 0 !important;
+    }
+    body .heatmap-tooltip .section-label {
+      font-weight: 600 !important;
+      margin-bottom: 4px !important;
+      font-size: 11px !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+    }
+    body .heatmap-tooltip .section-label.correct {
+      color: #86efac !important;
+    }
+    body .heatmap-tooltip .section-label.incorrect {
+      color: #fca5a5 !important;
+    }
+    body .heatmap-tooltip .student-list {
+      font-size: 12px !important;
+      line-height: 1.6 !important;
+      color: #e5e7eb !important;
+      max-height: 200px !important;
+      overflow-y: auto !important;
+    }
+    body .heatmap-tooltip .student-name {
+      display: block !important;
+      padding: 2px 0 !important;
+    }
+
     /* Item Analysis */
     body .items-grid {
       display: grid !important;
@@ -1017,12 +1079,19 @@
         classesData.forEach(function(classData) {
           let correctCount = 0;
           let totalCount = 0;
+          let correctStudents = [];
+          let incorrectStudents = [];
 
           classData.students.forEach(function(student) {
             const item = student.ptm.itemResponses.find(r => r.skill === skill);
             if (item) {
               totalCount++;
-              if (item.correct) correctCount++;
+              if (item.correct) {
+                correctCount++;
+                correctStudents.push(student.studentName);
+              } else {
+                incorrectStudents.push(student.studentName);
+              }
             }
           });
 
@@ -1030,7 +1099,14 @@
           schoolTotal += percentage;
           schoolCount++;
 
-          html += '      <td class="' + getCellClass(percentage) + '">' + percentage + '%</td>';
+          const tooltipData = JSON.stringify({
+            correct: correctStudents,
+            incorrect: incorrectStudents,
+            skill: skill,
+            className: classData.className
+          }).replace(/"/g, '&quot;');
+
+          html += '      <td class="' + getCellClass(percentage) + ' heatmap-cell" data-tooltip=\'' + tooltipData + '\'>' + percentage + '%</td>';
         });
 
         const schoolAvg = Math.round(schoolTotal / schoolCount);
@@ -1043,6 +1119,75 @@
       html += '</div>';
 
       document.getElementById('heatmapContent').innerHTML = html;
+
+      // Add tooltip functionality
+      setupHeatmapTooltips();
+    }
+
+    function setupHeatmapTooltips() {
+      const tooltip = document.createElement('div');
+      tooltip.className = 'heatmap-tooltip';
+      document.body.appendChild(tooltip);
+
+      const heatmapCells = document.querySelectorAll('.heatmap-cell');
+
+      heatmapCells.forEach(function(cell) {
+        cell.addEventListener('mouseenter', function(e) {
+          const tooltipData = JSON.parse(cell.getAttribute('data-tooltip'));
+
+          let tooltipHTML = '<h4>' + tooltipData.className + ' - ' + tooltipData.skill + '</h4>';
+
+          if (tooltipData.correct.length > 0) {
+            tooltipHTML += '<div class="student-section">';
+            tooltipHTML += '<div class="section-label correct">✓ Correct (' + tooltipData.correct.length + ')</div>';
+            tooltipHTML += '<div class="student-list">';
+            tooltipData.correct.forEach(function(name) {
+              tooltipHTML += '<span class="student-name">' + name + '</span>';
+            });
+            tooltipHTML += '</div>';
+            tooltipHTML += '</div>';
+          }
+
+          if (tooltipData.incorrect.length > 0) {
+            tooltipHTML += '<div class="student-section">';
+            tooltipHTML += '<div class="section-label incorrect">✗ Incorrect (' + tooltipData.incorrect.length + ')</div>';
+            tooltipHTML += '<div class="student-list">';
+            tooltipData.incorrect.forEach(function(name) {
+              tooltipHTML += '<span class="student-name">' + name + '</span>';
+            });
+            tooltipHTML += '</div>';
+            tooltipHTML += '</div>';
+          }
+
+          tooltip.innerHTML = tooltipHTML;
+          tooltip.classList.add('show');
+
+          // Position tooltip
+          const rect = cell.getBoundingClientRect();
+          const tooltipRect = tooltip.getBoundingClientRect();
+
+          let top = rect.top - tooltipRect.height - 10;
+          let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+
+          // Adjust if tooltip goes off screen
+          if (top < 0) {
+            top = rect.bottom + 10;
+          }
+          if (left < 0) {
+            left = 10;
+          }
+          if (left + tooltipRect.width > window.innerWidth) {
+            left = window.innerWidth - tooltipRect.width - 10;
+          }
+
+          tooltip.style.top = (top + window.scrollY) + 'px';
+          tooltip.style.left = left + 'px';
+        });
+
+        cell.addEventListener('mouseleave', function() {
+          tooltip.classList.remove('show');
+        });
+      });
     }
 
     function renderItems() {
