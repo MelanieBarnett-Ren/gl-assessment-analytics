@@ -885,7 +885,10 @@
 
   <div class="header">
     <div class="breadcrumb">
-      <a href="/gl">← Back to Schools</a>
+      <a href="/mat">MAT Overview</a> /
+      <a href="/gl">GL Assessment</a> /
+      <span id="breadcrumbSchool">School</span> /
+      Skills
     </div>
     <h1 id="pageTitle">Loading...</h1>
     <div class="school-selector">
@@ -1028,6 +1031,7 @@
           if (schoolData) {
             document.getElementById('pageTitle').textContent =
               schoolData.schoolName + ' - Skills Analysis';
+            document.getElementById('breadcrumbSchool').textContent = schoolData.schoolName;
 
             renderDomains();
             renderSkills();

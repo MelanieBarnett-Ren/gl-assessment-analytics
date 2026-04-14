@@ -1106,7 +1106,8 @@
       document.getElementById('pageTitle').textContent = data.name;
       document.getElementById('pageSubtitle').textContent = `${data.schoolName} • ${data.studentCount} students`;
       document.getElementById('breadcrumb').innerHTML = `
-        <a href="/gl">← GL Assessment</a> /
+        <a href="/mat">MAT Overview</a> /
+        <a href="/gl">GL Assessment</a> /
         <a href="/school/${schoolId}/skills">${data.schoolName}</a> /
         <a href="/school/${schoolId}/strands">Strands</a> /
         <span>${data.name}</span>
