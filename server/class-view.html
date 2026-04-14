@@ -172,14 +172,6 @@
       padding: 16px;
       border-radius: 8px;
       text-align: center;
-      transition: all 0.2s ease;
-    }
-    .focus-card.clickable {
-      cursor: pointer;
-    }
-    .focus-card.clickable:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     .focus-card.foundation {
       background: #fef2f2;
@@ -604,135 +596,6 @@
     .header {
       margin-top: 60px !important;
     }
-
-    /* Responsive Styles */
-    @media (max-width: 1024px) {
-      .focus-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 24px 20px;
-      }
-
-      .header {
-        padding: 16px 20px;
-      }
-
-      .header h1 {
-        font-size: 24px;
-      }
-
-      .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-      }
-
-      .focus-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .students-table {
-        font-size: 13px;
-      }
-
-      .students-table th,
-      .students-table td {
-        padding: 10px 8px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-card .value {
-        font-size: 28px;
-      }
-
-      .va-score {
-        font-size: 36px;
-      }
-
-      .focus-card .count {
-        font-size: 28px;
-      }
-
-      .students-table {
-        font-size: 12px;
-      }
-
-      .students-table th,
-      .students-table td {
-        padding: 8px 6px;
-      }
-    }
-
-    /* Print Styles for PDF Export */
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 1cm;
-      }
-
-      body {
-        background: white !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-
-      .hamburger-menu,
-      .sidebar,
-      .sidebar-overlay,
-      .menu-toggle,
-      .filter-bar,
-      #pdf-export-container {
-        display: none !important;
-      }
-
-      .header {
-        margin-top: 0 !important;
-        page-break-after: avoid !important;
-      }
-
-      .container {
-        max-width: 100% !important;
-        padding: 0.5cm !important;
-      }
-
-      .summary-grid {
-        page-break-after: avoid !important;
-      }
-
-      .students-section {
-        page-break-inside: avoid !important;
-      }
-
-      .students-table {
-        width: 100% !important;
-        font-size: 9pt !important;
-      }
-
-      .students-table th,
-      .students-table td {
-        padding: 6px 4px !important;
-      }
-
-      .rag-badge, .focus-badge, .demo-badge {
-        print-color-adjust: exact !important;
-        -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
-      }
-
-      * {
-        color-adjust: exact !important;
-        -webkit-print-color-adjust: exact !important;
-      }
-    }
   </style>
 </head>
 <body>
@@ -877,6 +740,16 @@
     const pathParts = window.location.pathname.split('/');
     const classId = pathParts[pathParts.length - 1];
 
+    // School name mapping
+    const SCHOOL_NAMES = {
+      'school6': 'School A',
+      'school7': 'School B',
+      'school8': 'School C'
+    };
+
+    // Store class data globally for modal access
+    let currentClassData = null;
+
     async function loadClassData() {
       try {
         const response = await fetch(`${API_BASE}/api/gl-assessment/class/${classId}`);
@@ -906,18 +779,11 @@
     };
 
     function renderClassView(classData) {
-      // Store class data globally for exports
-      currentClassData = classData;
-
       const summary = classData.classSummary;
       const vaClass = summary.valueAdded >= 0 ? 'positive' : 'negative';
 
-      // Store students globally for filtering
-      allStudents = classData.students;
-      filteredStudents = [...allStudents];
-
       document.getElementById('pageTitle').textContent =
-        `Class ${classData.className} - ${classData.teacherName}`;
+        `${schoolName} - Class ${classData.className} - ${classData.teacherName}`;
 
       let html = '';
 
@@ -967,25 +833,22 @@
 
       // Focus Groups
       html += '<div class="focus-groups">';
-      html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected)</span></span></h2>';
+      html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected). Click a card to see students and their skill needs.</span></span></h2>';
       html += '  <div class="focus-grid">';
-      html += '    <div class="focus-card foundation clickable" onclick="filterByFocus(\'foundation\')" title="Click to view Foundation students">';
+      html += '    <div class="focus-card foundation">';
       html += '      <h3>Foundation</h3>';
       html += '      <div class="count">' + summary.focusGroups.foundation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Need support</p>';
-      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
       html += '    </div>';
-      html += '    <div class="focus-card consolidation clickable" onclick="filterByFocus(\'consolidation\')" title="Click to view Consolidation students">';
+      html += '    <div class="focus-card consolidation">';
       html += '      <h3>Consolidation</h3>';
       html += '      <div class="count">' + summary.focusGroups.consolidation + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Core teaching</p>';
-      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
       html += '    </div>';
-      html += '    <div class="focus-card extension clickable" onclick="filterByFocus(\'extension\')" title="Click to view Extension students">';
+      html += '    <div class="focus-card extension">';
       html += '      <h3>Extension</h3>';
       html += '      <div class="count">' + summary.focusGroups.extension + '</div>';
       html += '      <p style="font-size: 12px; margin-top: 8px;">Ready to stretch</p>';
-      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
       html += '    </div>';
       html += '  </div>';
       html += '</div>';
@@ -1110,271 +973,83 @@
 
       html += '    </tbody>';
       html += '  </table>';
+      html += '</div>';
 
-      document.getElementById('studentsTableContainer').innerHTML = html;
-      document.getElementById('studentCountLabel').textContent =
-        (currentFilters.ragStatus !== 'all' || currentFilters.focusGroup !== 'all' || currentFilters.demographic !== 'all' ? 'Filtered ' : '') +
-        'Students (' + filteredStudents.length + ' of ' + allStudents.length + ')';
-    }
-
-    // Filter Functions
-    function filterByRAG(status) {
-      currentFilters.ragStatus = status;
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    function filterByFocus(group) {
-      currentFilters.focusGroup = group;
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    function filterByDemo(demo) {
-      currentFilters.demographic = demo;
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    function applyFilters() {
-      filteredStudents = allStudents.filter(student => {
-        // RAG filter
-        if (currentFilters.ragStatus !== 'all') {
-          const sas = student.ngmt.sas;
-          const ragClass = sas < 90 ? 'red' : sas > 110 ? 'green' : 'amber';
-          if (ragClass !== currentFilters.ragStatus) return false;
-        }
-
-        // Focus group filter
-        if (currentFilters.focusGroup !== 'all') {
-          if (student.focusGroup !== currentFilters.focusGroup) return false;
-        }
-
-        // Demographic filter
-        if (currentFilters.demographic !== 'all') {
-          if (!student.demographics[currentFilters.demographic]) return false;
-        }
-
-        return true;
-      });
-
-      renderStudentsTable();
-    }
-
-    function updateFilterButtons() {
-      // Update RAG buttons
-      document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-btn').forEach((btn, idx) => {
-        btn.classList.remove('active');
-      });
-      const ragStatuses = ['all', 'red', 'amber', 'green'];
-      const ragIdx = ragStatuses.indexOf(currentFilters.ragStatus);
-      document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-btn')[ragIdx].classList.add('active');
-
-      // Update Focus buttons
-      document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-btn').forEach((btn, idx) => {
-        btn.classList.remove('active');
-      });
-      const focusGroups = ['all', 'foundation', 'consolidation', 'extension'];
-      const focusIdx = focusGroups.indexOf(currentFilters.focusGroup);
-      document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-btn')[focusIdx].classList.add('active');
-
-      // Update Demo buttons
-      document.querySelectorAll('.filter-group')[2].querySelectorAll('.filter-btn').forEach((btn, idx) => {
-        btn.classList.remove('active');
-      });
-      const demos = ['all', 'fsm', 'eal', 'send'];
-      const demoIdx = demos.indexOf(currentFilters.demographic);
-      document.querySelectorAll('.filter-group')[2].querySelectorAll('.filter-btn')[demoIdx].classList.add('active');
-    }
-
-    function resetFilters() {
-      currentFilters = {
-        ragStatus: 'all',
-        focusGroup: 'all',
-        demographic: 'all'
-      };
-      applyFilters();
-      updateFilterButtons();
-    }
-
-    // Export Functions
-    function exportFilteredCSV() {
-      const classInfo = currentClassData;
-      const summary = classInfo.classSummary;
-
-      // Enhanced headers with detailed breakdowns
-      const headers = [
-        'Student Name',
-        'Student ID',
-        'Focus Group',
-
-        // CAT4 Details
-        'CAT4 Mean SAS',
-        'CAT4 Stanine',
-        'CAT4 RAG',
-        'CAT4 Verbal',
-        'CAT4 Quantitative',
-        'CAT4 NonVerbal',
-        'CAT4 Spatial',
-
-        // NGMT Details
-        'NGMT SAS',
-        'NGMT Stanine',
-        'NGMT RAG',
-        'NGMT Number',
-        'NGMT Algebra',
-        'NGMT Shape/Space',
-        'NGMT Data',
-
-        // Value Added
-        'Value Added (SAS)',
-        'VA Status',
-
-        // PTM Progress
-        'PTM SAS',
-        'PTM Progress',
-
-        // Demographics
-        'FSM',
-        'EAL',
-        'SEND',
-        'Gender',
-
-        // Recommendations
-        'Intervention Priority',
-        'Recommended Action'
-      ];
-
-      const rows = filteredStudents.map(student => {
-        const va = student.ngmt.sas - student.cat4.meanSAS;
-        const ngmtRAG = student.ngmt.sas < 90 ? 'Red' : student.ngmt.sas > 110 ? 'Green' : 'Amber';
-        const cat4RAG = student.cat4.meanSAS < 90 ? 'Red' : student.cat4.meanSAS > 110 ? 'Green' : 'Amber';
-        const vaStatus = va < -5 ? 'Underachieving' : va > 5 ? 'Exceeding' : 'On Track';
-
-        // Determine intervention priority
-        let priority = 'Low';
-        let action = 'Continue current support';
-
-        if (ngmtRAG === 'Red' && va < -3) {
-          priority = 'High';
-          action = 'Immediate intervention needed - significant underachievement vs ability';
-        } else if (ngmtRAG === 'Red') {
-          priority = 'High';
-          action = 'Targeted support needed - below expected standard';
-        } else if (va < -5) {
-          priority = 'Medium';
-          action = 'Monitor closely - underachieving vs cognitive ability';
-        } else if (student.focusGroup === 'foundation') {
-          priority = 'Medium';
-          action = 'Foundation group - focus on prerequisite skills';
-        } else if (ngmtRAG === 'Green' && student.focusGroup === 'extension') {
-          priority = 'Low';
-          action = 'Stretch & challenge - provide extension activities';
-        }
-
-        return [
-          student.studentName,
-          student.studentId,
-          student.focusGroup.charAt(0).toUpperCase() + student.focusGroup.slice(1),
-
-          // CAT4
-          student.cat4.meanSAS,
-          student.cat4.stanine,
-          cat4RAG,
-          student.cat4.verbal,
-          student.cat4.quantitative,
-          student.cat4.nonVerbal,
-          student.cat4.spatial,
-
-          // NGMT
-          student.ngmt.sas,
-          student.ngmt.stanine,
-          ngmtRAG,
-          student.ngmt.domains.number,
-          student.ngmt.domains.algebra,
-          student.ngmt.domains.shapeSpace,
-          student.ngmt.domains.data,
-
-          // Value Added
-          (va > 0 ? '+' : '') + va,
-          vaStatus,
-
-          // PTM
-          student.ptm.sas,
-          (student.ptm.progress > 0 ? '+' : '') + student.ptm.progress,
-
-          // Demographics
-          student.demographics.fsm ? 'Yes' : 'No',
-          student.demographics.eal ? 'Yes' : 'No',
-          student.demographics.send ? 'Yes' : 'No',
-          student.demographics.gender === 'male' ? 'Male' : 'Female',
-
-          // Recommendations
-          priority,
-          action
-        ];
-      });
-
-      // Enhanced metadata section
-      const csvContent = [
-        ['GL ASSESSMENT - CLASS STUDENT DATA EXPORT'],
-        [],
-        ['CLASS INFORMATION'],
-        [`Class: ${classInfo.className}`],
-        [`School: ${classInfo.schoolId === 'class6a' ? 'School A - Oakwood Primary' : classInfo.schoolId}`],
-        [`Year Group: Year ${classInfo.yearGroup}`],
-        [`Teacher: ${classInfo.teacherName}`],
-        [`Total Students in Class: ${classInfo.studentCount}`],
-        [],
-        ['CLASS SUMMARY'],
-        [`Average CAT4: ${summary.avgCAT4} SAS (Cognitive Ability)`],
-        [`Average NGMT: ${summary.avgNGMT} SAS (Maths Attainment)`],
-        [`Value Added: ${summary.valueAdded > 0 ? '+' : ''}${summary.valueAdded} SAS (${summary.valueAdded < -2 ? 'Concern - Underachieving' : summary.valueAdded > 2 ? 'Excellent - Exceeding' : 'As Expected'})`],
-        [],
-        ['DEMOGRAPHICS'],
-        [`FSM: ${summary.fsmPercentage}%`],
-        [`EAL: ${summary.ealPercentage}%`],
-        [`SEND: ${summary.sendPercentage}%`],
-        [],
-        ['FOCUS GROUPS'],
-        [`Foundation (needing support): ${summary.focusGroups.foundation} students`],
-        [`Consolidation (core teaching): ${summary.focusGroups.consolidation} students`],
-        [`Extension (ready to stretch): ${summary.focusGroups.extension} students`],
-        [],
-        ['EXPORT DETAILS'],
-        [`Exported: ${new Date().toLocaleString()}`],
-        [`Filters Applied: RAG Status=${currentFilters.ragStatus}, Focus Group=${currentFilters.focusGroup}, Demographics=${currentFilters.demographic}`],
-        [`Students in Export: ${filteredStudents.length} of ${allStudents.length}`],
-        [],
-        ['KEY INFORMATION'],
-        ['- SAS (Standardised Age Score): 100 = national average, 85-115 = typical range'],
-        ['- Stanine: 1-3 = below average, 4-6 = average, 7-9 = above average'],
-        ['- Value Added: Difference between CAT4 (ability) and NGMT (attainment)'],
-        ['- RAG Status: Red (<90 concern), Amber (90-110 expected), Green (>110 exceeding)'],
-        ['- Focus Groups: Foundation (below expected), Consolidation (at expected), Extension (above expected)'],
-        [],
-        ['DETAILED STUDENT DATA'],
-        headers,
-        ...rows
-      ].map(row => Array.isArray(row) ? row.join(',') : row).join('\n');
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `${classInfo.className.replace(/\s+/g, '_')}_detailed_export_${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-
-    function exportFilteredPDF() {
-      window.print();
+      document.getElementById('content').innerHTML = html;
     }
 
     loadClassData();
+
+    // Show focus group modal with students grouped by skills
+    function showFocusGroupModal(focusGroup) {
+      if (!currentClassData) return;
+
+      const modal = document.getElementById('focusGroupModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      // Filter students in this focus group
+      const students = currentClassData.students.filter(s => s.focusGroup === focusGroup);
+
+      // Group students by skills they got wrong
+      const skillGroups = {};
+      students.forEach(student => {
+        const wrongSkills = student.ptm.itemResponses.filter(item => !item.correct);
+        wrongSkills.forEach(item => {
+          if (!skillGroups[item.skill]) {
+            skillGroups[item.skill] = [];
+          }
+          skillGroups[item.skill].push(student.studentName);
+        });
+      });
+
+      // Sort by number of students (most common issues first)
+      const sortedSkills = Object.entries(skillGroups).sort((a, b) => b[1].length - a[1].length);
+
+      // Build modal content
+      const focusGroupTitles = {
+        foundation: 'Foundation Group',
+        consolidation: 'Consolidation Group',
+        extension: 'Extension Group'
+      };
+      modalTitle.textContent = focusGroupTitles[focusGroup] + ' - Skills Requiring Focus';
+
+      let bodyHtml = '<p style="color: #6b7280; margin-bottom: 20px;">';
+      bodyHtml += students.length + ' student' + (students.length === 1 ? '' : 's') + ' in this group, ';
+      bodyHtml += 'grouped by the skills they need help with:';
+      bodyHtml += '</p>';
+
+      if (sortedSkills.length === 0) {
+        bodyHtml += '<p style="text-align: center; color: #6b7280; padding: 40px;">No skill gaps identified for this group.</p>';
+      } else {
+        sortedSkills.forEach(([skill, studentNames]) => {
+          bodyHtml += '<div class="skill-group">';
+          bodyHtml += '  <h3>📚 ' + skill + ' <span style="color: #6b7280; font-size: 14px; font-weight: 400;">(' + studentNames.length + ' student' + (studentNames.length === 1 ? '' : 's') + ')</span></h3>';
+          bodyHtml += '  <div class="student-list">';
+          studentNames.forEach(name => {
+            bodyHtml += '<div class="student-chip">' + name + '</div>';
+          });
+          bodyHtml += '  </div>';
+          bodyHtml += '</div>';
+        });
+      }
+
+      modalBody.innerHTML = bodyHtml;
+      modal.classList.add('active');
+    }
+
+    function closeFocusGroupModal() {
+      const modal = document.getElementById('focusGroupModal');
+      modal.classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('focusGroupModal');
+      if (event.target === modal) {
+        closeFocusGroupModal();
+      }
+    };
 
     // Hamburger menu toggle
     function toggleMenu() {

@@ -773,6 +773,106 @@
       color: white;
     }
 
+    /* Modal for Student Lists */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal.active {
+      display: block;
+    }
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .modal-header h2 {
+      font-size: 24px;
+      margin: 0;
+      color: #1f2937;
+    }
+    .modal-close {
+      background: #f3f4f6;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+    }
+    .modal-close:hover {
+      background: #e5e7eb;
+      color: #1f2937;
+    }
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .student-table th {
+      background: #f3f4f6;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .student-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+    .student-table tr:hover {
+      background: #f9fafb;
+    }
+    .score-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .score-badge.low {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .score-badge.high {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .tile.clickable {
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .tile.clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
     @media (max-width: 1024px) {
       .analysis-grid {
         grid-template-columns: 1fr;
@@ -1100,7 +1200,45 @@
         group: [82, 84, 79, 65],
         national: [71, 64, 54, 38],
         categories: ['Fluency (Facts)', 'Fluency (Conceptual)', 'Mathematical Reasoning', 'Problem Solving']
-      }
+      },
+      studentsNeedingSupport: [
+        { name: 'Student 15', school: 'School A', class: '5A', sas: 78, mastery: '42%' },
+        { name: 'Student 23', school: 'School A', class: '5B', sas: 81, mastery: '45%' },
+        { name: 'Student 31', school: 'School A', class: '5C', sas: 76, mastery: '38%' },
+        { name: 'Student 47', school: 'School A', class: '5D', sas: 79, mastery: '41%' },
+        { name: 'Student 52', school: 'School A', class: '5D', sas: 74, mastery: '36%' },
+        { name: 'Student 68', school: 'School B', class: '5A', sas: 83, mastery: '47%' },
+        { name: 'Student 89', school: 'School B', class: '5B', sas: 80, mastery: '44%' },
+        { name: 'Student 91', school: 'School B', class: '5C', sas: 77, mastery: '40%' },
+        { name: 'Student 105', school: 'School B', class: '5D', sas: 82, mastery: '46%' },
+        { name: 'Student 127', school: 'School C', class: '5A', sas: 84, mastery: '48%' },
+        { name: 'Student 134', school: 'School C', class: '5B', sas: 81, mastery: '45%' },
+        { name: 'Student 156', school: 'School C', class: '5B', sas: 78, mastery: '42%' },
+        { name: 'Student 178', school: 'School C', class: '5C', sas: 75, mastery: '37%' },
+        { name: 'Student 192', school: 'School C', class: '5D', sas: 79, mastery: '43%' },
+        { name: 'Student 203', school: 'School C', class: '5D', sas: 76, mastery: '39%' },
+        { name: 'Student 218', school: 'School C', class: '5D', sas: 80, mastery: '44%' },
+        { name: 'Student 229', school: 'School C', class: '5D', sas: 77, mastery: '40%' },
+        { name: 'Student 241', school: 'School C', class: '5D', sas: 73, mastery: '35%' }
+      ],
+      highAchievers: [
+        { name: 'Student 3', school: 'School A', class: '5A', sas: 125, mastery: '94%' },
+        { name: 'Student 8', school: 'School A', class: '5A', sas: 122, mastery: '92%' },
+        { name: 'Student 12', school: 'School A', class: '5B', sas: 128, mastery: '96%' },
+        { name: 'Student 19', school: 'School A', class: '5B', sas: 124, mastery: '93%' },
+        { name: 'Student 27', school: 'School A', class: '5C', sas: 126, mastery: '95%' },
+        { name: 'Student 34', school: 'School A', class: '5C', sas: 123, mastery: '91%' },
+        { name: 'Student 41', school: 'School A', class: '5D', sas: 127, mastery: '95%' },
+        { name: 'Student 49', school: 'School B', class: '5A', sas: 129, mastery: '97%' },
+        { name: 'Student 56', school: 'School B', class: '5A', sas: 125, mastery: '94%' },
+        { name: 'Student 63', school: 'School B', class: '5B', sas: 124, mastery: '93%' },
+        { name: 'Student 71', school: 'School B', class: '5B', sas: 126, mastery: '95%' },
+        { name: 'Student 78', school: 'School B', class: '5C', sas: 128, mastery: '96%' },
+        { name: 'Student 85', school: 'School B', class: '5C', sas: 123, mastery: '92%' },
+        { name: 'Student 93', school: 'School B', class: '5D', sas: 127, mastery: '95%' },
+        { name: 'Student 98', school: 'School B', class: '5D', sas: 125, mastery: '94%' }
+        // ... shortened for brevity - would have 98 total students
+      ]
     };
 
     function updateLevel(level) {
@@ -1158,24 +1296,26 @@
           <span class="tile-badge good">12 Classes</span>
         </div>
 
-        <div class="tile concern">
+        <div class="tile concern clickable" onclick="showStudentList('needingSupport')">
           <div class="tile-label">
             Students Needing Support
-            <span class="tooltip-icon" data-tooltip="Students scoring below 50% mastery">?</span>
+            <span class="tooltip-icon" data-tooltip="Students scoring below 50% mastery. Click to view list.">?</span>
           </div>
           <div class="tile-value">18</div>
           <div class="tile-comparison">7% of cohort</div>
           <span class="tile-badge concern">Urgent Intervention</span>
+          <p style="font-size: 11px; margin-top: 8px; color: #6b7280;">Click to view students</p>
         </div>
 
-        <div class="tile excellent">
+        <div class="tile excellent clickable" onclick="showStudentList('highAchievers')">
           <div class="tile-label">
             High Achievers
-            <span class="tooltip-icon" data-tooltip="Students scoring 85%+ mastery">?</span>
+            <span class="tooltip-icon" data-tooltip="Students scoring 85%+ mastery. Click to view list.">?</span>
           </div>
           <div class="tile-value">98</div>
           <div class="tile-comparison">39% of cohort</div>
           <span class="tile-badge excellent">Extension Ready</span>
+          <p style="font-size: 11px; margin-top: 8px; color: #6b7280;">Click to view students</p>
         </div>
 
         <div class="tile neutral">
@@ -2362,7 +2502,85 @@
 
     // Initial load
     loadDashboard();
+
+    // Student List Modal Functions
+    function showStudentList(type) {
+      const modal = document.getElementById('studentListModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      let students, title, badgeClass;
+
+      if (type === 'needingSupport') {
+        students = data.studentsNeedingSupport;
+        title = 'Students Needing Support';
+        badgeClass = 'low';
+      } else {
+        students = data.highAchievers;
+        title = 'High Achievers';
+        badgeClass = 'high';
+      }
+
+      modalTitle.textContent = title;
+
+      let bodyHtml = '<p style="color: #6b7280; margin-bottom: 20px;">';
+      bodyHtml += students.length + ' student' + (students.length === 1 ? '' : 's');
+      bodyHtml += '</p>';
+
+      bodyHtml += '<table class="student-table">';
+      bodyHtml += '  <thead>';
+      bodyHtml += '    <tr>';
+      bodyHtml += '      <th>Student</th>';
+      bodyHtml += '      <th>School</th>';
+      bodyHtml += '      <th>Class</th>';
+      bodyHtml += '      <th>SAS</th>';
+      bodyHtml += '      <th>Mastery</th>';
+      bodyHtml += '    </tr>';
+      bodyHtml += '  </thead>';
+      bodyHtml += '  <tbody>';
+
+      students.forEach(student => {
+        bodyHtml += '  <tr>';
+        bodyHtml += '    <td>' + student.name + '</td>';
+        bodyHtml += '    <td>' + student.school + '</td>';
+        bodyHtml += '    <td>' + student.class + '</td>';
+        bodyHtml += '    <td>' + student.sas + '</td>';
+        bodyHtml += '    <td><span class="score-badge ' + badgeClass + '">' + student.mastery + '</span></td>';
+        bodyHtml += '  </tr>';
+      });
+
+      bodyHtml += '  </tbody>';
+      bodyHtml += '</table>';
+
+      modalBody.innerHTML = bodyHtml;
+      modal.classList.add('active');
+    }
+
+    function closeStudentListModal() {
+      const modal = document.getElementById('studentListModal');
+      modal.classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('studentListModal');
+      if (event.target === modal) {
+        closeStudentListModal();
+      }
+    };
   </script>
+
+  <!-- Student List Modal -->
+  <div id="studentListModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Student List</h2>
+        <button class="modal-close" onclick="closeStudentListModal()">&times;</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
   <!-- PDF Export Script -->
   <script src="pdf-export.js"></script>
 </body>

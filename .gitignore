@@ -28,6 +28,9 @@ yarn-error.log*
 *~
 .DS_Store
 
+# Local settings
+settings.local.json
+
 # Testing
 coverage/
 .nyc_output/
