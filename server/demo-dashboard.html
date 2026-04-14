@@ -308,6 +308,7 @@
       #curriculumChart,
       #processChart,
       #schoolComparisonChart,
+      #valueAddedChart,
       #strandHeatmap {
         width: 100% !important;
         max-width: none !important;
@@ -1104,10 +1105,20 @@
     <div class="chart-section">
       <div class="chart-header">
         <div class="chart-title">School-by-School Performance Comparison</div>
-        <div class="chart-subtitle">Mean SAS scores and value-added across MAT schools</div>
+        <div class="chart-subtitle">Mean SAS scores across MAT schools</div>
         <button class="export-btn" onclick="exportChartData('schools')">📥 Export Data</button>
       </div>
       <div id="schoolComparisonChart" style="height: 400px;"></div>
+    </div>
+
+    <!-- Value Added Comparison -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Value Added by School</div>
+        <div class="chart-subtitle">Progress relative to starting points (CAT4 baseline)</div>
+        <button class="export-btn" onclick="exportChartData('valueadded')">📥 Export Data</button>
+      </div>
+      <div id="valueAddedChart" style="height: 350px;"></div>
     </div>
 
     <!-- Strand Performance Heatmap -->
@@ -1277,6 +1288,7 @@
       renderCurriculumChart();
       renderProcessChart();
       renderSchoolComparisonChart();
+      renderValueAddedChart();
       renderStrandHeatmap();
       renderInsights();
     }
@@ -1494,43 +1506,97 @@
         xAxis: {
           categories: ['School A<br/>Oakwood', 'School B<br/>Riverside', 'School C<br/>Hillside']
         },
-        yAxis: [{
+        yAxis: {
           title: {
             text: 'Mean SAS Score'
           },
-          min: 70
-        }, {
-          title: {
-            text: 'Value Added'
-          },
-          opposite: true
-        }],
+          min: 70,
+          plotLines: [{
+            value: 100,
+            color: '#3b82f6',
+            width: 2,
+            dashStyle: 'Dash',
+            zIndex: 5,
+            label: {
+              text: 'National Average (100)',
+              align: 'right',
+              style: {
+                color: '#3b82f6'
+              }
+            }
+          }]
+        },
         legend: {
           enabled: true
         },
         plotOptions: {
           column: {
             dataLabels: {
-              enabled: true
+              enabled: true,
+              format: '{y}'
             }
           }
         },
         series: [{
           name: 'Mean SAS',
           data: [92.0, 101.0, 109.0],
-          color: '#d946ef',
-          yAxis: 0
-        }, {
+          color: '#d946ef'
+        }],
+        credits: {
+          enabled: false
+        }
+      });
+    }
+
+    function renderValueAddedChart() {
+      Highcharts.chart('valueAddedChart', {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: null
+        },
+        xAxis: {
+          categories: ['School A<br/>Oakwood', 'School B<br/>Riverside', 'School C<br/>Hillside']
+        },
+        yAxis: {
+          title: {
+            text: 'Value Added Score'
+          },
+          plotLines: [{
+            value: 0,
+            color: '#64748b',
+            width: 2,
+            zIndex: 5,
+            label: {
+              text: 'Expected (0)',
+              align: 'right',
+              style: {
+                color: '#64748b'
+              }
+            }
+          }]
+        },
+        legend: {
+          enabled: false
+        },
+        plotOptions: {
+          column: {
+            dataLabels: {
+              enabled: true,
+              format: '{y}'
+            },
+            colorByPoint: true,
+            colors: ['#dc2626', '#10b981', '#10b981']
+          }
+        },
+        series: [{
           name: 'Value Added',
-          data: [-4, 3, 6],
-          color: '#10b981',
-          yAxis: 1
-        }, {
-          name: 'National Average',
-          data: [100, 100, 100],
-          color: '#3b82f6',
-          dashStyle: 'Dash',
-          yAxis: 0
+          data: [
+            { y: -4, color: '#dc2626' },  // Negative = red
+            { y: 3, color: '#10b981' },   // Positive = green
+            { y: 6, color: '#10b981' }    // Positive = green
+          ]
         }],
         credits: {
           enabled: false
