@@ -750,6 +750,26 @@
             }
           }]
         },
+        legend: {
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
+        },
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            events: {
+              legendItemClick: function() {
+                return true;
+              }
+            }
+          }
+        },
         series: [{
           name: 'Average SAS',
           data: data.avgSAS,
@@ -890,9 +910,14 @@
           pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y}%</b><br/>'
         },
         legend: {
+          enabled: true,
           align: 'center',
           verticalAlign: 'bottom',
-          layout: 'horizontal'
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
         },
         series: [{
           name: schoolName,
@@ -924,6 +949,11 @@
                 click: function() {
                   window.location.href = '/school/' + currentSchool + '/skills';
                 }
+              }
+            },
+            events: {
+              legendItemClick: function() {
+                return true;
               }
             }
           }

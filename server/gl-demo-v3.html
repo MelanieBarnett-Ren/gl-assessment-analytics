@@ -1203,13 +1203,29 @@
             }
           },
           legend: {
-            enabled: false
+            enabled: true,
+            align: 'center',
+            verticalAlign: 'bottom',
+            layout: 'horizontal',
+            itemStyle: {
+              cursor: 'pointer',
+              fontSize: '10px'
+            },
+            itemDistance: 10
           },
           plotOptions: {
             line: {
               marker: {
                 enabled: true,
                 radius: 3
+              }
+            },
+            series: {
+              cursor: 'pointer',
+              events: {
+                legendItemClick: function() {
+                  return true;
+                }
               }
             }
           },

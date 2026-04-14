@@ -1382,13 +1382,28 @@
           }
         },
         legend: {
-          enabled: true
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
         },
         plotOptions: {
           column: {
             dataLabels: {
               enabled: true,
               format: '{y}%'
+            }
+          },
+          series: {
+            cursor: 'pointer',
+            events: {
+              legendItemClick: function() {
+                return true;
+              }
             }
           }
         },
@@ -1426,13 +1441,28 @@
           }
         },
         legend: {
-          enabled: true
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
         },
         plotOptions: {
           bar: {
             dataLabels: {
               enabled: true,
               format: '{y}%'
+            }
+          },
+          series: {
+            cursor: 'pointer',
+            events: {
+              legendItemClick: function() {
+                return true;
+              }
             }
           }
         },
@@ -1470,13 +1500,28 @@
           }
         },
         legend: {
-          enabled: true
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
         },
         plotOptions: {
           column: {
             dataLabels: {
               enabled: true,
               format: '{y}%'
+            }
+          },
+          series: {
+            cursor: 'pointer',
+            events: {
+              legendItemClick: function() {
+                return true;
+              }
             }
           }
         },
@@ -1527,7 +1572,14 @@
           }]
         },
         legend: {
-          enabled: true
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
         },
         plotOptions: {
           column: {
@@ -1578,7 +1630,14 @@
           }]
         },
         legend: {
-          enabled: false
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal',
+          itemStyle: {
+            cursor: 'pointer',
+            fontSize: '12px'
+          }
         },
         plotOptions: {
           column: {
@@ -1588,6 +1647,14 @@
             },
             colorByPoint: true,
             colors: ['#dc2626', '#10b981', '#10b981']
+          },
+          series: {
+            cursor: 'pointer',
+            events: {
+              legendItemClick: function() {
+                return true;
+              }
+            }
           }
         },
         series: [{
