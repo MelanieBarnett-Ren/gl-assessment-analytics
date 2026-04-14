@@ -123,6 +123,43 @@
       background: #f3f4f6 !important;
     }
 
+    /* Class Selector Cards */
+    body .class-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+      gap: 16px !important;
+    }
+    body .class-card {
+      background: white !important;
+      padding: 24px !important;
+      border-radius: 12px !important;
+      text-align: center !important;
+      cursor: pointer !important;
+      border: 2px solid #e5e7eb !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    }
+    body .class-card:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15) !important;
+      border-color: #8b5cf6 !important;
+    }
+    body .class-card-name {
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      color: #1f2937 !important;
+      margin-bottom: 8px !important;
+    }
+    body .class-card-teacher {
+      font-size: 13px !important;
+      color: #6b7280 !important;
+      margin-bottom: 4px !important;
+    }
+    body .class-card-students {
+      font-size: 12px !important;
+      color: #9ca3af !important;
+    }
+
     /* Tabs */
     body .tabs {
       display: flex !important;
@@ -275,6 +312,10 @@
       position: sticky !important;
       top: 0 !important;
       font-family: 'Inter', sans-serif !important;
+    }
+    body .heatmap-table th a:hover {
+      color: #8b5cf6 !important;
+      text-decoration: underline !important;
     }
     body .heatmap-table td {
       padding: 12px 8px !important;
@@ -731,6 +772,12 @@
   </div>
 
   <div class="container">
+    <!-- Class Selector Section -->
+    <div id="classSelector" style="margin-bottom: 32px;">
+      <h2 style="font-size: 20px; margin-bottom: 16px;">📚 Select a Class</h2>
+      <div id="classCards" class="loading">Loading classes...</div>
+    </div>
+
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab active" onclick="switchTab('domains')">📊 Domains</button>
@@ -848,6 +895,7 @@
 
         if (classResult.success) {
           classesData = classResult.data;
+          renderClassCards();
           renderHeatmap();
           renderItems();
         }
@@ -857,6 +905,23 @@
         document.getElementById('domainsContent').innerHTML =
           '<div class="loading" style="color: var(--color-error);">Error: ' + error.message + '</div>';
       }
+    }
+
+    function renderClassCards() {
+      if (!classesData) return;
+
+      let html = '<div class="class-grid">';
+
+      classesData.forEach(function(classData) {
+        html += '<div class="class-card" onclick="window.location.href=\'/class/' + classData.classId + '\'" title="Click to view ' + classData.className + ' details">';
+        html += '  <div class="class-card-name">' + classData.className + '</div>';
+        html += '  <div class="class-card-teacher">' + classData.teacherName + '</div>';
+        html += '  <div class="class-card-students">' + classData.studentCount + ' students</div>';
+        html += '</div>';
+      });
+
+      html += '</div>';
+      document.getElementById('classCards').innerHTML = html;
     }
 
     function renderDomains() {
@@ -1001,7 +1066,7 @@
       html += '      <th>Skill</th>';
 
       classesData.forEach(function(classData) {
-        html += '      <th>' + classData.className + '<br><span style="font-weight: 400; font-size: 11px;">(' + classData.teacherName + ')</span></th>';
+        html += '      <th onclick="window.location.href=\'/class/' + classData.classId + '\'" style="cursor: pointer;" title="Click to view ' + classData.className + ' details">' + classData.className + '<br><span style="font-weight: 400; font-size: 11px;">(' + classData.teacherName + ')</span></th>';
       });
 
       html += '      <th>School Avg</th>';
