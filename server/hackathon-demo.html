@@ -217,6 +217,43 @@
       color: #92400e;
     }
 
+    /* Expand/Collapse */
+    .insight-header-collapsible {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .insight-header-collapsible:hover h3 {
+      color: #667eea;
+    }
+
+    .expand-icon {
+      font-size: 20px;
+      color: #667eea;
+      transition: transform 0.3s;
+      user-select: none;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+
+    .expand-icon.expanded {
+      transform: rotate(180deg);
+    }
+
+    .insight-content-collapsible {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .insight-content-collapsible.expanded {
+      max-height: 3000px;
+      transition: max-height 0.5s ease-in;
+    }
+
     /* Loading */
     .loading {
       text-align: center;
@@ -489,27 +526,33 @@
           panel.insights.slice(0, 3).forEach((insight, idx) => {
             const severityClass = insight.severity === 'critical' ? 'critical' :
                                  insight.severity === 'positive' ? 'positive' : '';
+            const insightId = \`insight-\${schoolId}-\${idx}\`;
 
             html += \`
               <div class="insight \${severityClass}">
-                <h3>\${idx + 1}. \${insight.title}</h3>
-                <p>\${insight.summary}</p>
-                <p style="white-space: pre-wrap; margin-top: 12px;">\${insight.detailedAnalysis}</p>
-                \${insight.recommendations.length > 0 ? \`
-                  <div style="background: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
-                    <strong>💡 Recommendations:</strong>
-                    <ul style="margin: 8px 0 0 20px;">
-                      \${insight.recommendations.map(rec => \`
-                        <li style="margin: 8px 0;">
-                          <strong>\${rec.title}:</strong> \${rec.description}
-                          \${rec.targetMetric ? \`
-                            <br><span class="highlight">Target: \${rec.targetMetric.metric} from \${rec.targetMetric.currentValue} to \${rec.targetMetric.targetValue} (\${rec.targetMetric.timeframe})</span>
-                          \` : ''}
-                        </li>
-                      \`).join('')}
-                    </ul>
-                  </div>
-                \` : ''}
+                <div class="insight-header-collapsible" onclick="toggleInsightHackathon('\${insightId}')">
+                  <h3 style="margin: 0;">\${idx + 1}. \${insight.title}</h3>
+                  <span class="expand-icon" id="icon-\${insightId}">▼</span>
+                </div>
+                <div class="insight-content-collapsible" id="\${insightId}">
+                  <p>\${insight.summary}</p>
+                  <p style="white-space: pre-wrap; margin-top: 12px;">\${insight.detailedAnalysis}</p>
+                  \${insight.recommendations.length > 0 ? \`
+                    <div style="background: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                      <strong>💡 Recommendations:</strong>
+                      <ul style="margin: 8px 0 0 20px;">
+                        \${insight.recommendations.map(rec => \`
+                          <li style="margin: 8px 0;">
+                            <strong>\${rec.title}:</strong> \${rec.description.substring(0, 300)}\${rec.description.length > 300 ? '...' : ''}
+                            \${rec.targetMetric ? \`
+                              <br><span class="highlight">Target: \${rec.targetMetric.metric} from \${rec.targetMetric.currentValue} to \${rec.targetMetric.targetValue} (\${rec.targetMetric.timeframe})</span>
+                            \` : ''}
+                          </li>
+                        \`).join('')}
+                      </ul>
+                    </div>
+                  \` : ''}
+                </div>
               </div>
             \`;
           });
@@ -532,6 +575,17 @@
             <p>Failed to generate insights: \${error.message}</p>
           </div>
         \`;
+      }
+    }
+
+    // Toggle function for expand/collapse
+    function toggleInsightHackathon(insightId) {
+      const content = document.getElementById(insightId);
+      const icon = document.getElementById(\`icon-\${insightId}\`);
+
+      if (content && icon) {
+        content.classList.toggle('expanded');
+        icon.classList.toggle('expanded');
       }
     }
   </script>

@@ -554,6 +554,65 @@
       color: #7c3aed;
     }
 
+    /* Expand/Collapse Functionality */
+    .insight-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+
+    .insight-header:hover {
+      opacity: 0.8;
+    }
+
+    .expand-icon {
+      font-size: 18px;
+      color: #7c3aed;
+      transition: transform 0.3s;
+      user-select: none;
+    }
+
+    .expand-icon.expanded {
+      transform: rotate(180deg);
+    }
+
+    .insight-content-collapsible {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .insight-content-collapsible.expanded {
+      max-height: 2000px;
+      transition: max-height 0.5s ease-in;
+    }
+
+    .recommendation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 4px 0;
+      margin-bottom: 8px;
+    }
+
+    .recommendation-header:hover {
+      opacity: 0.8;
+    }
+
+    .recommendation-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .recommendation-content.expanded {
+      max-height: 1500px;
+      transition: max-height 0.5s ease-in;
+    }
+
     /* Group Analysis Section */
     .group-analysis {
       background: white;
@@ -1222,15 +1281,36 @@
           html += '<div class="ai-insights-content">';
 
           insights.forEach((insight, index) => {
+            const insightId = `insight-${schoolId}-${index}`;
             html += `
               <div class="ai-insight-item">
-                <div class="ai-insight-summary">${index + 1}. ${insight.title}</div>
-                <div class="ai-insight-detail">${insight.summary}</div>
-                ${insight.recommendations && insight.recommendations.length > 0 ? `
-                  <div class="ai-insight-recommendation">
-                    💡 <strong>Recommendation:</strong> ${insight.recommendations[0].title} - ${insight.recommendations[0].description.substring(0, 150)}...
+                <div class="insight-header" onclick="toggleInsight('${insightId}')">
+                  <div class="ai-insight-summary">
+                    <strong>${index + 1}. ${insight.title}</strong>
                   </div>
-                ` : ''}
+                  <span class="expand-icon" id="icon-${insightId}">▼</span>
+                </div>
+                <div class="insight-content-collapsible" id="${insightId}">
+                  <div class="ai-insight-detail" style="margin-bottom: 12px;">${insight.summary}</div>
+                  ${insight.recommendations && insight.recommendations.length > 0 ?
+                    insight.recommendations.map((rec, recIndex) => {
+                      const recId = `rec-${insightId}-${recIndex}`;
+                      return `
+                        <div class="ai-insight-recommendation">
+                          <div class="recommendation-header" onclick="event.stopPropagation(); toggleRecommendation('${recId}')">
+                            <strong style="font-size: 13px;">${rec.title}</strong>
+                            <span class="expand-icon" id="icon-${recId}" style="font-size: 14px;">▼</span>
+                          </div>
+                          <div class="recommendation-content" id="${recId}">
+                            <div style="margin-top: 8px; white-space: pre-wrap; font-size: 11px; line-height: 1.6;">
+                              ${rec.description}
+                            </div>
+                          </div>
+                        </div>
+                      `;
+                    }).join('')
+                  : ''}
+                </div>
               </div>
             `;
           });
@@ -1261,6 +1341,27 @@
         // Reset button
         button.disabled = false;
         button.textContent = '🤖 Generate AI Insights';
+      }
+    }
+
+    // Toggle functions for expand/collapse
+    function toggleInsight(insightId) {
+      const content = document.getElementById(insightId);
+      const icon = document.getElementById(`icon-${insightId}`);
+
+      if (content && icon) {
+        content.classList.toggle('expanded');
+        icon.classList.toggle('expanded');
+      }
+    }
+
+    function toggleRecommendation(recId) {
+      const content = document.getElementById(recId);
+      const icon = document.getElementById(`icon-${recId}`);
+
+      if (content && icon) {
+        content.classList.toggle('expanded');
+        icon.classList.toggle('expanded');
       }
     }
 

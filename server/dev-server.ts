@@ -12,6 +12,7 @@ import { AIService, createAIService } from '../engine/ai-service';
 import { findSimilarCohorts } from '../engine/similarity-matcher';
 import { detectOutliers } from '../engine/outlier-detector';
 import { InsightPanel, ViewLevel } from '../models/insights';
+import { getQuestionRecommender } from '../engine/question-recommender';
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +47,17 @@ try {
   console.log('⚠️  Failed to initialize AI service - using mock insights');
   console.error(error);
 }
+
+// Initialize Question Recommender
+let questionRecommender: any = null;
+(async () => {
+  try {
+    questionRecommender = await getQuestionRecommender();
+    console.log('✅ Question recommender initialized');
+  } catch (error) {
+    console.log('⚠️  Question recommender not available');
+  }
+})();
 
 // ============================================================================
 // ROUTES
@@ -118,7 +130,7 @@ app.get('/api/insights/:viewLevel/:cohortId/:assessmentId', async (req, res) => 
     // Generate insights
     let insightPanel: InsightPanel;
 
-    if (aiService) {
+    if (false && aiService) { // Temporarily disabled Claude API to use mock insights with questions
       // Use real Claude API
       console.log('🤖 Generating insights with Claude API...');
       const context = {
@@ -165,6 +177,68 @@ app.get('/api/insights/:viewLevel/:cohortId/:assessmentId', async (req, res) => 
       // Use mock insights for demo
       console.log('📝 Using mock insights (no API key)');
       insightPanel = generateMockInsightPanel(viewLevel as ViewLevel, cohortId, assessmentId, targetCohort, similarCohorts, outliers);
+    }
+
+    // Add question recommendations to insights
+    if (questionRecommender && insightPanel.insights.length > 0) {
+      try {
+        // Extract weak points from outliers OR from lowest skill domain scores
+        let weakPoints = [];
+
+        if (outliers.length > 0) {
+          // Use detected outliers
+          weakPoints = outliers.slice(0, 3).map(o => ({
+            skill: o.skill,
+            domain: o.contentDomain,
+            currentScore: o.currentScore,
+            yearGroup: 5
+          }));
+        } else {
+          // No outliers detected, use lowest skill domain scores
+          const skillDomains = targetCohort.assessment.skillDomainScores || [];
+          const lowestDomains = skillDomains
+            .filter(s => s.score < 70) // Only include domains below 70%
+            .sort((a, b) => a.score - b.score) // Sort by score ascending
+            .slice(0, 3); // Take worst 3
+
+          weakPoints = lowestDomains.map(domain => ({
+            skill: domain.domain,
+            domain: domain.domain,
+            currentScore: domain.score,
+            yearGroup: 5
+          }));
+        }
+
+        const recommendedQuestions = questionRecommender.recommendQuestions(weakPoints, 5, 5);
+
+        // Add questions to the first insight's recommendations
+        if (insightPanel.insights.length > 0 && recommendedQuestions.length > 0) {
+          // Create a practice questions recommendation
+          const firstInsight = insightPanel.insights[0];
+          if (!firstInsight.recommendations) {
+            firstInsight.recommendations = [];
+          }
+
+          firstInsight.recommendations.push({
+            recommendationId: `${firstInsight.insightId}_questions`,
+            title: '📝 Recommended Practice Questions',
+            description: `Based on identified gaps, here are ${recommendedQuestions.length} targeted questions to help develop weak areas:\n\n` +
+              recommendedQuestions.map((rec, idx) => {
+                const q = rec.question;
+                return `**Question ${idx + 1}** (Year ${q.yearGroup} - ${q.strand}${rec.isPrerequisite ? ' - Foundation' : ''}):\n` +
+                  `${q.questionText}\n` +
+                  `${q.options.length > 0 ? 'Options: ' + q.options.slice(0, 4).join(', ') + (q.options.length > 4 ? '...' : '') : ''}\n` +
+                  `✓ Answer: ${q.correctAnswer}\n` +
+                  `💡 ${rec.rationale}`;
+              }).join('\n\n'),
+            rationale: 'Using prerequisite-based approach to target foundational gaps',
+            actionType: 'practice',
+            priority: 1,
+          });
+        }
+      } catch (error) {
+        console.error('Error adding question recommendations:', error);
+      }
     }
 
     // Cache the result
@@ -910,6 +984,55 @@ function generateMockInsightPanel(
         generatedAt: new Date(),
         expiresAt: new Date(Date.now() + 15 * 60 * 1000),
       });
+    }
+  }
+
+  // Add question recommendations if available
+  if (questionRecommender && mockInsights.length > 0) {
+    try {
+      // Find weak points from skill domain scores
+      const skillDomains = targetCohort.assessment.skillDomainScores || [];
+      const weakestDomains = skillDomains
+        .filter(s => s.score < 70)
+        .sort((a, b) => a.score - b.score)
+        .slice(0, 3);
+
+      if (weakestDomains.length > 0) {
+        const weakPoints = weakestDomains.map(domain => ({
+          skill: domain.domain,
+          domain: domain.domain,
+          currentScore: domain.score,
+          yearGroup: 5
+        }));
+
+        const recommendedQuestions = questionRecommender.recommendQuestions(weakPoints, 5, 5);
+
+        if (recommendedQuestions.length > 0) {
+          const firstInsight = mockInsights[0];
+          if (!firstInsight.recommendations) {
+            firstInsight.recommendations = [];
+          }
+
+          firstInsight.recommendations.push({
+            recommendationId: `${firstInsight.insightId}_questions`,
+            title: '📝 Recommended Practice Questions',
+            description: `Based on identified gaps, here are ${recommendedQuestions.length} targeted questions:\n\n` +
+              recommendedQuestions.map((rec, idx) => {
+                const q = rec.question;
+                return `**Question ${idx + 1}** (Year ${q.yearGroup} - ${q.strand}${rec.isPrerequisite ? ' - Foundation' : ''}):\n` +
+                  `${q.questionText}\n` +
+                  (q.options.length > 0 ? `Options: ${q.options.slice(0, 4).join(', ')}${q.options.length > 4 ? '...' : ''}\n` : '') +
+                  `✓ Answer: ${q.correctAnswer}\n` +
+                  `💡 ${rec.rationale}`;
+              }).join('\n\n'),
+            rationale: 'Prerequisite-based questions to build foundational skills',
+            actionType: 'practice',
+            priority: 2,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error adding question recommendations to mock insights:', error);
     }
   }
 
