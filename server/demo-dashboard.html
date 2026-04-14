@@ -168,21 +168,215 @@
       padding: 40px;
     }
 
-    /* Print-specific overrides */
+    /* Print-specific overrides - AGGRESSIVE FULL WIDTH */
     @media print {
-      .container {
-        max-width: none !important;
-        width: 100% !important;
+      /* Force page to landscape A4 */
+      @page {
+        size: A4 landscape !important;
+        margin: 0.5cm !important;
+      }
+
+      /* Force HTML and body to full width */
+      html {
+        width: 297mm !important;
+        min-width: 297mm !important;
+        max-width: 297mm !important;
         margin: 0 !important;
-        padding: 1cm !important;
+        padding: 0 !important;
       }
 
       body {
-        width: 100% !important;
-        max-width: none !important;
+        width: 297mm !important;
+        min-width: 297mm !important;
+        max-width: 297mm !important;
         padding: 0 !important;
         margin: 0 !important;
+        background: white !important;
+        transform: scale(1) !important;
       }
+
+      /* Force container to full width */
+      .container {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0.5cm !important;
+        transform: scale(1) !important;
+      }
+
+      /* Hide navigation elements */
+      .hamburger-menu,
+      .sidebar,
+      .sidebar-overlay,
+      .menu-toggle,
+      .tree-nav,
+      .tree-select,
+      button,
+      .export-btn,
+      .insight-action,
+      .action-cards {
+        display: none !important;
+        visibility: hidden !important;
+      }
+
+      /* Adjust main content */
+      .page-header {
+        width: 100% !important;
+        max-width: none !important;
+        margin-bottom: 0.5cm !important;
+        page-break-after: avoid !important;
+      }
+
+      .page-header h1 {
+        font-size: 20pt !important;
+        margin-bottom: 0.2cm !important;
+      }
+
+      .page-subtitle {
+        font-size: 11pt !important;
+      }
+
+      /* Dashboard tiles */
+      .dashboard-tiles {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.3cm !important;
+        width: 100% !important;
+        margin-bottom: 0.6cm !important;
+        page-break-after: avoid !important;
+      }
+
+      .tile {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        padding: 0.3cm !important;
+        border: 1px solid #e5e7eb !important;
+      }
+
+      /* Summary cards */
+      .summary-section {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.4cm !important;
+        width: 100% !important;
+        margin-bottom: 0.6cm !important;
+        page-break-after: avoid !important;
+      }
+
+      .summary-card {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* Analysis grid and charts */
+      .analysis-grid {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 0.6cm !important;
+      }
+
+      .chart-section {
+        width: 100% !important;
+        max-width: none !important;
+        margin-bottom: 0.8cm !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      .chart-header {
+        margin-bottom: 0.3cm !important;
+      }
+
+      .chart-title {
+        font-size: 14pt !important;
+        font-weight: 600 !important;
+      }
+
+      .chart-subtitle {
+        font-size: 10pt !important;
+        color: #666 !important;
+      }
+
+      /* Charts themselves */
+      #distributionChart,
+      #curriculumChart,
+      #processChart,
+      #schoolComparisonChart,
+      #strandHeatmap {
+        width: 100% !important;
+        max-width: none !important;
+        height: 350px !important;
+      }
+
+      .highcharts-container,
+      .highcharts-container svg {
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      /* Insight cards */
+      .insights-list {
+        width: 100% !important;
+      }
+
+      .insight-card {
+        width: 100% !important;
+        max-width: none !important;
+        margin-bottom: 0.5cm !important;
+        padding: 0.4cm !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        border: 1px solid #e5e7eb !important;
+        border-left: 4px solid !important;
+      }
+
+      .insight-card.critical {
+        border-left-color: #dc2626 !important;
+      }
+
+      .insight-card.attention {
+        border-left-color: #f59e0b !important;
+      }
+
+      .insight-card.positive {
+        border-left-color: #10b981 !important;
+      }
+
+      .insight-title {
+        font-size: 12pt !important;
+        font-weight: 600 !important;
+        margin-bottom: 0.2cm !important;
+      }
+
+      .insight-desc {
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
+      }
+
+      .insight-desc strong {
+        font-weight: 600 !important;
+      }
+
+      /* Hide all buttons and actions */
+      .insight-actions,
+      .action-card,
+      button[onclick] {
+        display: none !important;
+      }
+
+      /* Typography adjustments */
+      * {
+        color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      h1 { font-size: 18pt !important; }
+      h2 { font-size: 16pt !important; }
+      h3 { font-size: 14pt !important; }
+      h4 { font-size: 12pt !important; }
+      p, li, td, th { font-size: 9pt !important; line-height: 1.4 !important; }
     }
 
     /* Breadcrumb Tree */

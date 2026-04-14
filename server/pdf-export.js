@@ -241,10 +241,55 @@ class PDFExporter {
     const fabWrapper = document.querySelector('.pdf-fab-wrapper');
     const sidebar = document.querySelector('.sidebar');
     const hamburger = document.querySelector('.hamburger-menu');
+    const container = document.querySelector('.container');
+    const treeNav = document.querySelector('.tree-nav');
 
     if (fabWrapper) fabWrapper.style.display = 'none';
     if (sidebar) sidebar.style.display = 'none';
     if (hamburger) hamburger.style.display = 'none';
+    if (treeNav) treeNav.style.display = 'none';
+
+    // Inject temporary print styles
+    const printStyleSheet = document.createElement('style');
+    printStyleSheet.id = 'temp-print-styles';
+    printStyleSheet.textContent = `
+      @media print {
+        html, body {
+          width: 297mm !important;
+          min-width: 297mm !important;
+          max-width: 297mm !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        .container {
+          width: 100% !important;
+          max-width: none !important;
+          margin: 0 !important;
+          padding: 1cm !important;
+        }
+        * {
+          max-width: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(printStyleSheet);
+
+    // Force full width on body and container
+    const originalBodyStyle = document.body.style.cssText;
+    const originalContainerStyle = container ? container.style.cssText : '';
+
+    document.body.style.cssText += 'width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important;';
+    if (container) {
+      container.style.cssText += 'width: 100% !important; max-width: none !important; margin: 0 !important; padding: 1cm !important;';
+    }
+
+    // Hide all buttons
+    const buttons = document.querySelectorAll('button:not(.no-print)');
+    buttons.forEach(btn => {
+      if (!btn.classList.contains('no-print')) {
+        btn.style.display = 'none';
+      }
+    });
 
     // Small delay to ensure styles are applied
     setTimeout(() => {
@@ -257,8 +302,24 @@ class PDFExporter {
         if (fabWrapper) fabWrapper.style.display = 'block';
         if (sidebar) sidebar.style.display = '';
         if (hamburger) hamburger.style.display = '';
+        if (treeNav) treeNav.style.display = '';
+
+        // Restore original styles
+        document.body.style.cssText = originalBodyStyle;
+        if (container) container.style.cssText = originalContainerStyle;
+
+        // Remove temporary print stylesheet
+        const tempStyle = document.getElementById('temp-print-styles');
+        if (tempStyle) tempStyle.remove();
+
+        // Restore buttons
+        buttons.forEach(btn => {
+          if (!btn.classList.contains('no-print')) {
+            btn.style.display = '';
+          }
+        });
       }, 100);
-    }, 100);
+    }, 200);
   }
 
   async exportAllPages() {
