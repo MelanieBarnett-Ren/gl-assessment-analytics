@@ -916,6 +916,7 @@
     };
 
     function renderClassView(classData) {
+      currentClassData = classData; // Store for intervention groups
       const summary = classData.classSummary;
       const vaClass = summary.valueAdded >= 0 ? 'positive' : 'negative';
 
@@ -1059,6 +1060,13 @@
       html += '  </div>';
       html += '</div>';
 
+      // Intervention Groups - Group students by similar skill needs
+      html += '<div class="students-section" style="margin-bottom: 28px;">';
+      html += '  <h2>🎯 Intervention Groups <span style="font-size: 14px; font-weight: 400; color: var(--color-50);">(Students grouped by similar skill needs)</span></h2>';
+      html += '  <p style="color: var(--color-50); margin-bottom: 20px; font-size: 14px;">Take action with small groups of students who need the same intervention</p>';
+      html += '  <div id="interventionGroupsContainer"></div>';
+      html += '</div>';
+
       // Students Table
       html += '<div class="students-section">';
       html += '  <h2 id="studentCountLabel">All Students (' + classData.students.length + ')</h2>';
@@ -1066,8 +1074,109 @@
       html += '</div>';
 
       document.getElementById('content').innerHTML = html;
+      renderInterventionGroups();
       renderStudentsTable();
     }
+
+    function renderInterventionGroups() {
+      if (!currentClassData) return;
+
+      // Group students by the skills they got wrong
+      const skillGroups = {};
+
+      currentClassData.students.forEach(student => {
+        const wrongSkills = student.ptm.itemResponses.filter(item => !item.correct);
+        wrongSkills.forEach(item => {
+          if (!skillGroups[item.skill]) {
+            skillGroups[item.skill] = {
+              skill: item.skill,
+              students: [],
+              percentage: 0
+            };
+          }
+          skillGroups[item.skill].students.push({
+            name: student.studentName,
+            cat4: student.cat4.meanSAS,
+            ngmt: student.ngmt.sas,
+            focusGroup: student.focusGroup
+          });
+        });
+      });
+
+      // Calculate percentage and sort by number of students (most common first)
+      const sortedGroups = Object.values(skillGroups).map(group => {
+        group.percentage = Math.round((group.students.length / currentClassData.students.length) * 100);
+        return group;
+      }).sort((a, b) => b.students.length - a.students.length);
+
+      // Show top 8 most common intervention needs
+      const topGroups = sortedGroups.slice(0, 8);
+
+      let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">';
+
+      if (topGroups.length === 0) {
+        html += '<p style="text-align: center; color: var(--color-50); padding: 40px; grid-column: 1/-1;">No skill gaps identified. All students performing well!</p>';
+      } else {
+        topGroups.forEach((group, index) => {
+          const severity = group.percentage >= 50 ? 'critical' : group.percentage >= 30 ? 'warning' : 'info';
+          const severityColor = severity === 'critical' ? '#dc2626' : severity === 'warning' ? '#f59e0b' : '#3b82f6';
+          const severityBg = severity === 'critical' ? '#fef2f2' : severity === 'warning' ? '#fffbeb' : '#eff6ff';
+
+          html += '<div style="background: ' + severityBg + '; border: 2px solid ' + severityColor + '; border-radius: 12px; padding: 20px;">';
+          html += '  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">';
+          html += '    <h3 style="font-size: 15px; font-weight: 600; color: ' + severityColor + '; margin: 0; flex: 1;">';
+          html += '      ' + (index + 1) + '. ' + group.skill;
+          html += '    </h3>';
+          html += '    <div style="background: ' + severityColor + '; color: white; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; white-space: nowrap; margin-left: 8px;">';
+          html += '      ' + group.students.length + ' students (' + group.percentage + '%)';
+          html += '    </div>';
+          html += '  </div>';
+
+          html += '  <div style="margin-top: 12px;">';
+          html += '    <div style="font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 8px;">👥 STUDENTS NEEDING THIS INTERVENTION:</div>';
+          html += '    <div style="display: flex; flex-wrap: wrap; gap: 6px;">';
+
+          group.students.slice(0, 10).forEach(student => {
+            const focusColor = student.focusGroup === 'foundation' ? '#fca5a5' :
+                             student.focusGroup === 'consolidation' ? '#93c5fd' : '#86efac';
+            html += '      <div style="background: white; border: 1px solid ' + focusColor + '; padding: 6px 12px; border-radius: 16px; font-size: 12px; color: #374151;">';
+            html += '        ' + student.name;
+            html += '      </div>';
+          });
+
+          if (group.students.length > 10) {
+            html += '      <div style="background: #f3f4f6; padding: 6px 12px; border-radius: 16px; font-size: 12px; color: #6b7280;">';
+            html += '        +' + (group.students.length - 10) + ' more';
+            html += '      </div>';
+          }
+
+          html += '    </div>';
+          html += '  </div>';
+
+          html += '  <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.1);">';
+          html += '    <button onclick="alert(\'Intervention planning coming soon: ' + group.skill.replace(/'/g, "\\'") + '\')" style="background: ' + severityColor + '; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;">';
+          html += '      📝 Plan Intervention for ' + group.students.length + ' Students';
+          html += '    </button>';
+          html += '  </div>';
+
+          html += '</div>';
+        });
+      }
+
+      html += '</div>';
+
+      if (sortedGroups.length > 8) {
+        html += '<p style="text-align: center; margin-top: 20px; color: var(--color-50); font-size: 14px;">';
+        html += '  Showing top 8 of ' + sortedGroups.length + ' intervention groups. ';
+        html += '  <a href="#" onclick="alert(\'View all coming soon\'); return false;" style="color: var(--color-primary);">View all →</a>';
+        html += '</p>';
+      }
+
+      document.getElementById('interventionGroupsContainer').innerHTML = html;
+    }
+
+    // Store current class data for intervention groups
+    let currentClassData = null;
 
     function renderStudentsTable() {
       let html = '';

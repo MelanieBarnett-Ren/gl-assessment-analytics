@@ -911,7 +911,7 @@
             html += '    <div class="skill-item">';
             html += '      <div class="skill-name">' + capitalizedName + '</div>';
             html += '      <div class="skill-bar-container">';
-            html += '        <div class="skill-bar ' + getScoreClass(skillScore) + '" style="width: ' + skillScore + '%"></div>';
+            html += '        <div class="skill-bar ' + getScoreClass(skillScore) + '" style="width: ' + Math.max(skillScore, 8) + '%; min-width: 24px;"></div>';
             html += '      </div>';
             html += '      <div class="skill-score">' + skillScore + '%</div>';
             html += '    </div>';
