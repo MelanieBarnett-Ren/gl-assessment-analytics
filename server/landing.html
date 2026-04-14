@@ -170,7 +170,7 @@
     }
 
     .hero {
-      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       border-radius: 12px;
       padding: 48px;
       color: white;
@@ -182,6 +182,7 @@
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 12px;
+      color: white;
     }
 
     .hero p {
@@ -291,8 +292,8 @@
 
     .nav-card-badge {
       display: inline-block;
-      background: #eff6ff;
-      color: #3730a3;
+      background: var(--color-primary-50);
+      color: var(--color-primary);
       padding: 4px 10px;
       border-radius: 12px;
       font-size: 11px;
@@ -301,8 +302,8 @@
     }
 
     .nav-card-badge.new {
-      background: #d1fae5;
-      color: #065f46;
+      background: var(--color-tertiary-container);
+      color: var(--color-tertiary);
     }
 
     .footer {
@@ -692,7 +693,7 @@
         </div>
         <div class="stat-value">
           90–112
-          <span style="font-size: 16px; color: #a855f7;">SAS</span>
+          <span style="font-size: 16px; color: var(--color-primary);">SAS</span>
         </div>
         <div class="stat-detail">22-point gap (School A → C)</div>
       </div>
@@ -706,7 +707,7 @@
         </div>
         <div class="stat-value">
           305
-          <span style="font-size: 16px; color: #d946ef;">⭐</span>
+          <span style="font-size: 16px; color: var(--color-secondary);">⭐</span>
         </div>
         <div class="stat-detail">Essential 23% to prioritize</div>
       </div>
