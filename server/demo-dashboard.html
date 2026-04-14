@@ -1071,26 +1071,165 @@
       `;
     }
 
+    // CSV Download Helper Function
+    function downloadCSV(content, filename) {
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    }
+
     // Export functions with proper parameters
     function exportStrandConcern(schoolId, strandId) {
       const filename = `${schoolId}_${strandId}_concern_students_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating CSV export:\n\nFile: ${filename}\n\nFilters:\n- School: ${schoolId}\n- Strand: ${strandId}\n- Level: Concern (< 50% mastery)\n- Students: 46\n\nExport will include:\n- Student ID & Name\n- Average Mastery %\n- Individual objective scores\n- Recommended interventions`);
-      // In real implementation, this would call the actual export API
+
+      // Generate mock data for demonstration
+      const headers = ['Student ID', 'Student Name', 'Average % Correct', 'Performance Level', 'Y5.N.FDP.2', 'Y5.N.FDP.3', 'Y5.N.FDP.5', 'Recommended Intervention'];
+      const mockStudents = [];
+
+      for (let i = 1; i <= 46; i++) {
+        mockStudents.push([
+          `STU${String(i).padStart(4, '0')}`,
+          `Student ${i}`,
+          Math.floor(Math.random() * 20 + 30) + '%',
+          'Concern',
+          Math.floor(Math.random() * 30 + 20) + '%',
+          Math.floor(Math.random() * 30 + 15) + '%',
+          Math.floor(Math.random() * 30 + 25) + '%',
+          'Small group intervention - Focus on fraction fundamentals'
+        ]);
+      }
+
+      const csvContent = [
+        ['Strand Concern Students Report'],
+        [`School: ${schoolId}`],
+        [`Strand: ${strandId}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Filter: Concern Level (< 50% correct)`],
+        [`Total Students: 46`],
+        [],
+        headers,
+        ...mockStudents
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     function exportComparison(school1, school2) {
       const filename = `comparison_${school1}_vs_${school2}_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating comparison report:\n\nFile: ${filename}\n\nComparing:\n- School A (${school1}): 92.0 SAS, -4 VA\n- School C (${school2}): 109.0 SAS, +6 VA\n\nReport will include:\n- SAS scores by curriculum area\n- Process skills breakdown\n- Demographics comparison\n- Teaching time analysis`);
+
+      const headers = ['Metric', school1, school2, 'Difference'];
+      const data = [
+        ['Mean SAS Score', '92.0', '109.0', '+17.0'],
+        ['Value Added', '-4', '+6', '+10'],
+        ['Number & Place Value', '88', '105', '+17'],
+        ['Fractions & Decimals', '85', '112', '+27'],
+        ['Measurement', '94', '108', '+14'],
+        ['Geometry', '96', '110', '+14'],
+        ['Statistics', '91', '107', '+16'],
+        ['Mathematical Fluency', '87%', '94%', '+7%'],
+        ['Problem Solving', '82%', '91%', '+9%'],
+        ['Reasoning', '79%', '88%', '+9%'],
+        ['FSM Students Count', '58', '42', '-16'],
+        ['EAL Students Count', '34', '28', '-6'],
+        ['Average Teaching Time (hrs/week)', '5.2', '5.8', '+0.6']
+      ];
+
+      const csvContent = [
+        ['School Comparison Report'],
+        [`Comparing: ${school1} vs ${school2}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [],
+        headers,
+        ...data
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     function exportProgress(schoolId) {
       const filename = `${schoolId}_progress_report_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating progress report:\n\nFile: ${filename}\n\nSchool: ${schoolId}\nTerm range: Last 6 terms\n\nReport will include:\n- Term-on-term SAS changes\n- Student-level progress tracking\n- Value-added trends\n- Intervention effectiveness`);
+
+      const headers = ['Term', 'Mean SAS', 'Change from Previous', 'Value Added', 'Students On Track', 'Intervention Count'];
+      const terms = ['Autumn 1', 'Autumn 2', 'Spring 1', 'Spring 2', 'Summer 1', 'Summer 2'];
+      const data = [];
+
+      let prevSAS = 88;
+      for (let i = 0; i < 6; i++) {
+        const currentSAS = prevSAS + Math.floor(Math.random() * 5 + 1);
+        data.push([
+          terms[i],
+          currentSAS.toFixed(1),
+          i === 0 ? 'N/A' : '+' + (currentSAS - prevSAS).toFixed(1),
+          (Math.random() * 10 - 2).toFixed(1),
+          Math.floor(Math.random() * 20 + 75) + '%',
+          Math.floor(Math.random() * 15 + 10)
+        ]);
+        prevSAS = currentSAS;
+      }
+
+      const csvContent = [
+        ['Progress Report'],
+        [`School: ${schoolId}`],
+        [`Term Range: Last 6 terms`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [],
+        headers,
+        ...data,
+        [],
+        ['Summary'],
+        ['Total SAS Improvement', '+' + (prevSAS - 88).toFixed(1)],
+        ['Average Term Growth', '+' + ((prevSAS - 88) / 6).toFixed(1)],
+        ['Current Value Added', '+3.0']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     function exportDemographic(demographic) {
       const filename = `${demographic}_students_${new Date().toISOString().split('T')[0]}.csv`;
-      alert(`Generating demographic export:\n\nFile: ${filename}\n\nDemographic: ${demographic.toUpperCase()}\nStudents: 136 (54% of cohort)\n\nExport will include:\n- Student ID & Name\n- Current SAS & NPR\n- Gap vs non-${demographic} (8.2 points)\n- Focus areas for intervention`);
+
+      const headers = ['Student ID', 'Student Name', 'Current SAS', 'NPR', 'Gap vs Non-' + demographic.toUpperCase(), 'Focus Areas'];
+      const mockStudents = [];
+
+      for (let i = 1; i <= 136; i++) {
+        mockStudents.push([
+          `STU${String(i).padStart(4, '0')}`,
+          `Student ${i}`,
+          Math.floor(Math.random() * 15 + 88),
+          Math.floor(Math.random() * 40 + 20),
+          '-' + (Math.random() * 10 + 3).toFixed(1),
+          'Fluency, Reasoning'
+        ]);
+      }
+
+      const csvContent = [
+        ['Demographic Analysis Report'],
+        [`Demographic: ${demographic.toUpperCase()}`],
+        [`Exported: ${new Date().toLocaleString()}`],
+        [`Total Students: 136 (54% of cohort)`],
+        [`Average Gap: -8.2 SAS points`],
+        [],
+        headers,
+        ...mockStudents,
+        [],
+        ['Summary'],
+        ['Average SAS', '95.8'],
+        ['Non-' + demographic.toUpperCase() + ' Average', '104.0'],
+        ['Gap', '-8.2'],
+        ['Recommended Action', 'Small-group tuition focusing on conceptual fluency']
+      ].map(row => row.join(',')).join('\n');
+
+      downloadCSV(csvContent, filename);
     }
 
     // Initial load
