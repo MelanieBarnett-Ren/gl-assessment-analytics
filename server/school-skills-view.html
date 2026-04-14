@@ -79,42 +79,33 @@
 
     /* School Selector */
     body .school-selector {
-      margin-top: 12px !important;
+      margin-top: 16px !important;
       display: flex !important;
-      align-items: center !important;
       gap: 12px !important;
     }
 
-    body .school-selector label {
-      font-size: 14px !important;
-      font-weight: 600 !important;
-      opacity: 0.9 !important;
-      color: white !important;
-    }
-
-    body .school-selector select {
-      padding: 8px 16px !important;
-      font-size: 14px !important;
-      font-weight: 600 !important;
+    body .school-btn {
+      padding: 10px 20px !important;
       border: 2px solid rgba(255, 255, 255, 0.3) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: white !important;
       border-radius: 8px !important;
-      background: rgba(255, 255, 255, 0.95) !important;
-      color: #1f2937 !important;
       cursor: pointer !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
       transition: all 0.2s !important;
-      min-width: 250px !important;
       font-family: 'Inter', sans-serif !important;
     }
 
-    body .school-selector select:hover {
-      background: white !important;
-      border-color: rgba(255, 255, 255, 0.5) !important;
+    body .school-btn:hover {
+      border-color: rgba(255, 255, 255, 0.6) !important;
+      background: rgba(255, 255, 255, 0.2) !important;
     }
 
-    body .school-selector select:focus {
-      outline: none !important;
+    body .school-btn.active {
       border-color: white !important;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+      background: white !important;
+      color: #ba119b !important;
     }
 
     body .container {
@@ -892,12 +883,9 @@
     </div>
     <h1 id="pageTitle">Loading...</h1>
     <div class="school-selector">
-      <label for="schoolSelect">🏫 School:</label>
-      <select id="schoolSelect" onchange="changeSchool(this.value)">
-        <option value="school6">School A - Oakwood Primary</option>
-        <option value="school7">School B - Riverside Academy</option>
-        <option value="school8">School C - Hillside Primary</option>
-      </select>
+      <button class="school-btn" data-school="school6" onclick="changeSchool('school6')">School A</button>
+      <button class="school-btn" data-school="school7" onclick="changeSchool('school7')">School B</button>
+      <button class="school-btn" data-school="school8" onclick="changeSchool('school8')">School C</button>
     </div>
   </div>
 
@@ -954,17 +942,29 @@
     let schoolData = null;
     let classesData = null;
 
-    // Set the dropdown to match the current school
+    // Set the active button to match the current school
     function initSchoolSelector() {
-      const dropdown = document.getElementById('schoolSelect');
-      if (dropdown && schoolId) {
-        dropdown.value = schoolId;
-      }
+      document.querySelectorAll('.school-btn').forEach(btn => {
+        if (btn.getAttribute('data-school') === schoolId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
     }
 
     // Change school and reload data
     function changeSchool(newSchoolId) {
       schoolId = newSchoolId;
+
+      // Update active button
+      document.querySelectorAll('.school-btn').forEach(btn => {
+        if (btn.getAttribute('data-school') === newSchoolId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
 
       // Update page title
       document.getElementById('pageTitle').textContent = 'Loading...';

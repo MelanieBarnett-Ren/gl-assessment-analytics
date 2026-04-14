@@ -344,14 +344,34 @@
       background: rgba(186, 17, 155, 0.02) !important;
     }
 
-    .school-selector select:hover {
-      border-color: #ba119b !important;
+    .school-selector {
+      display: flex !important;
+      gap: 12px !important;
+      margin-top: 16px !important;
     }
 
-    .school-selector select:focus {
-      outline: none !important;
+    .school-btn {
+      padding: 10px 20px !important;
+      border: 2px solid #e5e7eb !important;
+      background: white !important;
+      color: #6b7280 !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      transition: all 0.2s !important;
+    }
+
+    .school-btn:hover {
       border-color: #ba119b !important;
-      box-shadow: 0 0 0 3px rgba(186, 17, 155, 0.1) !important;
+      background: rgba(186, 17, 155, 0.05) !important;
+      color: #ba119b !important;
+    }
+
+    .school-btn.active {
+      border-color: #ba119b !important;
+      background: #ba119b !important;
+      color: white !important;
     }
   </style>
 </head>
@@ -445,13 +465,10 @@
       Strands
     </div>
     <h1 id="pageTitle" style="font-size: 28px; margin-bottom: 8px; color: #1f2937; font-weight: 700;">Loading...</h1>
-    <div class="school-selector" style="margin-top: 12px; display: flex; align-items: center; gap: 12px;">
-      <label for="schoolSelect" style="font-size: 14px; font-weight: 600;">🏫 School:</label>
-      <select id="schoolSelect" onchange="changeSchool(this.value)" style="padding: 8px 16px; font-size: 14px; font-weight: 600; border: 2px solid #e5e7eb; border-radius: 8px; background: white; cursor: pointer; transition: all 0.2s;">
-        <option value="school6">School A - Oakwood Primary</option>
-        <option value="school7">School B - Riverside Academy</option>
-        <option value="school8">School C - Hillside Primary</option>
-      </select>
+    <div class="school-selector">
+      <button class="school-btn" data-school="school6" onclick="changeSchool('school6')">School A</button>
+      <button class="school-btn" data-school="school7" onclick="changeSchool('school7')">School B</button>
+      <button class="school-btn" data-school="school8" onclick="changeSchool('school8')">School C</button>
     </div>
   </div>
 
@@ -533,10 +550,13 @@
     }
 
     function initSchoolSelector() {
-      const dropdown = document.getElementById('schoolSelect');
-      if (dropdown && schoolId) {
-        dropdown.value = schoolId;
-      }
+      document.querySelectorAll('.school-btn').forEach(btn => {
+        if (btn.getAttribute('data-school') === schoolId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
     }
 
     function changeSchool(newSchoolId) {
