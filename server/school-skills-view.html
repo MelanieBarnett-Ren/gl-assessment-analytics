@@ -890,20 +890,13 @@
   </div>
 
   <div class="container">
-    <!-- Class Selector Section -->
-    <div id="classSelector" style="margin-bottom: 32px;">
-      <h2 style="font-size: 20px; margin-bottom: 16px;">📚 Select a Class</h2>
-      <div id="classCards" class="loading">Loading classes...</div>
-    </div>
-
     <!-- Tabs -->
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('domains')">📊 Domains</button>
+      <button class="tab active" onclick="switchTab('domains')">📊 Performance Overview</button>
       <button class="tab" onclick="switchTab('skills')">🎯 Skills Breakdown</button>
-      <button class="tab" onclick="window.location.href='/school/' + schoolId + '/strands'">📐 Strands</button>
+      <button class="tab" onclick="window.location.href='/school/' + schoolId + '/strands'">📚 Strands</button>
       <button class="tab" onclick="switchTab('classes')">👥 Classes</button>
-      <button class="tab" onclick="switchTab('heatmap')">🔥 Class Heatmap</button>
-      <button class="tab" onclick="switchTab('items')">📝 Item Analysis</button>
+      <button class="tab" onclick="switchTab('heatmap')">📋 Item Analysis</button>
     </div>
 
     <!-- Domains Tab -->
@@ -921,14 +914,9 @@
       <div id="classesContent" class="loading">Loading classes...</div>
     </div>
 
-    <!-- Heatmap Tab -->
+    <!-- Heatmap/Item Analysis Tab -->
     <div id="heatmap-tab" class="tab-content">
-      <div id="heatmapContent" class="loading">Loading heatmap...</div>
-    </div>
-
-    <!-- Items Tab -->
-    <div id="items-tab" class="tab-content">
-      <div id="itemsContent" class="loading">Loading item analysis...</div>
+      <div id="heatmapContent" class="loading">Loading item analysis...</div>
     </div>
   </div>
 
@@ -973,8 +961,7 @@
       document.getElementById('domainsContent').innerHTML = '<div class="loading">Loading domain data...</div>';
       document.getElementById('skillsContent').innerHTML = '<div class="loading">Loading skills data...</div>';
       document.getElementById('classesContent').innerHTML = '<div class="loading">Loading classes...</div>';
-      document.getElementById('heatmapContent').innerHTML = '<div class="loading">Loading heatmap...</div>';
-      document.getElementById('itemsContent').innerHTML = '<div class="loading">Loading item analysis...</div>';
+      document.getElementById('heatmapContent').innerHTML = '<div class="loading">Loading item analysis...</div>';
 
       // Update URL without page reload
       const newUrl = `/school/${schoolId}/skills`;
@@ -990,7 +977,7 @@
 
       // Find and activate the correct tab button
       const tabs = document.querySelectorAll('.tab');
-      const tabNames = ['domains', 'skills', 'strands', 'classes', 'heatmap', 'items'];
+      const tabNames = ['domains', 'skills', 'strands', 'classes', 'heatmap'];
       const tabIndex = tabNames.indexOf(tabName);
       if (tabIndex >= 0 && tabs[tabIndex]) {
         tabs[tabIndex].classList.add('active');
@@ -1044,10 +1031,8 @@
 
         if (classResult.success) {
           classesData = classResult.data;
-          renderClassCards();
           renderClasses();
           renderHeatmap();
-          renderItems();
         }
 
       } catch (error) {
@@ -1079,16 +1064,21 @@
 
       const ngmt = schoolData.ngmt;
 
-      // Overall NGMT summary at top
-      let html = '<div style="background: white; border-radius: 16px; padding: 32px; margin-bottom: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center;">';
-      html += '  <div style="font-size: 16px; color: #6b7280; font-weight: 500; margin-bottom: 8px;">Overall Mathematics Performance</div>';
-      html += '  <div style="font-size: 56px; font-weight: 700; color: ' + (getScoreClass(ngmt.overall.sas) === 'high' ? '#10b981' : getScoreClass(ngmt.overall.sas) === 'good' ? '#059669' : getScoreClass(ngmt.overall.sas) === 'medium' ? '#f59e0b' : '#dc2626') + ';">' + ngmt.overall.sas + '</div>';
-      html += '  <div style="font-size: 14px; color: #9ca3af;">SAS Score (Stanine ' + ngmt.overall.stanine + ')</div>';
+      // Overall NGMT summary at top - more compact
+      let html = '<div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between;">';
+      html += '  <div>';
+      html += '    <div style="font-size: 14px; color: #6b7280; font-weight: 500; margin-bottom: 4px;">Overall Mathematics Performance</div>';
+      html += '    <div style="font-size: 13px; color: #9ca3af;">School Average • Stanine ' + ngmt.overall.stanine + '</div>';
+      html += '  </div>';
+      html += '  <div style="text-align: right;">';
+      html += '    <div style="font-size: 36px; font-weight: 700; color: ' + (getScoreClass(ngmt.overall.sas) === 'high' ? '#10b981' : getScoreClass(ngmt.overall.sas) === 'good' ? '#059669' : getScoreClass(ngmt.overall.sas) === 'medium' ? '#f59e0b' : '#dc2626') + ';">' + ngmt.overall.sas + '</div>';
+      html += '    <div style="font-size: 12px; color: #9ca3af;">SAS Score</div>';
+      html += '  </div>';
       html += '</div>';
 
       // Strand cards
-      html += '<h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #1f2937;">Curriculum Strands</h2>';
-      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px;">';
+      html += '<h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #1f2937;">Curriculum Domains</h2>';
+      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">';
 
       const strandsData = [
         {
@@ -1121,25 +1111,25 @@
         const scoreColor = scoreClass === 'high' ? '#10b981' : scoreClass === 'good' ? '#059669' : scoreClass === 'medium' ? '#f59e0b' : '#dc2626';
 
         html += '<a href="/school/' + schoolId + '/strand/' + strand.id + '" style="text-decoration: none; display: block;">';
-        html += '  <div style="background: white; border-radius: 16px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; cursor: pointer; height: 100%; border: 2px solid transparent;" onmouseover="this.style.transform=\'translateY(-4px)\'; this.style.boxShadow=\'0 8px 24px rgba(186, 17, 155, 0.15)\'; this.style.borderColor=\'#ba119b\';" onmouseout="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'0 2px 12px rgba(0,0,0,0.08)\'; this.style.borderColor=\'transparent\';">';
+        html += '  <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.2s ease; cursor: pointer; height: 100%; border-left: 4px solid ' + scoreColor + ';" onmouseover="this.style.boxShadow=\'0 4px 12px rgba(0,0,0,0.12)\';" onmouseout="this.style.boxShadow=\'0 1px 3px rgba(0,0,0,0.1)\';">';
 
         // Header with icon and score
-        html += '    <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: 16px;">';
-        html += '      <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f8e5f2 0%, #fce7f3 100%); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;">' + strand.icon + '</div>';
+        html += '    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">';
+        html += '      <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #f8e5f2 0%, #fce7f3 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">' + strand.icon + '</div>';
         html += '      <div style="text-align: right;">';
-        html += '        <div style="font-size: 32px; font-weight: 700; color: ' + scoreColor + ';">' + avgScore + '</div>';
-        html += '        <div style="font-size: 12px; color: #9ca3af;">SAS Score</div>';
+        html += '        <div style="font-size: 24px; font-weight: 700; color: ' + scoreColor + ';">' + avgScore + '</div>';
+        html += '        <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">SAS</div>';
         html += '      </div>';
         html += '    </div>';
 
         // Strand name and description
-        html += '    <h3 style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 8px;">' + strand.name + '</h3>';
-        html += '    <p style="font-size: 14px; color: #6b7280; line-height: 1.6; margin-bottom: 16px;">' + strand.description + '</p>';
+        html += '    <h3 style="font-size: 16px; font-weight: 600; color: #1f2937; margin-bottom: 6px; line-height: 1.3;">' + strand.name + '</h3>';
+        html += '    <p style="font-size: 13px; color: #6b7280; line-height: 1.5; margin-bottom: 12px;">' + strand.description + '</p>';
 
-        // View details button
-        html += '    <div style="display: flex; align-items: center; color: #ba119b; font-weight: 500; font-size: 14px;">';
-        html += '      View Detailed Analysis';
-        html += '      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; margin-left: 6px;">';
+        // View details link
+        html += '    <div style="display: flex; align-items: center; color: #ba119b; font-weight: 500; font-size: 13px;">';
+        html += '      View Analysis';
+        html += '      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px; margin-left: 4px;">';
         html += '        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />';
         html += '      </svg>';
         html += '    </div>';
