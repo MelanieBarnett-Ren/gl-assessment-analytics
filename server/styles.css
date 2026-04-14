@@ -592,6 +592,19 @@ pre {
   box-shadow: var(--shadow-lg);
 }
 
+/* Prevent text underlines on all card types when hovering */
+.card:hover *,
+.card:hover a,
+a:hover .card,
+a:hover .card *,
+[class*="card"]:hover,
+[class*="card"]:hover *,
+[class*="card"]:hover a,
+a:hover [class*="card"],
+a:hover [class*="card"] * {
+  text-decoration: none !important;
+}
+
 /* Badges */
 .badge {
   display: inline-flex;
