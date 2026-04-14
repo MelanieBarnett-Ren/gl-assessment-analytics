@@ -1012,10 +1012,10 @@
       html += '  </div>';
       html += '  <div class="summary-card">';
       html += '    <h3>Demographics</h3>';
-      html += '    <div style="font-size: 14px; margin-top: 8px;">';
-      html += '      ' + summary.fsmPercentage + '% FSM<br>';
-      html += '      ' + summary.ealPercentage + '% EAL<br>';
-      html += '      ' + summary.sendPercentage + '% SEND';
+      html += '    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">';
+      html += '      <span style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 500;">' + summary.fsmPercentage + '% FSM</span>';
+      html += '      <span style="background: #8b5cf6; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 500;">' + summary.ealPercentage + '% EAL</span>';
+      html += '      <span style="background: #ec4899; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 500;">' + summary.sendPercentage + '% SEND</span>';
       html += '    </div>';
       html += '  </div>';
       html += '</div>';
@@ -1044,8 +1044,7 @@
       html += '<div class="tabs">';
       html += '  <button class="tab active" onclick="switchTab(\'focus\')">👥 Focus Groups</button>';
       html += '  <button class="tab" onclick="switchTab(\'interventions\')">🎯 Interventions</button>';
-      html += '  <button class="tab" onclick="switchTab(\'performance\')">📊 Performance (RAG)</button>';
-      html += '  <button class="tab" onclick="switchTab(\'students\')">📋 Student Data</button>';
+      html += '  <button class="tab" onclick="switchTab(\'students\')">📊 Student Data & Performance</button>';
       html += '</div>';
 
       // Tab 1: Focus Groups
@@ -1083,35 +1082,31 @@
       html += '  <div id="interventionGroupsContainer"></div>';
       html += '</div>';
 
-      // Tab 3: Performance (RAG)
-      html += '<div id="performance-tab" class="tab-content">';
+      // Tab 3: Student Data & Performance
+      html += '<div id="students-tab" class="tab-content">';
       html += '  <div class="focus-groups">';
       html += '    <h2><span class="tooltip">Performance Status (RAG)<span class="tooltiptext">Students grouped by SAS scores: Red (<90 = concern), Amber (90-110 = expected), Green (>110 = exceeding)</span></span></h2>';
       html += '    <div class="focus-grid">';
-      html += '      <div class="focus-card rag-red clickable" onclick="switchTab(\'students\'); filterByRAG(\'red\')" title="Click to view students needing support">';
+      html += '      <div class="focus-card rag-red clickable" onclick="filterByRAG(\'red\')" title="Click to filter students needing support">';
       html += '        <h3>🔴 Needing Support</h3>';
       html += '        <div class="count">' + ragCounts.red + '</div>';
       html += '        <p style="font-size: 12px; margin-top: 8px;">SAS < 90</p>';
-      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to filter</p>';
       html += '      </div>';
-      html += '      <div class="focus-card rag-amber clickable" onclick="switchTab(\'students\'); filterByRAG(\'amber\')" title="Click to view students performing as expected">';
+      html += '      <div class="focus-card rag-amber clickable" onclick="filterByRAG(\'amber\')" title="Click to filter students performing as expected">';
       html += '        <h3>🟡 As Expected</h3>';
       html += '        <div class="count">' + ragCounts.amber + '</div>';
       html += '        <p style="font-size: 12px; margin-top: 8px;">SAS 90-110</p>';
-      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to filter</p>';
       html += '      </div>';
-      html += '      <div class="focus-card rag-green clickable" onclick="switchTab(\'students\'); filterByRAG(\'green\')" title="Click to view high achievers">';
+      html += '      <div class="focus-card rag-green clickable" onclick="filterByRAG(\'green\')" title="Click to filter high achievers">';
       html += '        <h3>🟢 High Achievers</h3>';
       html += '        <div class="count">' + ragCounts.green + '</div>';
       html += '        <p style="font-size: 12px; margin-top: 8px;">SAS > 110</p>';
-      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to filter</p>';
       html += '      </div>';
       html += '    </div>';
       html += '  </div>';
-      html += '</div>';
-
-      // Tab 4: Student Data
-      html += '<div id="students-tab" class="tab-content">';
       html += '  <div class="filter-bar">';
       html += '    <h3>🔍 Filter & Export Students</h3>';
       html += '    <div class="filter-group">';
@@ -1158,7 +1153,7 @@
 
       // Find the button that corresponds to this tab
       const tabs = document.querySelectorAll('.tab');
-      const tabNames = ['focus', 'interventions', 'performance', 'students'];
+      const tabNames = ['focus', 'interventions', 'students'];
       const tabIndex = tabNames.indexOf(tabName);
       if (tabIndex >= 0 && tabs[tabIndex]) {
         tabs[tabIndex].classList.add('active');
@@ -1248,7 +1243,7 @@
           html += '  </div>';
 
           html += '  <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.1);">';
-          html += '    <button onclick="alert(\'Intervention planning coming soon: ' + group.skill.replace(/'/g, "\\'") + '\')" style="background: ' + severityColor + '; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;">';
+          html += '    <button onclick="planIntervention(\'' + group.skill.replace(/'/g, "\\'") + '\', ' + JSON.stringify(group.students).replace(/"/g, '&quot;') + ')" style="background: ' + severityColor + '; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;">';
           html += '      📝 Plan Intervention for ' + group.students.length + ' Students';
           html += '    </button>';
           html += '  </div>';
@@ -1267,6 +1262,12 @@
       }
 
       document.getElementById('interventionGroupsContainer').innerHTML = html;
+    }
+
+    function planIntervention(skill, students) {
+      const studentsParam = encodeURIComponent(JSON.stringify(students));
+      const skillParam = encodeURIComponent(skill);
+      window.location.href = `/intervention/planner?classId=${classId}&skill=${skillParam}&students=${studentsParam}`;
     }
 
     function renderStudentsTable() {

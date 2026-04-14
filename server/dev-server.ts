@@ -503,11 +503,27 @@ app.get('/class/:classId', (req, res) => {
 });
 
 /**
+ * GET /intervention/planner
+ * Intervention planning tool
+ */
+app.get('/intervention/planner', (req, res) => {
+  res.sendFile(path.join(__dirname, 'intervention-planner.html'));
+});
+
+/**
  * GET /school/:schoolId/skills
  * School-level skills analysis page
  */
 app.get('/school/:schoolId/skills', (req, res) => {
   res.sendFile(path.join(__dirname, 'school-skills-view.html'));
+});
+
+/**
+ * GET /school/:schoolId/strands
+ * Strands landing page (shows all available strands)
+ */
+app.get('/school/:schoolId/strands', (req, res) => {
+  res.sendFile(path.join(__dirname, 'strands-landing.html'));
 });
 
 /**

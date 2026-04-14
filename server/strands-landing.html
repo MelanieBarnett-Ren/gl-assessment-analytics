@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strand Analysis - GL Assessment</title>
+
+  <!-- Preconnect to Google Fonts for faster loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Inter Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+
+  <!-- Epoch UI Theme (GL Assessment Brand) -->
+  <link rel="stylesheet" href="epoch-theme.css">
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Accessibility -->
+  <link rel="stylesheet" href="accessibility.css">
+
+  <!-- PDF Export -->
+  <link rel="stylesheet" href="/pdf-export.css">
+
+  <style>
+    :root {
+      --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --color-primary: #ba119b;
+      --color-secondary: #d946ef;
+      --color-page-background: #f3f4f6;
+    }
+
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      background: #f3f4f6 !important;
+      color: #1f2937 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .hamburger-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 1000;
+      color: white;
+    }
+
+    .hamburger-button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      transition: opacity 0.2s;
+    }
+
+    .hamburger-button:hover {
+      opacity: 0.8;
+    }
+
+    .hamburger-menu h1 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: -300px;
+      width: 300px;
+      height: calc(100vh - 60px);
+      background: white;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      z-index: 999;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 998;
+    }
+
+    .sidebar-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .sidebar nav {
+      padding: 20px 0;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #9ca3af;
+      padding: 0 24px 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: #1f2937;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-link:hover {
+      background: #f3f4f6;
+    }
+
+    .nav-link.active {
+      background: #fce7f3;
+      color: var(--color-primary);
+      border-right: 3px solid var(--color-primary);
+    }
+
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .nav-icon svg,
+    .nav-icon .icon {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    .container {
+      margin-top: 60px;
+      padding: 40px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .header {
+      background: white;
+      padding: 32px;
+      margin-bottom: 32px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .breadcrumb a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .domain-section {
+      margin-bottom: 40px;
+    }
+
+    .domain-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .strands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .strand-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      border: 2px solid transparent;
+    }
+
+    .strand-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(186, 17, 155, 0.15);
+      border-color: var(--color-primary);
+    }
+
+    .strand-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .strand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .strand-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+      flex: 1;
+    }
+
+    .strand-description {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .strand-stats {
+      display: flex;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .strand-stat {
+      flex: 1;
+    }
+
+    .strand-stat-label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .strand-stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .strand-stat-value.concern {
+      color: #dc2626;
+    }
+
+    .strand-stat-value.emerging {
+      color: #f59e0b;
+    }
+
+    .strand-stat-value.developing {
+      color: #3b82f6;
+    }
+
+    .strand-stat-value.mastered {
+      color: #10b981;
+    }
+
+    .no-strands {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- HAMBURGER MENU -->
+  <div class="hamburger-menu">
+    <button class="hamburger-button" onclick="toggleSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+    <h1>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+      </svg>
+      GL Assessment Analytics
+    </h1>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <nav>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="/gl" class="nav-link">
+          <span class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+            </svg>
+          </span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/mat" class="nav-link">
+          <span class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
+            </svg>
+          </span>
+          <span>MAT Overview</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Schools & Classes</div>
+        <a href="/school/school6/skills" class="nav-link">
+          <span class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+            </svg>
+          </span>
+          <span>School A</span>
+        </a>
+        <a href="/school/school7/skills" class="nav-link">
+          <span class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+            </svg>
+          </span>
+          <span>School B</span>
+        </a>
+        <a href="/school/school8/skills" class="nav-link">
+          <span class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+            </svg>
+          </span>
+          <span>School C</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Reports</div>
+        <a href="/reports" class="nav-link">
+          <span class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+          </span>
+          <span>Reports</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div class="breadcrumb">
+        <a href="/gl">Dashboard</a> / <a href="#" id="schoolLink">School</a> / <span>Strand Analysis</span>
+      </div>
+      <h1 id="pageTitle">Strand Analysis - Select a Strand</h1>
+    </div>
+
+    <div id="strandsContent"></div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3001';
+
+    // Get schoolId from URL
+    const pathParts = window.location.pathname.split('/');
+    const schoolId = pathParts[pathParts.length - 2]; // /school/school6/strands
+
+    // School name mapping
+    const SCHOOL_NAMES = {
+      'school6': 'School A',
+      'school7': 'School B',
+      'school8': 'School C'
+    };
+
+    const schoolName = SCHOOL_NAMES[schoolId] || 'Unknown School';
+
+    // Define all strands organized by domain
+    const DOMAINS = [
+      {
+        name: 'Number',
+        icon: '🔢',
+        strands: [
+          {
+            id: 'number-fractions',
+            name: 'Fractions, Decimals & Percentages',
+            description: 'Understanding and working with fractions, decimals, and percentages. Converting between forms, ordering, and solving problems.'
+          },
+          {
+            id: 'number-operations',
+            name: 'Four Operations',
+            description: 'Addition, subtraction, multiplication, and division with whole numbers and decimals. Mental and written methods.'
+          }
+        ]
+      },
+      {
+        name: 'Algebra',
+        icon: '📐',
+        strands: [
+          {
+            id: 'algebra-sequences',
+            name: 'Sequences & Patterns',
+            description: 'Generating and describing number sequences, using formulae, and solving algebraic problems.'
+          }
+        ]
+      },
+      {
+        name: 'Shape, Space & Measures',
+        icon: '📏',
+        strands: []
+      },
+      {
+        name: 'Handling Data',
+        icon: '📊',
+        strands: []
+      }
+    ];
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('visible');
+    }
+
+    function renderStrands() {
+      document.getElementById('pageTitle').textContent = `${schoolName} - Strand Analysis`;
+      document.getElementById('schoolLink').textContent = schoolName;
+      document.getElementById('schoolLink').href = `/school/${schoolId}/skills`;
+
+      let html = '';
+
+      DOMAINS.forEach(domain => {
+        html += '<div class="domain-section">';
+        html += `  <div class="domain-title">${domain.icon} ${domain.name}</div>`;
+
+        if (domain.strands.length === 0) {
+          html += '  <div class="no-strands">No strands available for analysis yet</div>';
+        } else {
+          html += '  <div class="strands-grid">';
+          domain.strands.forEach(strand => {
+            html += `<a href="/school/${schoolId}/strand/${strand.id}" class="strand-card">`;
+            html += '  <div class="strand-card-header">';
+            html += `    <div class="strand-icon">${domain.icon}</div>`;
+            html += `    <div class="strand-name">${strand.name}</div>`;
+            html += '  </div>';
+            html += `  <div class="strand-description">${strand.description}</div>`;
+            html += '  <div class="strand-stats">';
+            html += '    <div class="strand-stat">';
+            html += '      <div class="strand-stat-label">Objectives</div>';
+            html += '      <div class="strand-stat-value">8-10</div>';
+            html += '    </div>';
+            html += '    <div class="strand-stat">';
+            html += '      <div class="strand-stat-label">Status</div>';
+            html += '      <div class="strand-stat-value developing">View →</div>';
+            html += '    </div>';
+            html += '  </div>';
+            html += '</a>';
+          });
+          html += '  </div>';
+        }
+        html += '</div>';
+      });
+
+      document.getElementById('strandsContent').innerHTML = html;
+    }
+
+    // Initialize
+    renderStrands();
+  </script>
+</body>
+</html>
