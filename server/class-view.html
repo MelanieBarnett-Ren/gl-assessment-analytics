@@ -991,113 +991,133 @@
       }
       html += '</div>';
 
-      // Focus Groups
-      html += '<div class="focus-groups">';
-      html += '  <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected). Click a card to see students and their skill needs.</span></span></h2>';
-      html += '  <div class="focus-grid">';
-      html += '    <div class="focus-card foundation clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'foundation\')">';
-      html += '      <h3>Foundation</h3>';
-      html += '      <div class="count">' + summary.focusGroups.foundation + '</div>';
-      html += '      <p style="font-size: 12px; margin-top: 8px;">Need support</p>';
-      html += '      <p class="focus-card-hint">Click for practice questions</p>';
-      html += '    </div>';
-      html += '    <div class="focus-card consolidation clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'consolidation\')">';
-      html += '      <h3>Consolidation</h3>';
-      html += '      <div class="count">' + summary.focusGroups.consolidation + '</div>';
-      html += '      <p style="font-size: 12px; margin-top: 8px;">Core teaching</p>';
-      html += '      <p class="focus-card-hint">Click for practice questions</p>';
-      html += '    </div>';
-      html += '    <div class="focus-card extension clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'extension\')">';
-      html += '      <h3>Extension</h3>';
-      html += '      <div class="count">' + summary.focusGroups.extension + '</div>';
-      html += '      <p style="font-size: 12px; margin-top: 8px;">Ready to stretch</p>';
-      html += '      <p class="focus-card-hint">Click for practice questions</p>';
-      html += '    </div>';
-      html += '  </div>';
-      html += '</div>';
-
-      // Focus Group Questions Panel (hidden by default)
-      html += '<div class="focus-questions-panel" id="focusQuestionsPanel">';
-      html += '</div>';
-
-      // RAG Status Summary
+      // Calculate RAG counts for tabs
       const ragCounts = {
         red: classData.students.filter(s => s.ngmt.sas < 90).length,
         amber: classData.students.filter(s => s.ngmt.sas >= 90 && s.ngmt.sas <= 110).length,
         green: classData.students.filter(s => s.ngmt.sas > 110).length
       };
 
-      html += '<div class="focus-groups">';
-      html += '  <h2><span class="tooltip">Performance Status (RAG)<span class="tooltiptext">Students grouped by SAS scores: Red (<90 = concern), Amber (90-110 = expected), Green (>110 = exceeding)</span></span></h2>';
-      html += '  <div class="focus-grid">';
-      html += '    <div class="focus-card rag-red clickable" onclick="filterByRAG(\'red\')" title="Click to view students needing support">';
-      html += '      <h3>🔴 Needing Support</h3>';
-      html += '      <div class="count">' + ragCounts.red + '</div>';
-      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS < 90</p>';
-      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
-      html += '    </div>';
-      html += '    <div class="focus-card rag-amber clickable" onclick="filterByRAG(\'amber\')" title="Click to view students performing as expected">';
-      html += '      <h3>🟡 As Expected</h3>';
-      html += '      <div class="count">' + ragCounts.amber + '</div>';
-      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS 90-110</p>';
-      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
-      html += '    </div>';
-      html += '    <div class="focus-card rag-green clickable" onclick="filterByRAG(\'green\')" title="Click to view high achievers">';
-      html += '      <h3>🟢 High Achievers</h3>';
-      html += '      <div class="count">' + ragCounts.green + '</div>';
-      html += '      <p style="font-size: 12px; margin-top: 8px;">SAS > 110</p>';
-      html += '      <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
-      html += '    </div>';
-      html += '  </div>';
+      // Tabs
+      html += '<div class="tabs">';
+      html += '  <button class="tab active" onclick="switchTab(\'focus\')">👥 Focus Groups</button>';
+      html += '  <button class="tab" onclick="switchTab(\'interventions\')">🎯 Interventions</button>';
+      html += '  <button class="tab" onclick="switchTab(\'performance\')">📊 Performance (RAG)</button>';
+      html += '  <button class="tab" onclick="switchTab(\'students\')">📋 Student Data</button>';
       html += '</div>';
 
-      // Intervention Groups - Group students by similar skill needs
-      html += '<div class="students-section" style="margin-bottom: 28px;">';
+      // Tab 1: Focus Groups
+      html += '<div id="focus-tab" class="tab-content active">';
+      html += '  <div class="focus-groups">';
+      html += '    <h2><span class="tooltip">Focus Groups<span class="tooltiptext">Students grouped by prior attainment: Foundation (below expected), Consolidation (at expected), Extension (above expected). Click a card to see students and their skill needs.</span></span></h2>';
+      html += '    <div class="focus-grid">';
+      html += '      <div class="focus-card foundation clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'foundation\')">';
+      html += '        <h3>Foundation</h3>';
+      html += '        <div class="count">' + summary.focusGroups.foundation + '</div>';
+      html += '        <p style="font-size: 12px; margin-top: 8px;">Need support</p>';
+      html += '        <p class="focus-card-hint">Click for practice questions</p>';
+      html += '      </div>';
+      html += '      <div class="focus-card consolidation clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'consolidation\')">';
+      html += '        <h3>Consolidation</h3>';
+      html += '        <div class="count">' + summary.focusGroups.consolidation + '</div>';
+      html += '        <p style="font-size: 12px; margin-top: 8px;">Core teaching</p>';
+      html += '        <p class="focus-card-hint">Click for practice questions</p>';
+      html += '      </div>';
+      html += '      <div class="focus-card extension clickable" onclick="showFocusGroupQuestions(\'' + classId + '\', \'extension\')">';
+      html += '        <h3>Extension</h3>';
+      html += '        <div class="count">' + summary.focusGroups.extension + '</div>';
+      html += '        <p style="font-size: 12px; margin-top: 8px;">Ready to stretch</p>';
+      html += '        <p class="focus-card-hint">Click for practice questions</p>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '  <div class="focus-questions-panel" id="focusQuestionsPanel"></div>';
+      html += '</div>';
+
+      // Tab 2: Interventions
+      html += '<div id="interventions-tab" class="tab-content">';
       html += '  <h2>🎯 Intervention Groups <span style="font-size: 14px; font-weight: 400; color: var(--color-50);">(Students grouped by similar skill needs)</span></h2>';
       html += '  <p style="color: var(--color-50); margin-bottom: 20px; font-size: 14px;">Take action with small groups of students who need the same intervention</p>';
       html += '  <div id="interventionGroupsContainer"></div>';
       html += '</div>';
 
-      // Filter Bar
-      html += '<div class="filter-bar">';
-      html += '  <h3>🔍 Filter & Export Students</h3>';
-      html += '  <div class="filter-group">';
-      html += '    <label>SAS Status:</label>';
-      html += '    <button class="filter-btn active" onclick="filterByRAG(\'all\')">All</button>';
-      html += '    <button class="filter-btn" onclick="filterByRAG(\'red\')">🔴 Red (<90)</button>';
-      html += '    <button class="filter-btn" onclick="filterByRAG(\'amber\')">🟡 Amber (90-110)</button>';
-      html += '    <button class="filter-btn" onclick="filterByRAG(\'green\')">🟢 Green (>110)</button>';
-      html += '  </div>';
-      html += '  <div class="filter-group">';
-      html += '    <label>Focus Group:</label>';
-      html += '    <button class="filter-btn active" onclick="filterByFocus(\'all\')">All</button>';
-      html += '    <button class="filter-btn" onclick="filterByFocus(\'foundation\')">Foundation</button>';
-      html += '    <button class="filter-btn" onclick="filterByFocus(\'consolidation\')">Consolidation</button>';
-      html += '    <button class="filter-btn" onclick="filterByFocus(\'extension\')">Extension</button>';
-      html += '  </div>';
-      html += '  <div class="filter-group">';
-      html += '    <label>Demographics:</label>';
-      html += '    <button class="filter-btn active" onclick="filterByDemo(\'all\')">All</button>';
-      html += '    <button class="filter-btn" onclick="filterByDemo(\'fsm\')">FSM</button>';
-      html += '    <button class="filter-btn" onclick="filterByDemo(\'eal\')">EAL</button>';
-      html += '    <button class="filter-btn" onclick="filterByDemo(\'send\')">SEND</button>';
-      html += '  </div>';
-      html += '  <div class="export-buttons">';
-      html += '    <button class="export-btn-custom" onclick="exportFilteredCSV()">📥 Export CSV</button>';
-      html += '    <button class="export-btn-custom" onclick="exportFilteredPDF()">📄 Export PDF</button>';
-      html += '    <button class="export-btn-custom" onclick="resetFilters()">↺ Reset Filters</button>';
+      // Tab 3: Performance (RAG)
+      html += '<div id="performance-tab" class="tab-content">';
+      html += '  <div class="focus-groups">';
+      html += '    <h2><span class="tooltip">Performance Status (RAG)<span class="tooltiptext">Students grouped by SAS scores: Red (<90 = concern), Amber (90-110 = expected), Green (>110 = exceeding)</span></span></h2>';
+      html += '    <div class="focus-grid">';
+      html += '      <div class="focus-card rag-red clickable" onclick="switchTab(\'students\'); filterByRAG(\'red\')" title="Click to view students needing support">';
+      html += '        <h3>🔴 Needing Support</h3>';
+      html += '        <div class="count">' + ragCounts.red + '</div>';
+      html += '        <p style="font-size: 12px; margin-top: 8px;">SAS < 90</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '      </div>';
+      html += '      <div class="focus-card rag-amber clickable" onclick="switchTab(\'students\'); filterByRAG(\'amber\')" title="Click to view students performing as expected">';
+      html += '        <h3>🟡 As Expected</h3>';
+      html += '        <div class="count">' + ragCounts.amber + '</div>';
+      html += '        <p style="font-size: 12px; margin-top: 8px;">SAS 90-110</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '      </div>';
+      html += '      <div class="focus-card rag-green clickable" onclick="switchTab(\'students\'); filterByRAG(\'green\')" title="Click to view high achievers">';
+      html += '        <h3>🟢 High Achievers</h3>';
+      html += '        <div class="count">' + ragCounts.green + '</div>';
+      html += '        <p style="font-size: 12px; margin-top: 8px;">SAS > 110</p>';
+      html += '        <p style="font-size: 10px; margin-top: 4px; opacity: 0.7;">👆 Click to view</p>';
+      html += '      </div>';
+      html += '    </div>';
       html += '  </div>';
       html += '</div>';
 
-      // Students Table
-      html += '<div class="students-section">';
-      html += '  <h2 id="studentCountLabel">All Students (' + classData.students.length + ')</h2>';
-      html += '  <div id="studentsTableContainer"></div>';
+      // Tab 4: Student Data
+      html += '<div id="students-tab" class="tab-content">';
+      html += '  <div class="filter-bar">';
+      html += '    <h3>🔍 Filter & Export Students</h3>';
+      html += '    <div class="filter-group">';
+      html += '      <label>SAS Status:</label>';
+      html += '      <button class="filter-btn active" onclick="filterByRAG(\'all\')">All</button>';
+      html += '      <button class="filter-btn" onclick="filterByRAG(\'red\')">🔴 Red (<90)</button>';
+      html += '      <button class="filter-btn" onclick="filterByRAG(\'amber\')">🟡 Amber (90-110)</button>';
+      html += '      <button class="filter-btn" onclick="filterByRAG(\'green\')">🟢 Green (>110)</button>';
+      html += '    </div>';
+      html += '    <div class="filter-group">';
+      html += '      <label>Focus Group:</label>';
+      html += '      <button class="filter-btn active" onclick="filterByFocus(\'all\')">All</button>';
+      html += '      <button class="filter-btn" onclick="filterByFocus(\'foundation\')">Foundation</button>';
+      html += '      <button class="filter-btn" onclick="filterByFocus(\'consolidation\')">Consolidation</button>';
+      html += '      <button class="filter-btn" onclick="filterByFocus(\'extension\')">Extension</button>';
+      html += '    </div>';
+      html += '    <div class="filter-group">';
+      html += '      <label>Demographics:</label>';
+      html += '      <button class="filter-btn active" onclick="filterByDemo(\'all\')">All</button>';
+      html += '      <button class="filter-btn" onclick="filterByDemo(\'fsm\')">FSM</button>';
+      html += '      <button class="filter-btn" onclick="filterByDemo(\'eal\')">EAL</button>';
+      html += '      <button class="filter-btn" onclick="filterByDemo(\'send\')">SEND</button>';
+      html += '    </div>';
+      html += '    <div class="export-buttons">';
+      html += '      <button class="export-btn-custom" onclick="exportFilteredCSV()">📥 Export CSV</button>';
+      html += '      <button class="export-btn-custom" onclick="exportFilteredPDF()">📄 Export PDF</button>';
+      html += '      <button class="export-btn-custom" onclick="resetFilters()">↺ Reset Filters</button>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '  <div class="students-section">';
+      html += '    <h2 id="studentCountLabel">All Students (' + classData.students.length + ')</h2>';
+      html += '    <div id="studentsTableContainer"></div>';
+      html += '  </div>';
       html += '</div>';
 
       document.getElementById('content').innerHTML = html;
       renderInterventionGroups();
       renderStudentsTable();
+    }
+
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update content
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      document.getElementById(tabName + '-tab').classList.add('active');
     }
 
     function renderInterventionGroups() {
