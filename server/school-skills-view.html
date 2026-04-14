@@ -276,6 +276,30 @@
       top: 0 !important;
       font-family: 'Inter', sans-serif !important;
     }
+    body .heatmap-table th.sortable {
+      cursor: pointer !important;
+      user-select: none !important;
+      transition: background 0.2s ease !important;
+    }
+    body .heatmap-table th.sortable:hover {
+      background: #e5e7eb !important;
+    }
+    body .heatmap-table th.sortable::after {
+      content: ' ⇅' !important;
+      opacity: 0.3 !important;
+      font-size: 14px !important;
+      margin-left: 4px !important;
+    }
+    body .heatmap-table th.sortable.sort-asc::after {
+      content: ' ▲' !important;
+      opacity: 1 !important;
+      color: #ba119b !important;
+    }
+    body .heatmap-table th.sortable.sort-desc::after {
+      content: ' ▼' !important;
+      opacity: 1 !important;
+      color: #ba119b !important;
+    }
     body .heatmap-table td {
       padding: 12px 8px !important;
       text-align: center !important;
@@ -1039,6 +1063,9 @@
       document.getElementById('skillsContent').innerHTML = html;
     }
 
+    // Store heatmap data globally for sorting
+    let heatmapData = [];
+
     function renderHeatmap() {
       if (!classesData) return;
 
@@ -1052,31 +1079,14 @@
         });
       });
 
-      let html = '<div class="heatmap-container">';
-      html += '<h2 style="margin-bottom: 16px; font-size: 20px;">Skills Mastery Heatmap (All Classes)</h2>';
-      html += '<p style="color: var(--color-50); margin-bottom: 24px;">Percentage of students who answered correctly</p>';
-      html += '<table class="heatmap-table">';
-      html += '  <thead>';
-      html += '    <tr>';
-      html += '      <th>Skill</th>';
-
-      classesData.forEach(function(classData) {
-        html += '      <th>' + classData.className + '<br><span style="font-weight: 400; font-size: 11px;">(' + classData.teacherName + ')</span></th>';
-      });
-
-      html += '      <th>School Avg</th>';
-      html += '    </tr>';
-      html += '  </thead>';
-      html += '  <tbody>';
-
+      // Build data structure for sorting
+      heatmapData = [];
       Array.from(allSkills).forEach(function(skill) {
-        html += '    <tr>';
-        html += '      <td class="skill-name-cell">' + skill + '</td>';
-
+        let rowData = { skill: skill, classes: [], schoolAvg: 0 };
         let schoolTotal = 0;
         let schoolCount = 0;
 
-        classesData.forEach(function(classData) {
+        classesData.forEach(function(classData, index) {
           let correctCount = 0;
           let totalCount = 0;
           let correctStudents = [];
@@ -1099,18 +1109,86 @@
           schoolTotal += percentage;
           schoolCount++;
 
+          rowData.classes.push({
+            percentage: percentage,
+            correctStudents: correctStudents,
+            incorrectStudents: incorrectStudents,
+            className: classData.className
+          });
+        });
+
+        rowData.schoolAvg = Math.round(schoolTotal / schoolCount);
+        heatmapData.push(rowData);
+      });
+
+      renderHeatmapTable();
+    }
+
+    function renderHeatmapTable(sortColumn = null, sortDirection = null) {
+      if (!heatmapData || heatmapData.length === 0) return;
+
+      // Sort data if needed
+      let sortedData = [...heatmapData];
+      if (sortColumn !== null) {
+        sortedData.sort(function(a, b) {
+          let aVal, bVal;
+
+          if (sortColumn === 0) {
+            // Sort by skill name
+            aVal = a.skill.toLowerCase();
+            bVal = b.skill.toLowerCase();
+            return sortDirection === 'asc'
+              ? (aVal < bVal ? -1 : aVal > bVal ? 1 : 0)
+              : (aVal > bVal ? -1 : aVal < bVal ? 1 : 0);
+          } else if (sortColumn === classesData.length + 1) {
+            // Sort by school average
+            aVal = a.schoolAvg;
+            bVal = b.schoolAvg;
+          } else {
+            // Sort by class column
+            const classIndex = sortColumn - 1;
+            aVal = a.classes[classIndex].percentage;
+            bVal = b.classes[classIndex].percentage;
+          }
+
+          return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+        });
+      }
+
+      let html = '<div class="heatmap-container">';
+      html += '<h2 style="margin-bottom: 16px; font-size: 20px;">Skills Mastery Heatmap (All Classes)</h2>';
+      html += '<p style="color: var(--color-50); margin-bottom: 24px;">Percentage of students who answered correctly. Click column headers to sort.</p>';
+      html += '<table class="heatmap-table">';
+      html += '  <thead>';
+      html += '    <tr>';
+      html += '      <th class="sortable' + (sortColumn === 0 ? ' sort-' + sortDirection : '') + '" data-column="0">Skill</th>';
+
+      classesData.forEach(function(classData, index) {
+        const colNum = index + 1;
+        html += '      <th class="sortable' + (sortColumn === colNum ? ' sort-' + sortDirection : '') + '" data-column="' + colNum + '">' + classData.className + '<br><span style="font-weight: 400; font-size: 11px;">(' + classData.teacherName + ')</span></th>';
+      });
+
+      html += '      <th class="sortable' + (sortColumn === (classesData.length + 1) ? ' sort-' + sortDirection : '') + '" data-column="' + (classesData.length + 1) + '">School Avg</th>';
+      html += '    </tr>';
+      html += '  </thead>';
+      html += '  <tbody>';
+
+      sortedData.forEach(function(rowData) {
+        html += '    <tr>';
+        html += '      <td class="skill-name-cell">' + rowData.skill + '</td>';
+
+        rowData.classes.forEach(function(classData) {
           const tooltipData = JSON.stringify({
-            correct: correctStudents,
-            incorrect: incorrectStudents,
-            skill: skill,
+            correct: classData.correctStudents,
+            incorrect: classData.incorrectStudents,
+            skill: rowData.skill,
             className: classData.className
           }).replace(/"/g, '&quot;');
 
-          html += '      <td class="' + getCellClass(percentage) + ' heatmap-cell" data-tooltip=\'' + tooltipData + '\'>' + percentage + '%</td>';
+          html += '      <td class="' + getCellClass(classData.percentage) + ' heatmap-cell" data-tooltip=\'' + tooltipData + '\'>' + classData.percentage + '%</td>';
         });
 
-        const schoolAvg = Math.round(schoolTotal / schoolCount);
-        html += '      <td class="' + getCellClass(schoolAvg) + '" style="font-weight: 700;">' + schoolAvg + '%</td>';
+        html += '      <td class="' + getCellClass(rowData.schoolAvg) + '" style="font-weight: 700;">' + rowData.schoolAvg + '%</td>';
         html += '    </tr>';
       });
 
@@ -1122,6 +1200,27 @@
 
       // Add tooltip functionality
       setupHeatmapTooltips();
+
+      // Add sorting functionality
+      setupHeatmapSorting();
+    }
+
+    function setupHeatmapSorting() {
+      const headers = document.querySelectorAll('.heatmap-table th.sortable');
+
+      headers.forEach(function(header) {
+        header.addEventListener('click', function() {
+          const column = parseInt(this.getAttribute('data-column'));
+          const currentSort = this.classList.contains('sort-asc') ? 'asc' :
+                             this.classList.contains('sort-desc') ? 'desc' : null;
+
+          let newSort = 'asc';
+          if (currentSort === 'asc') newSort = 'desc';
+          else if (currentSort === 'desc') newSort = 'asc';
+
+          renderHeatmapTable(column, newSort);
+        });
+      });
     }
 
     function setupHeatmapTooltips() {
