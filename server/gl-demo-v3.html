@@ -433,6 +433,127 @@
       font-size: 16px;
     }
 
+    /* AI Insights Button */
+    .ai-insights-button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .ai-insights-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+    }
+
+    .ai-insights-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* AI Insights Display */
+    .ai-insights {
+      margin-top: 16px;
+      padding: 16px;
+      background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 100%);
+      border-radius: 8px;
+      border-left: 4px solid #a855f7;
+      display: none;
+    }
+
+    .ai-insights.visible {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ai-insights-loading {
+      text-align: center;
+      padding: 20px;
+      color: #a855f7;
+      font-size: 14px;
+    }
+
+    .spinner {
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #a855f7;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .ai-insights-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #7c3aed;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ai-insights-content {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .ai-insight-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+    }
+
+    .ai-insight-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ai-insight-summary {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .ai-insight-detail {
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .ai-insight-recommendation {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #7c3aed;
+    }
+
     /* Group Analysis Section */
     .group-analysis {
       background: white;
@@ -989,6 +1110,14 @@
             `).join('')}
           </div>
         </div>
+
+        <button class="ai-insights-button" onclick="generateInsights('${school.id}', '${school.name}')">
+          🤖 Generate AI Insights
+        </button>
+
+        <div class="ai-insights" id="insights-${school.id}">
+          <!-- AI insights will be populated here -->
+        </div>
       `;
 
       // Render mini chart after DOM insertion
@@ -1064,6 +1193,75 @@
 
       sidebar.classList.toggle('open');
       overlay.classList.toggle('visible');
+    }
+
+    async function generateInsights(schoolId, schoolName) {
+      const insightsContainer = document.getElementById(`insights-${schoolId}`);
+      const button = event.target;
+
+      // Show loading state
+      button.disabled = true;
+      button.textContent = '⏳ Generating Insights...';
+
+      insightsContainer.classList.add('visible');
+      insightsContainer.innerHTML = `
+        <div class="ai-insights-loading">
+          <div class="spinner"></div>
+          <div>AI analyzing assessment data for ${schoolName}...</div>
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`http://localhost:3001/api/insights/school/${schoolId}/assessment123`);
+        const data = await response.json();
+
+        if (data.success && data.data.insights && data.data.insights.length > 0) {
+          const insights = data.data.insights.slice(0, 3); // Show top 3 insights
+
+          let html = '<div class="ai-insights-title">🤖 AI-Generated Insights</div>';
+          html += '<div class="ai-insights-content">';
+
+          insights.forEach((insight, index) => {
+            html += `
+              <div class="ai-insight-item">
+                <div class="ai-insight-summary">${index + 1}. ${insight.title}</div>
+                <div class="ai-insight-detail">${insight.summary}</div>
+                ${insight.recommendations && insight.recommendations.length > 0 ? `
+                  <div class="ai-insight-recommendation">
+                    💡 <strong>Recommendation:</strong> ${insight.recommendations[0].title} - ${insight.recommendations[0].description.substring(0, 150)}...
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          });
+
+          html += '</div>';
+          insightsContainer.innerHTML = html;
+
+          // Reset button
+          button.disabled = false;
+          button.textContent = '✅ Insights Generated';
+          setTimeout(() => {
+            button.textContent = '🤖 Generate AI Insights';
+          }, 3000);
+
+        } else {
+          throw new Error('No insights generated');
+        }
+
+      } catch (error) {
+        console.error('Error generating insights:', error);
+        insightsContainer.innerHTML = `
+          <div class="ai-insights-title">⚠️ Error</div>
+          <div class="ai-insights-content">
+            Failed to generate insights. Please ensure the server is running and try again.
+          </div>
+        `;
+
+        // Reset button
+        button.disabled = false;
+        button.textContent = '🤖 Generate AI Insights';
+      }
     }
 
     function filterYear(year) {
