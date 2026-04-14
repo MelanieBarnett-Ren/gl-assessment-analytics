@@ -571,6 +571,179 @@
     box-shadow: none !important;
     border: 1px solid #e5e7eb !important;
   }
+
+  /* Demo Dashboard Specific Styles */
+  .tree-nav,
+  .tree-select,
+  .tree-arrow {
+    display: none !important;
+  }
+
+  .dashboard-tiles {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5cm !important;
+    width: 100% !important;
+    margin-bottom: 0.5cm !important;
+  }
+
+  .tile {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    padding: 0.4cm !important;
+  }
+
+  .tile-label {
+    font-size: 10pt !important;
+  }
+
+  .tile-value {
+    font-size: 20pt !important;
+    font-weight: bold !important;
+  }
+
+  .tile-comparison {
+    font-size: 9pt !important;
+  }
+
+  .analysis-grid {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .chart-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0.8cm !important;
+    page-break-inside: avoid !important;
+  }
+
+  .chart-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 0.3cm !important;
+  }
+
+  .chart-title {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+  }
+
+  .chart-subtitle {
+    font-size: 10pt !important;
+    color: #6b7280 !important;
+  }
+
+  /* Insight cards for print */
+  .insights-list {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .insight-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0.5cm !important;
+    padding: 0.5cm !important;
+    page-break-inside: avoid !important;
+    border-left: 4px solid !important;
+  }
+
+  .insight-card.critical {
+    border-left-color: #dc2626 !important;
+  }
+
+  .insight-card.attention {
+    border-left-color: #f59e0b !important;
+  }
+
+  .insight-card.positive {
+    border-left-color: #10b981 !important;
+  }
+
+  .insight-title {
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    margin-bottom: 0.2cm !important;
+  }
+
+  .insight-desc {
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .insight-actions {
+    display: none !important;
+  }
+
+  .action-cards,
+  .action-card {
+    display: none !important;
+  }
+
+  /* Summary section */
+  .summary-section {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.4cm !important;
+    margin-bottom: 0.6cm !important;
+    width: 100% !important;
+  }
+
+  .summary-card {
+    page-break-inside: avoid !important;
+    padding: 0.3cm !important;
+  }
+
+  .summary-value {
+    font-size: 16pt !important;
+    font-weight: bold !important;
+  }
+
+  .summary-label {
+    font-size: 10pt !important;
+  }
+
+  .summary-detail {
+    font-size: 9pt !important;
+  }
+
+  /* Ensure charts render at good size */
+  #distributionChart,
+  #curriculumChart,
+  #processChart,
+  #schoolComparisonChart,
+  #strandHeatmap {
+    height: 400px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Page header for demo dashboard */
+  .page-header {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .page-header h1 {
+    font-size: 18pt !important;
+  }
+
+  .page-subtitle {
+    font-size: 10pt !important;
+  }
+
+  /* Force landscape and full width */
+  @page {
+    size: A4 landscape !important;
+    margin: 1cm !important;
+  }
+
+  html, body {
+    width: 297mm !important;
+    height: 210mm !important;
+  }
 }
 
 /* ============================================

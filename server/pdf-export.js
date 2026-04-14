@@ -220,11 +220,14 @@ class PDFExporter {
   exportCurrentPage() {
     // Show instructions for better PDF output
     const instructions =
-      '📄 PDF Export Tips:\n\n' +
-      '1. In the print dialog, select "Save as PDF" as destination\n' +
-      '2. Set orientation to "Landscape" for best results\n' +
-      '3. Enable "Background graphics" to include charts\n' +
-      '4. Use "Default" or "100%" scale\n\n' +
+      '📄 PDF Export Instructions - IMPORTANT:\n\n' +
+      '1. Destination: Select "Save as PDF"\n' +
+      '2. Layout: Choose "Landscape" (NOT Portrait)\n' +
+      '3. Margins: Set to "None" or "Minimum"\n' +
+      '4. Scale: Set to "100%" or "Default" (NOT "Fit to page")\n' +
+      '5. Options: Enable "Background graphics" to show charts\n' +
+      '6. Paper size: A4 or Letter\n\n' +
+      '⚠️ CRITICAL: Use Landscape + Minimum Margins for full width!\n\n' +
       'Click OK to open print dialog';
 
     if (!confirm(instructions)) {
