@@ -26,23 +26,23 @@
   <link rel="stylesheet" href="pdf-export.css">
 
   <style>
-    * {
-      font-family: var(--font-family-base) !important;
-    }
-
     body {
       font-family: var(--font-family-base) !important;
       background: var(--color-page-background);
-      color: var(--color-text-default);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      color: var(--color-copy-primary);
+      margin: 0;
+      padding: 0;
+    }
+
+    * {
+      font-family: var(--font-family-base) !important;
     }
 
     /* Header */
     .header {
       background: var(--color-primary);
       color: white;
-      padding: 20px 40px;
+      padding: 24px 32px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
     .header h1 {
@@ -63,9 +63,12 @@
     }
 
     .container {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 40px;
+      margin-top: 60px;
+      padding: 32px 24px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      background: var(--color-page-background);
     }
 
     /* Tabs */
@@ -77,7 +80,7 @@
     }
     .tab {
       padding: 12px 24px;
-      background: white;
+      background: var(--color-W);
       border: none;
       border-radius: 8px 8px 0 0;
       cursor: pointer;
@@ -110,10 +113,10 @@
       margin-bottom: 40px;
     }
     .domain-card {
-      background: white;
-      border-radius: 12px;
+      background: var(--color-W);
+      border-radius: var(--radius-lg);
       padding: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow-base);
     }
     .domain-card h3 {
       font-size: 18px;
@@ -175,10 +178,10 @@
 
     /* Heatmap */
     .heatmap-container {
-      background: white;
-      border-radius: 12px;
+      background: var(--color-W);
+      border-radius: var(--radius-lg);
       padding: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow-base);
       overflow-x: auto;
     }
     .heatmap-table {
@@ -204,16 +207,16 @@
     .heatmap-table td.skill-name-cell {
       text-align: left;
       font-weight: 500;
-      background: #f9fafb;
+      background: var(--color-white);
       position: sticky;
       left: 0;
       z-index: 10;
     }
-    .cell-critical { background: #fee2e2; color: #991b1b; }
-    .cell-low { background: #fed7aa; color: #9a3412; }
-    .cell-medium { background: #fef3c7; color: #92400e; }
-    .cell-good { background: #dbeafe; color: #1e40af; }
-    .cell-high { background: #d1fae5; color: #065f46; }
+    .cell-critical { background: var(--color-error-container); color: #991b1b; }
+    .cell-low { background: var(--color-warning-background); color: #9a3412; }
+    .cell-medium { background: var(--color-warning-background); color: #92400e; }
+    .cell-good { background: var(--color-primary-50); color: #1e40af; }
+    .cell-high { background: var(--color-tertiary-container); color: #065f46; }
 
     /* Item Analysis */
     .items-grid {
@@ -223,10 +226,10 @@
       margin-bottom: 40px;
     }
     .item-card {
-      background: white;
-      border-radius: 8px;
+      background: var(--color-W);
+      border-radius: var(--radius-lg);
       padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow-base);
       border-left: 4px solid var(--color-table-border);
     }
     .item-card.critical { border-left-color: var(--color-error); }
@@ -299,7 +302,7 @@
 
     .strand-link {
       display: block;
-      background: #eff6ff;
+      background: var(--color-primary-50);
       color: #1e40af;
       padding: 8px 12px;
       border-radius: 6px;
@@ -375,7 +378,7 @@
       left: -300px;
       width: 300px;
       height: calc(100vh - 60px);
-      background: white;
+      background: var(--color-W);
       box-shadow: 2px 0 12px rgba(0,0,0,0.1);
       transition: left 0.3s ease;
       overflow-y: auto;
@@ -438,7 +441,7 @@
     }
 
     .nav-link.active {
-      background: #eff6ff;
+      background: var(--color-primary-50);
       color: var(--color-secondary);
       border-right: 3px solid var(--color-secondary);
     }
@@ -721,7 +724,7 @@
     function renderSkills() {
       if (!schoolData || !schoolData.skillGaps) return;
 
-      let html = '<div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">';
+      let html = '<div style="background: var(--color-W); border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">';
       html += '<h2 style="margin-bottom: 20px; font-size: 20px;">Top Skills Needing Attention</h2>';
       html += '<p style="color: var(--color-50); margin-bottom: 24px;">Based on PTM item-level data compared to national averages</p>';
 
@@ -729,7 +732,7 @@
       schoolData.skillGaps.forEach(function(gap) {
         const gapClass = gap.severity === 'critical' ? 'low' : 'medium';
 
-        html += '<div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + ';">';
+        html += '<div style="background: var(--color-white); padding: 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid ' + (gap.severity === 'critical' ? 'var(--color-error)' : 'var(--color-warning)') + ';">';
         html += '  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">';
         html += '    <div style="flex: 1;">';
         html += '      <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">' + gap.skill + '</div>';
