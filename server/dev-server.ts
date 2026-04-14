@@ -472,7 +472,7 @@ app.get('/api/focus-group-questions/:classId/:group', async (req, res) => {
           valueAdded: s.ngmt.sas - s.cat4.meanSAS,
           demographics: s.demographics,
         })),
-        questions: recommendedQuestions.map(rec => ({
+        questions: recommendedQuestions.map((rec: any) => ({
           id: rec.question.id,
           yearGroup: rec.question.yearGroup,
           strand: rec.question.strand,

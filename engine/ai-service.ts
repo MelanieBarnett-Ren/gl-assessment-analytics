@@ -122,7 +122,7 @@ export class AIService {
           .replace(/\/\/.*$/gm, '')
           .replace(/\/\*[\s\S]*?\*\//g, '')
           // Escape literal newlines and tabs in string values
-          .replace(/:\s*"([^"]*[\n\r\t]+[^"]*)"(?=[,\}\]])/g, (match, str) => {
+          .replace(/:\s*"([^"]*[\n\r\t]+[^"]*)"(?=[,\}\]])/g, (match: string, str: string) => {
             return ': "' + str.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t') + '"';
           });
 
