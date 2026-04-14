@@ -1125,11 +1125,7 @@
     function renderClasses() {
       if (!classesData) return;
 
-      let html = '<div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">';
-      html += '<h2 style="margin-bottom: 16px; font-size: 20px;">Classes in This School</h2>';
-      html += '<p style="color: var(--color-50); margin-bottom: 24px;">Click on a class to view detailed student-level data</p>';
-
-      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">';
+      let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">';
 
       classesData.forEach(function(classData) {
         const avgSAS = Math.round(
@@ -1139,47 +1135,57 @@
           classData.students.reduce((sum, s) => sum + s.ngmt.stanine, 0) / classData.students.length
         );
         const scoreClass = getScoreClass(avgSAS);
+        const scoreColor = scoreClass === 'high' ? '#10b981' : scoreClass === 'good' ? '#059669' : scoreClass === 'medium' ? '#f59e0b' : '#dc2626';
 
-        html += '<a href="/class/' + classData.classId + '" style="text-decoration: none; display: block;">';
-        html += '  <div style="background: white; border: 2px solid var(--color-table-border); border-radius: 12px; padding: 24px; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.borderColor=\'var(--color-primary)\'; this.style.transform=\'translateY(-4px)\'; this.style.boxShadow=\'0 8px 20px rgba(0,0,0,0.12)\'" onmouseout="this.style.borderColor=\'var(--color-table-border)\'; this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'none\'">';
-        html += '    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">';
-        html += '      <div style="width: 48px; height: 48px; background: var(--color-primary-50, #f8e5f2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">';
-        html += '        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--color-primary, #ba119b)" style="width: 28px; height: 28px;">';
+        html += '<a href="/class/' + classData.classId + '" style="text-decoration: none; display: block; height: 100%;">';
+        html += '  <div class="class-card" style="background: white; border-radius: 16px; padding: 28px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; cursor: pointer; height: 100%; display: flex; flex-direction: column;" onmouseover="this.style.transform=\'translateY(-6px)\'; this.style.boxShadow=\'0 12px 32px rgba(186, 17, 155, 0.15)\';" onmouseout="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'0 2px 12px rgba(0,0,0,0.08)\';">';
+
+        // Icon and Class Name
+        html += '    <div style="text-align: center; margin-bottom: 24px;">';
+        html += '      <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #f8e5f2 0%, #fce7f3 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(186, 17, 155, 0.15);">';
+        html += '        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--color-primary, #ba119b)" style="width: 32px; height: 32px;">';
         html += '          <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />';
         html += '        </svg>';
         html += '      </div>';
-        html += '      <div style="flex: 1;">';
-        html += '        <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #1f2937;">' + classData.className + '</h3>';
-        html += '        <div style="font-size: 14px; color: var(--color-50); margin-top: 4px;">' + classData.teacherName + '</div>';
-        html += '      </div>';
+        html += '      <h3 style="margin: 0 0 6px 0; font-size: 24px; font-weight: 700; color: #1f2937; letter-spacing: -0.02em;">' + classData.className + '</h3>';
+        html += '      <div style="font-size: 15px; color: var(--color-primary); font-weight: 500;">' + classData.teacherName + '</div>';
         html += '    </div>';
 
-        html += '    <div style="display: flex; gap: 16px; margin-bottom: 16px;">';
-        html += '      <div style="flex: 1;">';
-        html += '        <div style="font-size: 12px; color: var(--color-50); margin-bottom: 4px;">Average SAS</div>';
-        html += '        <div style="font-size: 28px; font-weight: 700; color: ' + (scoreClass === 'high' ? '#10b981' : scoreClass === 'good' ? 'var(--color-primary)' : scoreClass === 'medium' ? '#f59e0b' : '#dc2626') + ';">' + avgSAS + '</div>';
+        // Metrics Grid
+        html += '    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; flex: 1;">';
+
+        // Average SAS
+        html += '      <div style="text-align: center; padding: 16px 12px; background: #f9fafb; border-radius: 12px;">';
+        html += '        <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Average SAS</div>';
+        html += '        <div style="font-size: 32px; font-weight: 800; color: ' + scoreColor + '; line-height: 1;">' + avgSAS + '</div>';
         html += '      </div>';
-        html += '      <div style="flex: 1;">';
-        html += '        <div style="font-size: 12px; color: var(--color-50); margin-bottom: 4px;">Stanine</div>';
-        html += '        <div style="font-size: 28px; font-weight: 700; color: #6b7280;">' + avgStanine + '</div>';
+
+        // Stanine
+        html += '      <div style="text-align: center; padding: 16px 12px; background: #f9fafb; border-radius: 12px;">';
+        html += '        <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Stanine</div>';
+        html += '        <div style="font-size: 32px; font-weight: 800; color: #4b5563; line-height: 1;">' + avgStanine + '</div>';
         html += '      </div>';
-        html += '      <div style="flex: 1;">';
-        html += '        <div style="font-size: 12px; color: var(--color-50); margin-bottom: 4px;">Students</div>';
-        html += '        <div style="font-size: 28px; font-weight: 700; color: #6b7280;">' + classData.students.length + '</div>';
+
+        // Students
+        html += '      <div style="text-align: center; padding: 16px 12px; background: #f9fafb; border-radius: 12px;">';
+        html += '        <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Students</div>';
+        html += '        <div style="font-size: 32px; font-weight: 800; color: #4b5563; line-height: 1;">' + classData.students.length + '</div>';
         html += '      </div>';
+
         html += '    </div>';
 
-        html += '    <div style="padding-top: 16px; border-top: 1px solid var(--color-table-border); display: flex; align-items: center; justify-content: space-between;">';
-        html += '      <div style="font-size: 14px; color: var(--color-primary); font-weight: 600;">View Class Details</div>';
-        html += '      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="var(--color-primary)" style="width: 20px; height: 20px;">';
+        // View Details Button
+        html += '    <div style="padding-top: 16px; border-top: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--color-primary); font-weight: 600; font-size: 14px;">';
+        html += '      <span>View Class Details</span>';
+        html += '      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">';
         html += '        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />';
         html += '      </svg>';
         html += '    </div>';
+
         html += '  </div>';
         html += '</a>';
       });
 
-      html += '</div>';
       html += '</div>';
 
       document.getElementById('classesContent').innerHTML = html;
