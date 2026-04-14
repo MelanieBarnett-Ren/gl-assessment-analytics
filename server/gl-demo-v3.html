@@ -1077,6 +1077,11 @@
         const card = createSchoolCard(school, data, term);
         grid.appendChild(card);
       });
+
+      // Reapply current filter after updating cards
+      if (currentViewFilter !== 'all') {
+        filterView(currentViewFilter);
+      }
     }
 
     function createSchoolCard(school, data, term) {
@@ -1454,24 +1459,62 @@
       URL.revokeObjectURL(url);
     }
 
+    // Filter state
+    let currentViewFilter = 'all';
+    let currentYearFilter = 5;
+
     function filterYear(year) {
-      // Placeholder for year filtering
+      currentYearFilter = year;
+
+      // Update active pill
       document.querySelectorAll('.filter-pills .pill').forEach(p => {
         if (p.textContent.includes('Year')) {
           p.classList.remove('active');
+          if (p.textContent.includes(year.toString())) {
+            p.classList.add('active');
+          }
         }
       });
-      event.target.classList.add('active');
+
+      // Note: All current data is Year 5, Year 6 filtering is not yet implemented
+      // This is ready for when Year 6 data is added to the schools array
+      console.log('Year filter set to:', year, '(Year 6 data not yet available)');
     }
 
     function filterView(view) {
-      // Placeholder for view filtering
+      currentViewFilter = view;
+
+      // Update active pill
       document.querySelectorAll('.filter-pills .pill').forEach(p => {
         if (p.textContent.includes('All') || p.textContent.includes('Concern')) {
           p.classList.remove('active');
+          if ((view === 'all' && p.textContent.includes('All')) ||
+              (view === 'concern' && p.textContent.includes('Concern'))) {
+            p.classList.add('active');
+          }
         }
       });
-      event.target.classList.add('active');
+
+      // Apply filter to school cards
+      const term = document.getElementById('termSelect').value;
+      const schoolCards = document.querySelectorAll('.school-card');
+
+      schoolCards.forEach((card, index) => {
+        const school = schools[index];
+        const data = termData[term][school.id];
+
+        if (view === 'concern') {
+          // Show only schools with negative value added
+          if (data.valueAdded < 0) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        } else {
+          // Show all schools
+          card.style.display = 'block';
+        }
+      });
     }
 
     // Close sidebar when clicking a link (on mobile)
