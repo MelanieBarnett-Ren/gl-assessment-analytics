@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git pull:*)",
+      "Bash(git --version)",
+      "Bash(git fetch:*)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(git merge:*)",
+      "Bash(git reset:*)",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
