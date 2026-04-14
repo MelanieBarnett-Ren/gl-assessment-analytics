@@ -822,14 +822,27 @@
 
     <!-- Page Header -->
     <div class="page-header">
-      <h1 id="pageTitle">Loading...</h1>
+      <h1 id="pageTitle" style="display: flex; align-items: center; gap: 12px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 32px; height: 32px; color: #ba119b;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+        </svg>
+        <span id="pageTitleText">Loading...</span>
+      </h1>
       <p class="subtitle" id="pageSubtitle">National Curriculum objectives with student performance analysis (% correct by objective)</p>
     </div>
 
     <!-- Focus Skills Explainer -->
     <div class="focus-skills-box">
-      <h3>⭐ Renaissance Focus Skills</h3>
-      <p>Focus Skills are the essential <strong>23% of mathematics skills</strong> (305 out of 1,304 total) identified by Renaissance as critical building blocks for future learning. Objectives marked with ⭐ deserve disproportionate practice time for maximum impact.</p>
+      <h3 style="display: flex; align-items: center; gap: 8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; color: #f59e0b;">
+          <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+        </svg>
+        Renaissance Focus Skills
+      </h3>
+      <p>Focus Skills are the essential <strong>23% of mathematics skills</strong> (305 out of 1,304 total) identified by Renaissance as critical building blocks for future learning. Objectives marked with
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px; color: #f59e0b; display: inline-block; vertical-align: middle;">
+          <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+        </svg> deserve disproportionate practice time for maximum impact.</p>
     </div>
 
     <!-- Export Section -->
@@ -1103,7 +1116,7 @@
       }
 
       // Update page title and breadcrumb
-      document.getElementById('pageTitle').textContent = data.name;
+      document.getElementById('pageTitleText').textContent = data.name;
       document.getElementById('pageSubtitle').textContent = `${data.schoolName} • ${data.studentCount} students`;
       document.getElementById('breadcrumb').innerHTML = `
         <a href="/mat">MAT Overview</a> /
