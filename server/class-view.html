@@ -1248,7 +1248,7 @@
           html += '  </div>';
 
           html += '  <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.1);">';
-          html += '    <button onclick="alert(\'Intervention planning coming soon: ' + group.skill.replace(/'/g, "\\'") + '\')" style="background: ' + severityColor + '; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;">';
+          html += '    <button onclick="planIntervention(\'' + group.skill.replace(/'/g, "\\'") + '\', ' + JSON.stringify(group.students).replace(/"/g, '&quot;') + ')" style="background: ' + severityColor + '; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;">';
           html += '      📝 Plan Intervention for ' + group.students.length + ' Students';
           html += '    </button>';
           html += '  </div>';
@@ -1267,6 +1267,12 @@
       }
 
       document.getElementById('interventionGroupsContainer').innerHTML = html;
+    }
+
+    function planIntervention(skill, students) {
+      const studentsParam = encodeURIComponent(JSON.stringify(students));
+      const skillParam = encodeURIComponent(skill);
+      window.location.href = `/intervention/planner?classId=${classId}&skill=${skillParam}&students=${studentsParam}`;
     }
 
     function renderStudentsTable() {

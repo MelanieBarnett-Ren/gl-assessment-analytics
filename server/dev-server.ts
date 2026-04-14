@@ -503,6 +503,14 @@ app.get('/class/:classId', (req, res) => {
 });
 
 /**
+ * GET /intervention/planner
+ * Intervention planning tool
+ */
+app.get('/intervention/planner', (req, res) => {
+  res.sendFile(path.join(__dirname, 'intervention-planner.html'));
+});
+
+/**
  * GET /school/:schoolId/skills
  * School-level skills analysis page
  */

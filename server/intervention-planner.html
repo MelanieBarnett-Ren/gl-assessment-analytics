@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intervention Planner - GL Assessment Analytics</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: var(--color-page-background);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 20px 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .breadcrumb a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 40px;
+    }
+
+    .planner-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: #1f2937;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      color: #1f2937;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(186, 17, 155, 0.1);
+    }
+
+    .form-helper {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .student-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .student-chip {
+      background: #f3f4f6;
+      color: #374151;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .info-box-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e40af;
+      margin-bottom: 8px;
+    }
+
+    .info-box-text {
+      font-size: 13px;
+      color: #1e40af;
+      line-height: 1.5;
+    }
+
+    .resource-item {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .resource-item:hover {
+      background: #f3f4f6;
+      border-color: var(--color-primary);
+    }
+
+    .resource-item.selected {
+      background: #faf5ff;
+      border-color: var(--color-primary);
+      border-width: 2px;
+    }
+
+    .resource-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+
+    .resource-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 14px;
+      color: #374151;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #a01082;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+    }
+
+    .summary-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .summary-stat:last-child {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .summary-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div id="breadcrumb" class="breadcrumb"></div>
+    <h1 id="pageTitle">Plan Intervention</h1>
+  </div>
+
+  <div class="container">
+    <div class="planner-grid">
+      <!-- Main Planning Form -->
+      <div>
+        <div class="card">
+          <h2>Intervention Details</h2>
+
+          <div class="info-box">
+            <div class="info-box-title">Target Skill</div>
+            <div class="info-box-text" id="targetSkill"></div>
+          </div>
+
+          <form id="interventionForm">
+            <div class="form-group">
+              <label for="interventionName">Intervention Name *</label>
+              <input type="text" id="interventionName" required placeholder="e.g., Fractions Foundation Group">
+              <div class="form-helper">Give this intervention a memorable name</div>
+            </div>
+
+            <div class="form-group">
+              <label for="objective">Learning Objective *</label>
+              <textarea id="objective" required placeholder="What specific skill or concept will students master?"></textarea>
+              <div class="form-helper">Be specific about what students will be able to do by the end</div>
+            </div>
+
+            <div class="form-group">
+              <label for="approach">Teaching Approach *</label>
+              <select id="approach" required>
+                <option value="">Select an approach...</option>
+                <option value="direct">Direct Instruction</option>
+                <option value="guided">Guided Practice</option>
+                <option value="collaborative">Collaborative Learning</option>
+                <option value="manipulatives">Concrete Manipulatives</option>
+                <option value="technology">Technology-Enhanced</option>
+                <option value="differentiated">Differentiated Activities</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="activities">Activities & Tasks *</label>
+              <textarea id="activities" required placeholder="Describe the specific activities students will complete..."></textarea>
+              <div class="form-helper">Include step-by-step tasks and any materials needed</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label for="duration">Duration (minutes) *</label>
+                <input type="number" id="duration" required min="5" max="120" value="30">
+              </div>
+
+              <div class="form-group">
+                <label for="frequency">Frequency *</label>
+                <select id="frequency" required>
+                  <option value="daily">Daily</option>
+                  <option value="3x-week">3x per week</option>
+                  <option value="2x-week">2x per week</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label for="startDate">Start Date *</label>
+                <input type="date" id="startDate" required>
+              </div>
+
+              <div class="form-group">
+                <label for="endDate">End Date *</label>
+                <input type="date" id="endDate" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="successCriteria">Success Criteria *</label>
+              <textarea id="successCriteria" required placeholder="How will you know students have mastered the skill?"></textarea>
+              <div class="form-helper">Define measurable outcomes (e.g., "80% accuracy on similar problems")</div>
+            </div>
+
+            <div class="form-group">
+              <label>Resources</label>
+              <div id="resourcesList"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Additional Notes</label>
+              <textarea id="notes" placeholder="Any other important information..."></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Summary Sidebar -->
+      <div>
+        <div class="card">
+          <h2>Summary</h2>
+
+          <div style="margin-bottom: 24px;">
+            <div class="summary-stat">
+              <span class="summary-label">Students</span>
+              <span class="summary-value" id="studentCount">0</span>
+            </div>
+            <div class="summary-stat">
+              <span class="summary-label">Class</span>
+              <span class="summary-value" id="className">-</span>
+            </div>
+            <div class="summary-stat">
+              <span class="summary-label">Total Sessions</span>
+              <span class="summary-value" id="totalSessions">-</span>
+            </div>
+          </div>
+
+          <h3>Students Included</h3>
+          <div id="studentsList" class="student-list"></div>
+
+          <div class="action-buttons">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+            <button type="submit" form="interventionForm" class="btn btn-primary">Save Intervention</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+          <h3>📋 Quick Tips</h3>
+          <ul style="font-size: 13px; color: #6b7280; line-height: 1.8; margin: 8px 0; padding-left: 20px;">
+            <li>Keep groups small (3-6 students) for maximum impact</li>
+            <li>Schedule interventions at consistent times</li>
+            <li>Use concrete materials before moving to abstract</li>
+            <li>Track progress weekly using formative assessments</li>
+            <li>Communicate regularly with parents about progress</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const classId = urlParams.get('classId');
+    const skill = urlParams.get('skill');
+    const studentsParam = urlParams.get('students');
+    const students = studentsParam ? JSON.parse(decodeURIComponent(studentsParam)) : [];
+
+    // Set today as default start date
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const nextMonth = new Date(today);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+    document.getElementById('startDate').value = tomorrow.toISOString().split('T')[0];
+    document.getElementById('endDate').value = nextMonth.toISOString().split('T')[0];
+
+    // Populate page
+    document.getElementById('targetSkill').textContent = skill || 'Unknown Skill';
+    document.getElementById('pageTitle').textContent = `Plan Intervention - ${skill || 'Unknown Skill'}`;
+    document.getElementById('breadcrumb').innerHTML = `
+      <a href="/gl">← GL Assessment</a> /
+      <a href="/class/${classId}">Class View</a> /
+      <span>Plan Intervention</span>
+    `;
+
+    // Populate students
+    document.getElementById('studentCount').textContent = students.length;
+    document.getElementById('className').textContent = classId || 'Unknown Class';
+
+    const studentsList = document.getElementById('studentsList');
+    if (students.length > 0) {
+      studentsList.innerHTML = students.map(s =>
+        `<span class="student-chip">${s.name}</span>`
+      ).join('');
+    } else {
+      studentsList.innerHTML = '<p style="color: #6b7280; font-size: 13px;">No students selected</p>';
+    }
+
+    // Sample resources
+    const resources = [
+      { id: 'concrete', name: 'Concrete Manipulatives', desc: 'Fraction bars, circles, counters' },
+      { id: 'worksheets', name: 'Practice Worksheets', desc: 'Differentiated by level' },
+      { id: 'digital', name: 'Digital Games', desc: 'Interactive fraction activities' },
+      { id: 'videos', name: 'Instructional Videos', desc: 'Step-by-step demonstrations' },
+      { id: 'assessment', name: 'Exit Tickets', desc: 'Quick formative checks' }
+    ];
+
+    const resourcesList = document.getElementById('resourcesList');
+    resourcesList.innerHTML = resources.map(r => `
+      <div class="checkbox-group">
+        <input type="checkbox" id="resource-${r.id}" value="${r.id}">
+        <label for="resource-${r.id}">${r.name} <span style="color: #9ca3af; font-weight: 400;">- ${r.desc}</span></label>
+      </div>
+    `).join('');
+
+    // Calculate sessions when dates or frequency change
+    function updateSessions() {
+      const start = new Date(document.getElementById('startDate').value);
+      const end = new Date(document.getElementById('endDate').value);
+      const frequency = document.getElementById('frequency').value;
+
+      if (start && end && frequency) {
+        const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+        const weeks = Math.ceil(days / 7);
+
+        let sessions = 0;
+        switch(frequency) {
+          case 'daily': sessions = days; break;
+          case '3x-week': sessions = weeks * 3; break;
+          case '2x-week': sessions = weeks * 2; break;
+          case 'weekly': sessions = weeks; break;
+        }
+
+        document.getElementById('totalSessions').textContent = sessions;
+      }
+    }
+
+    document.getElementById('startDate').addEventListener('change', updateSessions);
+    document.getElementById('endDate').addEventListener('change', updateSessions);
+    document.getElementById('frequency').addEventListener('change', updateSessions);
+
+    // Initialize sessions
+    updateSessions();
+
+    // Handle form submission
+    document.getElementById('interventionForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const selectedResources = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
+
+      const interventionData = {
+        classId: classId,
+        skill: skill,
+        students: students,
+        name: document.getElementById('interventionName').value,
+        objective: document.getElementById('objective').value,
+        approach: document.getElementById('approach').value,
+        activities: document.getElementById('activities').value,
+        duration: document.getElementById('duration').value,
+        frequency: document.getElementById('frequency').value,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        successCriteria: document.getElementById('successCriteria').value,
+        resources: selectedResources,
+        notes: document.getElementById('notes').value,
+        createdAt: new Date().toISOString()
+      };
+
+      // Store in localStorage for now (in production, this would POST to an API)
+      const interventions = JSON.parse(localStorage.getItem('interventions') || '[]');
+      interventions.push(interventionData);
+      localStorage.setItem('interventions', JSON.stringify(interventions));
+
+      alert('✅ Intervention saved successfully!\n\nYou can track progress from the class dashboard.');
+      window.location.href = `/class/${classId}`;
+    });
+  </script>
+</body>
+</html>
